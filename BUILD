@@ -66,3 +66,12 @@ cc_test(
     deps = ['@com_google_googletest//:gtest'],
 )
 
+cc_test(
+    name = 'test_json',
+    srcs = ['test/test_json.cpp', 'test/main.cpp'],
+    deps = [
+        '@com_google_googletest//:gtest',
+        '@com_github_nlohmann_json//:json',
+    ],
+)
+

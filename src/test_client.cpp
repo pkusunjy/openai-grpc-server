@@ -14,6 +14,7 @@ ABSL_FLAG(std::string, target, "localhost:8000", "Server address");
 
 int32_t main(int32_t argc, char* argv[]) {
     google::InitGoogleLogging(argv[0]);
+    google::SetLogDestination(google::INFO, "./logs/my_log_");
     LOG(INFO) << "test google logging";
 
     std::string target_str = absl::GetFlag(FLAGS_target);
