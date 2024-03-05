@@ -33,22 +33,29 @@ cc_library(
         '//:demo_cc_grpc',
         '@com_github_grpc_grpc//:grpc++',
         '@com_github_grpc_grpc//:grpc++_reflection',
-        # '@com_google_absl//absl/flags:flag',
-        # '@com_google_absl//absl/flags:parse',
-        # '@com_google_absl//absl/strings:str_format',
     ],
 )
 cc_binary(
     name = 'main',
     srcs = ['src/main.cpp'],
     deps = [
-        '//:demo_cc_proto',
         '//:greeter_server',
-        '@com_github_grpc_grpc//:grpc++',
-        '@com_github_grpc_grpc//:grpc++_reflection',
         '@com_google_absl//absl/flags:flag',
         '@com_google_absl//absl/flags:parse',
         '@com_google_absl//absl/strings:str_format',
+        '@com_github_google_glog//:glog',
+    ],
+)
+
+cc_binary(
+    name = 'test_client',
+    srcs = ['src/test_client.cpp'],
+    deps = [
+        '//:demo_cc_grpc',
+        '@com_github_google_glog//:glog',
+        '@com_github_grpc_grpc//:grpc++',
+        '@com_google_absl//absl/flags:flag',
+        '@com_google_absl//absl/flags:parse',
     ],
 )
 
