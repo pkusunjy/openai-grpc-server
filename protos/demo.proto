@@ -1,0 +1,18 @@
+syntax = "proto2";
+
+package demo;
+
+message DemoRequest {
+    optional bytes name = 1;
+};
+
+message DemoResponse {
+    optional bytes name = 1;
+};
+
+service DemoService {
+    rpc SayHello (DemoRequest) returns (DemoResponse) {}
+    // rpc SayHelloStreamReply (DemoRequest) returns (stream DemoResponse) {}
+    // rpc SayHelloBidiStream (stream DemoRequest) returns (stream DemoResponse) {}
+};
+
