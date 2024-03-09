@@ -72,6 +72,7 @@ cc_test(
     deps = [
         '@com_google_googletest//:gtest',
         '@com_github_nlohmann_json//:json',
+        '@com_github_d7ead_liboai//:oai',
     ],
 )
 
