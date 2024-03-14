@@ -42,9 +42,9 @@ http_archive(
 )
 
 http_archive(
-    name = 'com_github_d7ead_liboai',
-    urls = ['https://github.com/D7EAD/liboai/archive/refs/tags/v3.2.1.tar.gz'],
-    strip_prefix = 'liboai-3.2.1',
-    build_file = '//bazel/third_party/liboai:liboai.BUILD',
-    sha256 = '9058bcc1485967061c9c33b2e7a109a254cdf71638b1448f21cfefd7ffd9c4fa',
+    name = 'com_github_neargye_magic_enum',
+    urls = ['https://github.com/Neargye/magic_enum/archive/v0.9.5.tar.gz'],
+    strip_prefix = 'magic_enum-0.9.5',
+    sha256 = '44ad80db5a72f5047e01d90e18315751d9ac90c0ab42cbea7a6f9ec66a4cd679',
 )
+

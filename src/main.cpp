@@ -6,7 +6,7 @@
 #include "absl/flags/parse.h"
 #include "absl/strings/str_format.h"
 
-#include "protos/demo.pb.h"
+#include "proto/demo.pb.h"
 #include "src/service/greeter_server.h"
 
 ABSL_FLAG(uint16_t, port, 8000, "Server port for the service");

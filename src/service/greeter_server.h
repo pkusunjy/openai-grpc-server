@@ -4,7 +4,7 @@
 #include <grpcpp/grpcpp.h>
 #include <grpcpp/health_check_service_interface.h>
 
-#include "protos/demo.grpc.pb.h"
+#include "proto/demo.grpc.pb.h"
 
 namespace demo {
 

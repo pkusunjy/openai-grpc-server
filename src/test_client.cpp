@@ -8,7 +8,7 @@
 #include <glog/logging.h>
 #include <grpcpp/grpcpp.h>
 
-#include "protos/demo.grpc.pb.h"
+#include "proto/demo.grpc.pb.h"
 
 ABSL_FLAG(std::string, target, "localhost:8000", "Server address");
 
