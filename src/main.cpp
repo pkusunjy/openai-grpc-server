@@ -4,6 +4,7 @@
 
 #include "absl/flags/flag.h"
 #include "absl/flags/parse.h"
+#include "absl/log/log.h"
 #include "absl/strings/str_format.h"
 
 #include "proto/demo.pb.h"
@@ -13,7 +14,7 @@ ABSL_FLAG(uint16_t, port, 8000, "Server port for the service");
 
 int32_t main(int32_t argc, char* argv[]) {
     absl::ParseCommandLine(argc, argv);
-    std::cout << "cpp version: " << __cplusplus << std::endl;
+    LOG(INFO) << "cpp version: " << __cplusplus << std::endl;
 
     uint16_t port = absl::GetFlag(FLAGS_port);
     std::string server_addr = absl::StrFormat("0.0.0.0:%d", port);

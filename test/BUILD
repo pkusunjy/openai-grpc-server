@@ -5,11 +5,11 @@ cc_test(
 )
 
 cc_test(
-    name = 'test_json',
-    srcs = ['test_json.cpp', 'main.cpp'],
+    name = 'test_util',
+    srcs = ['test_util.cpp', 'main.cpp'],
     deps = [
         '@com_google_googletest//:gtest',
-        '@com_github_nlohmann_json//:json',
+        '@com_github_nlohmann_json//:nlohmann_json',
         '//src/util:exception',
     ],
 )
