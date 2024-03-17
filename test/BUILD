@@ -13,7 +13,6 @@ cc_test(
     deps = [
         '@com_google_googletest//:gtest',
         '@com_github_nlohmann_json//:nlohmann_json',
-        '//src/util:exception',
     ],
 )
 
