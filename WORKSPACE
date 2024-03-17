@@ -29,3 +29,10 @@ http_archive(
     sha256 = '44ad80db5a72f5047e01d90e18315751d9ac90c0ab42cbea7a6f9ec66a4cd679',
 )
 
+http_archive(
+    name = 'com_github_d7ead_liboai',
+    urls = ['https://github.com/D7EAD/liboai/archive/v3.2.1.tar.gz'],
+    strip_prefix = 'liboai-3.2.1/liboai',
+    build_file = '//bazel:liboai.BUILD',
+    sha256 = '9058bcc1485967061c9c33b2e7a109a254cdf71638b1448f21cfefd7ffd9c4fa',
+)

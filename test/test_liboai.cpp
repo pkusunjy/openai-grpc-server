@@ -1,6 +1,8 @@
 #include <gtest/gtest.h>
 
-TEST(default, add) {
+#include "liboai.h"
+
+TEST(liboai, add) {
     ASSERT_EQ(4, 2 + 2);
 }
 
