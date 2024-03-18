@@ -41,7 +41,7 @@ cc_library(
         'include/core/response.h',
         'include/liboai.h',
     ],
-    includes = ['include'],
+    strip_include_prefix = '//include',
     deps = [
         '@com_github_curl_curl//:curl',
         '@com_github_nlohmann_json//:nlohmann_json',

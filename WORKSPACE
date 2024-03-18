@@ -1,4 +1,4 @@
-workspace(name = 'ielts_ai')
+workspace(name = 'openai-grpc-server')
 
 load('@bazel_tools//tools/build_defs/repo:http.bzl', 'http_archive')
 
