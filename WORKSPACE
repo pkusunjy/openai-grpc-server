@@ -36,3 +36,10 @@ http_archive(
     build_file = '//bazel:liboai.BUILD',
     sha256 = '9058bcc1485967061c9c33b2e7a109a254cdf71638b1448f21cfefd7ffd9c4fa',
 )
+
+http_archive(
+    name = 'com_github_jbeder_yaml_cpp',
+    urls = ['https://github.com/jbeder/yaml-cpp/archive/0.8.0.tar.gz'],
+    strip_prefix = 'yaml-cpp-0.8.0',
+    sha256 = 'fbe74bbdcee21d656715688706da3c8becfd946d92cd44705cc6098bb23b3a16',
+)

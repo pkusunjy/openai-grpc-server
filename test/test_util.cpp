@@ -1,4 +1,3 @@
-#include <curl/curl.h>
 #include <gtest/gtest.h>
 #include <nlohmann/json.hpp>
 

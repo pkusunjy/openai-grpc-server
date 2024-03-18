@@ -16,3 +16,11 @@ cc_test(
     ],
 )
 
+cc_test(
+    name = 'test_yaml_parser',
+    srcs = ['test_yaml_parser.cpp', 'main.cpp'],
+    deps = [
+        '@com_google_googletest//:gtest',
+        '@com_github_jbeder_yaml_cpp//:yaml-cpp',
+    ],
+)
