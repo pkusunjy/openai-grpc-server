@@ -1,9 +1,9 @@
 syntax="proto3";
 
-package chat;
+package chat_completion;
 
 service ChatService {
-    rpc Chat (stream ChatMessage) returns (stream ChatMessage) {}
+    rpc chat (stream ChatMessage) returns (stream ChatMessage) {}
 };
 
 message ChatMessage {
