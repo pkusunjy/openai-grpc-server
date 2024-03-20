@@ -3,6 +3,7 @@ syntax="proto3";
 package chat_completion;
 
 service ChatService {
+    rpc ask (ChatMessage) returns (ChatMessage) {}
     rpc chat (stream ChatMessage) returns (stream ChatMessage) {}
 };
 

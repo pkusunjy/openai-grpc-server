@@ -3,7 +3,7 @@
 
 namespace chat_completion {
 
-grpc::Status IeltsAI::chat(grpc::ServerContext* ctx, const ChatMessage* request, ChatMessage* response) {
+grpc::Status IeltsAI::ask(grpc::ServerContext* ctx, const ChatMessage* request, ChatMessage* response) {
     if (_chat_completion == nullptr) {
         LOG(WARNING) << "openai chat completion not ready";
         return grpc::Status(

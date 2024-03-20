@@ -13,7 +13,7 @@ class IeltsAI : public ChatService::Service {
 public:
     IeltsAI() : _chat_completion(std::make_unique<liboai::ChatCompletion>()) {}
     virtual ~IeltsAI() = default;
-    grpc::Status chat(grpc::ServerContext* ctx, const ChatMessage* request, ChatMessage* response);
+    grpc::Status ask(grpc::ServerContext* ctx, const ChatMessage* request, ChatMessage* response);
 private:
     std::unique_ptr<liboai::ChatCompletion> _chat_completion;
 };

@@ -8,25 +8,30 @@
 
 #include <grpcpp/grpcpp.h>
 
-#include "proto/demo.grpc.pb.h"
+#include "proto/chat_completion.grpc.pb.h"
 
 ABSL_FLAG(std::string, target, "localhost:8000", "Server address");
+ABSL_FLAG(std::string, query, "", "your input");
 
 int32_t main(int32_t argc, char* argv[]) {
+    absl::ParseCommandLine(argc, argv);
+
     LOG(INFO) << "test absl logging";
 
     std::string target_str = absl::GetFlag(FLAGS_target);
-    std::unique_ptr<demo::DemoService::Stub> stub(
-        demo::DemoService::NewStub(grpc::CreateChannel(target_str, grpc::InsecureChannelCredentials()))
+    std::unique_ptr<chat_completion::ChatService::Stub> stub(
+        chat_completion::ChatService::NewStub(grpc::CreateChannel(
+            target_str,
+            grpc::InsecureChannelCredentials()
+        ))
     );
-    std::string user("sunjiayu");
+    std::string query(absl::GetFlag(FLAGS_query));
     grpc::ClientContext context;
-    demo::DemoRequest request;
-    request.set_name(user);
-    demo::DemoResponse response;
-    grpc::Status status = stub->SayHello(&context, request, &response);
+    chat_completion::ChatMessage request, response;
+    request.set_content(query);
+    grpc::Status status = stub->ask(&context, request, &response);
     if (status.ok()) {
-        std::cout << response.name() << std::endl;
+        std::cout << response.content() << std::endl;
     }
     else {
         std::cout << status.error_code() << ": " << status.error_message() << std::endl;
