@@ -32,6 +32,10 @@ int32_t main(int32_t argc, char* argv[]) {
     builder.AddListeningPort(server_addr, grpc::InsecureServerCredentials());
 
     chat_completion::IeltsAI service;
+    if (service.initialize() != 0) {
+        LOG(WARNING) << "IeltsAI initialize failed, server quit";
+        return 0;
+    }
     builder.RegisterService(&service);
     
     std::unique_ptr<grpc::Server> server(builder.BuildAndStart());

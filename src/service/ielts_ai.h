@@ -11,11 +11,17 @@ namespace chat_completion {
 
 class IeltsAI : public ChatService::Service {
 public:
-    IeltsAI() : _chat_completion(std::make_unique<liboai::ChatCompletion>()) {}
+    IeltsAI() = default;
     virtual ~IeltsAI() = default;
-    grpc::Status ask(grpc::ServerContext* ctx, const ChatMessage* request, ChatMessage* response);
+    int32_t initialize();
+    grpc::Status ask(grpc::ServerContext*, const ChatMessage*, ChatMessage*);
+
 private:
     std::unique_ptr<liboai::ChatCompletion> _chat_completion;
+
+private:
+    std::string _model;
+    std::string _system_data;
 };
 
 }

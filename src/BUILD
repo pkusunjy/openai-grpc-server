@@ -3,8 +3,8 @@ package(
 )
 
 cc_binary(
-    name = 'main',
-    srcs = ['main.cpp'],
+    name = 'ielts_ai',
+    srcs = ['ielts_ai.cpp'],
     deps = [
         '//src/service:greeter_server',
         '//src/service:ielts_ai',
