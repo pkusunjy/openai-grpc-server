@@ -6,10 +6,13 @@ cc_binary(
     name = 'ielts_ai',
     srcs = ['ielts_ai.cpp'],
     deps = [
+        '//src/plugin:logging',
         '//src/service:greeter_server',
         '//src/service:ielts_ai',
         '@com_google_absl//absl/flags:flag',
         '@com_google_absl//absl/flags:parse',
+        '@com_google_absl//absl/log:flags',
+        '@com_google_absl//absl/log:initialize',
         '@com_google_absl//absl/strings:str_format',
         '@com_github_d7ead_liboai//:oai',
     ],

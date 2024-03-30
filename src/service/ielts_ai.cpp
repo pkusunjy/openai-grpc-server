@@ -40,20 +40,27 @@ grpc::Status IeltsAI::ask(grpc::ServerContext* ctx, const ChatMessage* req, Chat
             "input empty, check your input"
         );
     }
-    auto stream_handler = [](std::string data, intptr_t ptr) -> bool {
-        if (data == "[DONE]") {
-            return true;
-        }
-        // TODO: json parse
-        LOG(INFO) << "str: " << data << ", ptr: " << ptr;
+    std::vector<std::string> all_words;
+    auto stream_handler = [&](std::string data, intptr_t ptr) -> bool {
+        // LOG(INFO) << "str: " << data << ", ptr: " << ptr;
+        all_words.emplace_back(std::move(data));
+        // if (data == "[DONE]") {
+        //     return true;
+        // }
+        // // TODO: json parse
+        // LOG(INFO) << "str: " << data << ", ptr: " << ptr;
         return true;
     };
     absl::Time step3 = absl::Now();
     liboai::Response openai_resp = _chat_completion->create(
         "gpt-3.5-turbo", convo, std::nullopt, std::nullopt, std::nullopt,
-        // stream_handler
-        std::nullopt
+        stream_handler
+        // std::nullopt
     );
+    LOG(INFO) << "all_words size " << all_words.size();
+    // for (const auto& word: all_words) {
+    //     LOG(INFO) << word;
+    // }
     absl::Time step4 = absl::Now();
     if (!convo.Update(openai_resp)) {
         LOG(WARNING) << "update conversion failed";
