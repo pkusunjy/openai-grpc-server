@@ -45,13 +45,14 @@ grpc::Status IeltsAI::ask(grpc::ServerContext* ctx, const ChatMessage* req, Chat
             return true;
         }
         // TODO: json parse
-        LOG(INFO) << "str: " << str << ", ptr: " << ptr;
+        LOG(INFO) << "str: " << data << ", ptr: " << ptr;
         return true;
     };
     absl::Time step3 = absl::Now();
     liboai::Response openai_resp = _chat_completion->create(
         "gpt-3.5-turbo", convo, std::nullopt, std::nullopt, std::nullopt,
-        stream_handler
+        // stream_handler
+        std::nullopt
     );
     absl::Time step4 = absl::Now();
     if (!convo.Update(openai_resp)) {
