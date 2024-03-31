@@ -4,18 +4,9 @@
 
 namespace plugin {
 
-DefaultLogSink::DefaultLogSink() : _os("./test.log", std::ios::app) {
-    if (_os.is_open()) {
-        LOG(INFO) << "DefaultLogSink os opened";
-    }
-    else {
-        LOG(INFO) << "DefaultLogSink os not opened";
-    }
-    LOG(INFO) << "DefaultLogSink ctor called";
-}
+DefaultLogSink::DefaultLogSink() : _os("./test.log", std::ios::app) {}
 
 DefaultLogSink::~DefaultLogSink() {
-    LOG(INFO) << "DefaultLogSink dtor called";
     _os.close();
 }
 
