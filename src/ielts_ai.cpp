@@ -10,7 +10,7 @@
 #include "absl/strings/str_format.h"
 
 #include "proto/chat_completion.pb.h"
-#include "src/plugin/logging.h"
+#include "src/plugin/log_sink.h"
 #include "src/service/ielts_ai.h"
 
 #include "liboai.h"
