@@ -25,8 +25,7 @@ int32_t main(int32_t argc, char* argv[]) {
     absl::AddLogSink(&default_sink);
     absl::InitializeLog();
 
-    // LOG(INFO).ToSinkAlso(&default_sink) << "cpp version: " << __cplusplus << std::endl;
-    LOG(INFO) << "cpp version: " << __cplusplus << std::endl;
+    LOG(INFO) << "cpp version: " << __cplusplus;
 
     if (!liboai::Authorization::Authorizer().SetKeyEnv("OPENAI_API_KEY")) {
         LOG(WARNING) << "OPENAI_API_KEY not found in env, server quit";

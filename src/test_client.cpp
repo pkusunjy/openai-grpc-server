@@ -29,7 +29,7 @@ int32_t main(int32_t argc, char* argv[]) {
     grpc::ClientContext context;
     chat_completion::ChatMessage request, response;
     request.set_content(query);
-    auto stream(stub->ask_stream(&context, request));
+    auto stream(stub->write_article_by_title(&context, request));
     while (stream->Read(&response)) {
         std::cout << response.content();
     }

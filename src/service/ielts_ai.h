@@ -15,10 +15,8 @@ public:
     virtual ~IeltsAI() = default;
     int32_t initialize();
     grpc::Status ask(grpc::ServerContext*, const ChatMessage*, ChatMessage*) override;
-    grpc::Status ask_stream(grpc::ServerContext*, const ChatMessage*, grpc::ServerWriter<ChatMessage>*) override;
-
-private:
-    int32_t parse_delta_content(const std::string&, std::string&);
+    grpc::Status write_article_by_title(grpc::ServerContext*, const ChatMessage*, grpc::ServerWriter<ChatMessage>*) override;
+    grpc::Status translate(grpc::ServerContext*, const ChatMessage*, ChatMessage*) override;
 
 private:
     std::unique_ptr<liboai::ChatCompletion> _chat_completion;

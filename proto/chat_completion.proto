@@ -4,8 +4,9 @@ package chat_completion;
 
 service ChatService {
     rpc ask (ChatMessage) returns (ChatMessage) {}
-    rpc ask_stream (ChatMessage) returns (stream ChatMessage) {}
     rpc chat (stream ChatMessage) returns (stream ChatMessage) {}
+    rpc write_article_by_title (ChatMessage) returns (stream ChatMessage) {}
+    rpc translate (ChatMessage) returns (ChatMessage) {}
 };
 
 message ChatMessage {
