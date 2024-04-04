@@ -7,7 +7,6 @@ cc_binary(
     srcs = ['ielts_ai.cpp'],
     deps = [
         '//src/plugin:log_sink',
-        '//src/service:greeter_server',
         '//src/service:ielts_ai',
         '@com_google_absl//absl/flags:flag',
         '@com_google_absl//absl/flags:parse',

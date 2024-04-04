@@ -15,7 +15,7 @@
 
 #include "liboai.h"
 
-ABSL_FLAG(uint16_t, port, 8000, "Server port for the service");
+ABSL_FLAG(uint16_t, port, 8123, "Server port for the service");
 // ABSL_FLAG(std::string, log_file, "test.log", "File to write log messages to");
 
 int32_t main(int32_t argc, char* argv[]) {
@@ -49,7 +49,6 @@ int32_t main(int32_t argc, char* argv[]) {
     builder.RegisterService(&service);
     
     std::unique_ptr<grpc::Server> server(builder.BuildAndStart());
-    std::cout << "Server listening on " << server_addr << std::endl;
     LOG(INFO) << "Server listening on " << server_addr;
 
     server->Wait();

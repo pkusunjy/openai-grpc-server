@@ -10,7 +10,7 @@
 
 #include "proto/chat_completion.grpc.pb.h"
 
-ABSL_FLAG(std::string, target, "localhost:8000", "Server address");
+ABSL_FLAG(std::string, target, "localhost:8123", "Server address");
 ABSL_FLAG(std::string, query, "", "your input");
 
 int32_t main(int32_t argc, char* argv[]) {
@@ -29,12 +29,9 @@ int32_t main(int32_t argc, char* argv[]) {
     grpc::ClientContext context;
     chat_completion::ChatMessage request, response;
     request.set_content(query);
-    grpc::Status status = stub->ask(&context, request, &response);
-    if (status.ok()) {
-        std::cout << response.content() << std::endl;
-    }
-    else {
-        std::cout << status.error_code() << ": " << status.error_message() << std::endl;
+    auto stream(stub->ask_stream(&context, request));
+    while (stream->Read(&response)) {
+        std::cout << response.content();
     }
     return 0;
 }

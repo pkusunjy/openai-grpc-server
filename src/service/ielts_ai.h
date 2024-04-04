@@ -9,17 +9,19 @@
 
 namespace chat_completion {
 
-class IeltsAI : public ChatService::Service {
+class IeltsAI final : public ChatService::Service {
 public:
     IeltsAI() = default;
     virtual ~IeltsAI() = default;
     int32_t initialize();
-    grpc::Status ask(grpc::ServerContext*, const ChatMessage*, ChatMessage*);
+    grpc::Status ask(grpc::ServerContext*, const ChatMessage*, ChatMessage*) override;
+    grpc::Status ask_stream(grpc::ServerContext*, const ChatMessage*, grpc::ServerWriter<ChatMessage>*) override;
+
+private:
+    int32_t parse_delta_content(const std::string&, std::string&);
 
 private:
     std::unique_ptr<liboai::ChatCompletion> _chat_completion;
-
-private:
     std::string _model;
     std::string _system_data;
 };

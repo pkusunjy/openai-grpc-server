@@ -43,3 +43,11 @@ http_archive(
     strip_prefix = 'yaml-cpp-0.8.0',
     sha256 = 'fbe74bbdcee21d656715688706da3c8becfd946d92cd44705cc6098bb23b3a16',
 )
+
+http_archive(
+    name = 'com_github_cameron314_concurrentqueue',
+    urls = ['https://github.com/cameron314/concurrentqueue/archive/v1.0.4.tar.gz'],
+    strip_prefix = 'concurrentqueue-1.0.4',
+    build_file = '//bazel:concurrentqueue.BUILD',
+    sha256 = '87fbc9884d60d0d4bf3462c18f4c0ee0a9311d0519341cac7cbd361c885e5281',
+)
