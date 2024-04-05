@@ -11,6 +11,7 @@ service ChatService {
 
 message ChatMessage {
     uint64 logid = 1;
-    string content = 2;
+    uint64 uid = 2;
+    string content = 3;
 };
 

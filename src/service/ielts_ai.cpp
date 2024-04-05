@@ -1,6 +1,7 @@
 #include <regex>
 
 #include "absl/log/log.h"
+#include "absl/strings/str_format.h"
 #include "absl/strings/str_split.h"
 #include "absl/time/time.h"
 #include "ielts_ai.h"
@@ -121,7 +122,9 @@ grpc::Status IeltsAI::write_article_by_title(grpc::ServerContext* ctx, const Cha
     openai_resp.wait();
 
     absl::Time step4 = absl::Now();
-    LOG(INFO) << "dealing with " << req->content()
+    LOG(INFO) << "logid " << req->logid()
+              << " uid " << req->uid()
+              << " content " << req->content()
               << " SetSystemData " << absl::ToDoubleMilliseconds(step2 - step1)
               << " AddUserData " << absl::ToDoubleMilliseconds(step3 - step2)
               << " CreateCompletion " << absl::ToDoubleMilliseconds(step4 - step3)
@@ -137,15 +140,31 @@ grpc::Status IeltsAI::transcribe_judge(grpc::ServerContext* ctx, const ChatMessa
             "openai audio nullptr"
         );
     }
-    // 1. TODO: write audio data to local file (up to 25MB, according to official documents);
+    absl::Time step1 = absl::Now();
+    // 1. write audio data to local file (up to 25MB, according to official documents);
+    std::string filename = absl::StrFormat("./temp_%llu_%llu.mp3", req->uid(), req->logid());
+    std::ofstream os(filename, std::ios::trunc | std::ios::binary);
+    os << req->content();
+    os.close();
+    absl::Time step2 = absl::Now();
     // 2. call api
-    auto res = _audio->transcribe(
-        "./somename.mp3",
-        "whisper-1"
-    );
+    auto res = _audio->transcribe(filename, "whisper-1");
+    absl::Time step3 = absl::Now();
     // 3. response
     resp->set_content(res["text"].get<std::string>());
-    // 4. TODO: delete audio file on disk
+    // 4. delete audio file on disk
+    if (unlink(filename.c_str()) < 0) {
+        char buf[256];
+        strerror_r(errno, buf, 256);
+        LOG(WARNING) << "unlink failed file: " << filename << ", errno: " << errno << ", errmsg: " << buf;
+    }
+    absl::Time step4 = absl::Now();
+    LOG(INFO) << "logid " << req->logid()
+              << " uid " << req->uid()
+              << " write_disk " << absl::ToDoubleMilliseconds(step2 - step1)
+              << " transcribe " << absl::ToDoubleMilliseconds(step3 - step2)
+              << " unlink " << absl::ToDoubleMilliseconds(step4 - step3)
+              << ", total cost time " << absl::ToDoubleMilliseconds(step4 - step1);
     return grpc::Status::OK;
 }
 
