@@ -6,10 +6,11 @@ service ChatService {
     rpc ask (ChatMessage) returns (ChatMessage) {}
     rpc chat (stream ChatMessage) returns (stream ChatMessage) {}
     rpc write_article_by_title (ChatMessage) returns (stream ChatMessage) {}
-    rpc translate (ChatMessage) returns (ChatMessage) {}
+    rpc transcribe_judge (ChatMessage) returns (ChatMessage) {}
 };
 
 message ChatMessage {
-    string content = 1;
+    uint64 logid = 1;
+    string content = 2;
 };
 

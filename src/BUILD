@@ -18,8 +18,8 @@ cc_binary(
 )
 
 cc_binary(
-    name = 'test_client',
-    srcs = ['test_client.cpp'],
+    name = 'client_article',
+    srcs = ['client_article.cpp'],
     deps = [
         '//proto:chat_completion_cc_grpc',
         '@com_github_grpc_grpc//:grpc++',
@@ -28,3 +28,13 @@ cc_binary(
     ],
 )
 
+cc_binary(
+    name = 'client_transcribe',
+    srcs = ['client_transcribe.cpp'],
+    deps = [
+        '//proto:chat_completion_cc_grpc',
+        '@com_github_grpc_grpc//:grpc++',
+        '@com_google_absl//absl/flags:flag',
+        '@com_google_absl//absl/flags:parse',
+    ],
+)

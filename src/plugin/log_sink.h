@@ -15,7 +15,9 @@ public:
 
 private:
     std::string _log_name;
+    std::string _log_name_wf;
     std::ofstream _os;
+    std::ofstream _os_wf;
     absl::CivilHour _civil_hour;
     // TODO: use an explicit time zone instead
     const absl::TimeZone _time_zone { absl::LocalTimeZone() };

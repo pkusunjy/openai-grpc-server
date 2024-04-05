@@ -8,6 +8,13 @@
 namespace chat_completion {
 
 int32_t IeltsAI::initialize() {
+    // audio
+    _audio = std::make_unique<liboai::Audio>();
+    if (_audio == nullptr) {
+        LOG(WARNING) << "ielts init failed";
+        return -1;
+    }
+    // chat
     _chat_completion = std::make_unique<liboai::ChatCompletion>();
     if (_chat_completion == nullptr) {
         LOG(WARNING) << "ielts init failed";
@@ -98,7 +105,7 @@ grpc::Status IeltsAI::write_article_by_title(grpc::ServerContext* ctx, const Cha
             LOG(WARNING) << "regex match failed, raw: " << data;
         }
         for (auto i = reg_begin; i != std::sregex_iterator(); ++i) {
-            ChatMessage resp;
+            ChatMessage resp{};
             resp.set_content((*i)[1]);
             stream->Write(std::move(resp));
         }
@@ -122,49 +129,23 @@ grpc::Status IeltsAI::write_article_by_title(grpc::ServerContext* ctx, const Cha
     return grpc::Status::OK;
 }
 
-grpc::Status IeltsAI::translate(grpc::ServerContext* ctx, const ChatMessage* req, ChatMessage* resp) {
-    if (_chat_completion == nullptr) {
-        LOG(WARNING) << "openai chat completion not ready";
+grpc::Status IeltsAI::transcribe_judge(grpc::ServerContext* ctx, const ChatMessage* req, ChatMessage* resp) {
+    if (_audio == nullptr) {
+        LOG(WARNING) << "openai audio not ready";
         return grpc::Status(
             grpc::StatusCode::UNAUTHENTICATED,
-            "openai chat completion nullptr"
+            "openai audio nullptr"
         );
     }
-    absl::Time step1 = absl::Now();
-    liboai::Conversation convo;
-    if (!convo.SetSystemData(_system_data)) {
-        LOG(WARNING) << "set system data failed";
-        return grpc::Status(
-            grpc::StatusCode::FAILED_PRECONDITION,
-            "conversion system data not set"
-        );
-    }
-    absl::Time step2 = absl::Now();
-    if (!convo.AddUserData(req->content())) {
-        LOG(WARNING) << "input data empty";
-        return grpc::Status(
-            grpc::StatusCode::INVALID_ARGUMENT,
-            "input empty, check your input"
-        );
-    }
-    absl::Time step3 = absl::Now();
-    liboai::Response openai_resp = _chat_completion->create("gpt-3.5-turbo", convo);
-    absl::Time step4 = absl::Now();
-    if (!convo.Update(openai_resp)) {
-        LOG(WARNING) << "update conversion failed";
-        return grpc::Status(
-            grpc::StatusCode::INTERNAL,
-            "internal error"
-        );
-    }
-    absl::Time step5 = absl::Now();
-    LOG(INFO) << "dealing with " << req->content()
-              << " SetSystemData " << absl::ToDoubleMilliseconds(step2 - step1)
-              << " AddUserData " << absl::ToDoubleMilliseconds(step3 - step2)
-              << " CreateCompletion " << absl::ToDoubleMilliseconds(step4 - step3)
-              << " Update " << absl::ToDoubleMilliseconds(step5 - step4)
-              << ", total cost time " << absl::ToDoubleMilliseconds(step5 - step1);
-    resp->set_content(convo.GetLastResponse());
+    // 1. TODO: write audio data to local file (up to 25MB, according to official documents);
+    // 2. call api
+    auto res = _audio->transcribe(
+        "./somename.mp3",
+        "whisper-1"
+    );
+    // 3. response
+    resp->set_content(res["text"].get<std::string>());
+    // 4. TODO: delete audio file on disk
     return grpc::Status::OK;
 }
 
