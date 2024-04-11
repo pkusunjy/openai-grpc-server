@@ -8,21 +8,33 @@ jobs:
   my-job:
     name: generate output
     runs-on: ubuntu-latest
-    # container: docker.io/centos:8
     steps:
     - name: checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
-    - name: install env
-      uses: egor-tensin/setup-gcc@v1
-      with:
-        version: latest
-        platform: x64
+    # - name: install env
+    #   uses: egor-tensin/setup-gcc@v1
+    #   with:
+    #     version: latest
+    #     platform: x64
 
     - name: test gcc
       run: |
         echo $(gcc -v)
   
-    - name: bazel build
+    - name: generate
       run: |
         bazel build //...
+        mkdir output
+        mv ./bazel-bin/src/ielts_ai output/
+        tar -czvf output.tar.gz output/
+
+    - name: deploy
+      uses: appleboy/ssh-action@master
+      with: 
+        host: ${{ secrets.SERVER_HOST }}
+        username: ${{ secrets.SERVER_USERNAME }}
+        password: ${{ secrets.SERVER_PASSWORD }}
+        port: ${{ secrets.SERVER_PORT }}
+        script: |
+          whoami
