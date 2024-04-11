@@ -7,8 +7,8 @@ on:
 jobs:
   my-job:
     name: My Job
-    runs-on: centos-latest
-    container: docker.io/centos:7
+    runs-on: ubuntu-latest
+    container: docker.io/centos:8
     steps:
     - uses: actions/checkout@v2
     - name: Print a greeting
