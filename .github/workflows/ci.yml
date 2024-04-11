@@ -12,14 +12,13 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: install env
-      env:
-        MY_VAR: Hi there! My name is
-        FIRST_NAME: Mona
-        MIDDLE_NAME: The
-        LAST_NAME: Octocat
+      uses: egor-tensin/setup-gcc@v1
+      with:
+        version: latest
+        platform: x64
+    - name: test gcc
       run: |
         echo $(gcc -v)
-        sudo yum install -y bazel
     - name: bazel build
       run: |
         bazel build //...
