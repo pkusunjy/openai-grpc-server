@@ -8,17 +8,21 @@ jobs:
   my-job:
     name: generate output
     runs-on: ubuntu-latest
-    container: docker.io/centos:8
+    # container: docker.io/centos:8
     steps:
-    - uses: actions/checkout@v2
+    - name: checkout repository
+      uses: actions/checkout@v2
+
     - name: install env
       uses: egor-tensin/setup-gcc@v1
       with:
         version: latest
         platform: x64
+
     - name: test gcc
       run: |
         echo $(gcc -v)
+  
     - name: bazel build
       run: |
         bazel build //...
