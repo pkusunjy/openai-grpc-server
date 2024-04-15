@@ -12,12 +12,6 @@ jobs:
     - name: checkout repository
       uses: actions/checkout@v4
 
-    # - name: install env
-    #   uses: egor-tensin/setup-gcc@v1
-    #   with:
-    #     version: latest
-    #     platform: x64
-
     - name: test gcc
       run: |
         echo $(gcc -v)
@@ -25,16 +19,23 @@ jobs:
     - name: generate
       run: |
         bazel build //...
-        mkdir output
-        mv ./bazel-bin/src/ielts_ai output/
-        tar -czvf output.tar.gz output/
+        mkdir -p output/bin
+        mv ./bazel-bin/src/ielts_ai output/bin/
 
+    - name: Get changed files
+      id: changed-files
+      uses: tj-actions/changed-files@v35
+      with:
+        since_last_remote_commit: true
+        separator: ","
+  
     - name: deploy
-      uses: appleboy/ssh-action@master
+      uses: appleboy/scp-action@v0.1.7
       with: 
         host: ${{ secrets.SERVER_HOST }}
         username: ${{ secrets.SERVER_USERNAME }}
         password: ${{ secrets.SERVER_PASSWORD }}
         port: ${{ secrets.SERVER_PORT }}
-        script: |
-          whoami
+        source: ${{ steps.changed-files.outputs.all_changed_files }}
+        target: /home/work/ielts-ai/
+
