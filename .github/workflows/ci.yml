@@ -25,17 +25,12 @@ jobs:
         mv ./bazel-bin/src/ielts_ai output/bin/
         mv ./conf/* output/conf/
         zip -r output output/*
-    
-    - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1.0.0
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Upload
+      uses: actions/upload-artifact@v1
       with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
-        draft: false
-        prerelease: false
+        path: ./output.zip
+        name: output.zip
 
     - name: Upload Release Asset
       id: release_artifacts
