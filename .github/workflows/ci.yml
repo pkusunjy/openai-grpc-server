@@ -1,7 +1,7 @@
 on:
   push:
-    branches:
-      - main
+    tags:
+      - 'v*'
 
 name: ielts-ai ci
 
@@ -24,25 +24,40 @@ jobs:
         mkdir -p output/bin output/conf
         mv ./bazel-bin/src/ielts_ai output/bin/
         mv ./conf/* output/conf/
+        zip --junk-paths output output/*
     
-    - name: Upload
-      id: upload_artifact
-      uses: actions/upload-artifact@v1
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1.0.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        path: ./output/
-        name: output
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        draft: false
+        prerelease: false
 
     - name: Upload Release Asset
-      id: upload-release-asset 
+      id: release_artifacts
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: ${{ steps.upload_artifact.outputs.upload_url }}
-        asset_path: ./output
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./output.zip
         asset_name: output.zip
         asset_content_type: application/zip
   
+    - name: copy file to server
+      uses: appleboy/scp-action@v0.1.7
+      with:
+        host: ${{ secrets.SERVER_HOST }}
+        username: ${{ secrets.SERVER_USERNAME }}
+        password: ${{ secrets.SERVER_PASSWORD }}
+        port: ${{ secrets.SERVER_PORT }}
+        source: ${{ steps.release_artifacts.outputs.browser_download_url }}
+        target: ${{ secrets.DEPLOY_PATH }}
+
     - name: Restart
       uses: appleboy/ssh-action@master
       with: 
@@ -51,6 +66,6 @@ jobs:
         password: ${{ secrets.SERVER_PASSWORD }}
         port: ${{ secrets.SERVER_PORT }}
         script: |
-          whoami
-          ls -al
+          cd ${{ secrets.DEPLOY_PATH }}
+          ll -al
 
