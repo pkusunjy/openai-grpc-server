@@ -26,22 +26,31 @@ jobs:
         mv ./conf/* output/conf/
         zip -r output output/*
 
-    - name: Upload
-      uses: actions/upload-artifact@v1
+    - name: Release
+      id: release
+      uses: softprops/action-gh-release@v2
       with:
-        path: ./output.zip
-        name: output.zip
+        files: |
+          output.zip
 
-    - name: Upload Release Asset
-      id: release_artifacts
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ github.event.release.upload_url }}
-        asset_path: ./output.zip
-        asset_name: output.zip
-        asset_content_type: application/zip
+    # - name: Upload
+    #   id: upload
+    #   uses: actions/upload-artifact@v3
+    #   with:
+    #     name: output
+    #     path: output.zip
+
+    # - name: Upload Release Asset
+    #   id: release_artifacts
+    #   uses: actions/upload-release-asset@v1
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #   with:
+    #     # upload_url: ${{ github.event.release.upload_url }}
+    #     upload_url: ${{ steps.upload.outputs.output }}
+    #     asset_path: ./output.zip
+    #     asset_name: output.zip
+    #     asset_content_type: application/zip
   
     # - name: copy file to server
     #   uses: appleboy/scp-action@v0.1.7
@@ -63,7 +72,7 @@ jobs:
         port: ${{ secrets.SERVER_PORT }}
         script: |
           cd ${{ secrets.DEPLOY_PATH }}
-          wget ${{ steps.release_artifacts.outputs.browser_download_url }}
+          wget ${{ steps.release.outputs.url }}
           unzip output.zip
           ll -al output/
 
