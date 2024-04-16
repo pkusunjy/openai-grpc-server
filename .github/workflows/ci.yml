@@ -12,28 +12,37 @@ jobs:
     steps:
     - name: checkout repository
       uses: actions/checkout@v4
-  
-    - name: Print env
-      run: |
-        echo github.event.action: ${{ github.event.action }}
-        echo github.event_name: ${{ github.event_name }}
-    
+
     - name: Build
       run: |
         bazel build //...
         mkdir -p output/bin output/conf
         mv ./bazel-bin/src/ielts_ai output/bin/
         mv ./conf/* output/conf/
-        zip -r output output/*
+        # zip -r output output/*
 
-    - name: Release
-      id: release
-      uses: softprops/action-gh-release@v2
+    - uses: actions/upload-artifact@v4
       with:
-        files: |
-          output.zip
+        name: main-artifact
+        path: ./output/
 
-    - name: Deploy & Restart
+    - uses: actions/download-artifact@v4
+      with:
+        name: main-artifact
+        path: ./output/
+
+    - name: Deploy
+      uses: appleboy/scp-action@v0.1.7
+      with:
+        host: ${{ secrets.SERVER_HOST }}
+        username: ${{ secrets.SERVER_USERNAME }}
+        password: ${{ secrets.SERVER_PASSWORD }}
+        port: ${{ secrets.SERVER_PORT }}
+        source: ./output/*
+        target: ${{ secrets.DEPLOY_PATH }}
+        strip_components: 1
+
+    - name: Restart
       uses: appleboy/ssh-action@master
       with: 
         host: ${{ secrets.SERVER_HOST }}
@@ -42,7 +51,4 @@ jobs:
         port: ${{ secrets.SERVER_PORT }}
         script: |
           cd ${{ secrets.DEPLOY_PATH }}
-          wget ${{ fromJson(steps.release.outputs.assets)[0].browser_download_url }}
-          unzip output.zip
-          ls -al output/
-
+          ls -al
