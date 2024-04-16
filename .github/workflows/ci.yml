@@ -33,36 +33,6 @@ jobs:
         files: |
           output.zip
 
-    # - name: Upload
-    #   id: upload
-    #   uses: actions/upload-artifact@v3
-    #   with:
-    #     name: output
-    #     path: output.zip
-
-    # - name: Upload Release Asset
-    #   id: release_artifacts
-    #   uses: actions/upload-release-asset@v1
-    #   env:
-    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    #   with:
-    #     # upload_url: ${{ github.event.release.upload_url }}
-    #     upload_url: ${{ steps.upload.outputs.output }}
-    #     asset_path: ./output.zip
-    #     asset_name: output.zip
-    #     asset_content_type: application/zip
-  
-    # - name: copy file to server
-    #   uses: appleboy/scp-action@v0.1.7
-    #   with:
-    #     host: ${{ secrets.SERVER_HOST }}
-    #     username: ${{ secrets.SERVER_USERNAME }}
-    #     password: ${{ secrets.SERVER_PASSWORD }}
-    #     port: ${{ secrets.SERVER_PORT }}
-    #     source: "output.zip"
-    #     # source: ${{ steps.release_artifacts.outputs.browser_download_url }}
-    #     target: ${{ secrets.DEPLOY_PATH }}
-  
     - name: Deploy & Restart
       uses: appleboy/ssh-action@master
       with: 
@@ -72,7 +42,7 @@ jobs:
         port: ${{ secrets.SERVER_PORT }}
         script: |
           cd ${{ secrets.DEPLOY_PATH }}
-          wget ${{ steps.release.outputs.url }}
+          wget ${{ fromJson(steps.release.outputs.assets)[0].browser_download_url }}
           unzip output.zip
-          ll -al output/
+          ls -al output/
 
