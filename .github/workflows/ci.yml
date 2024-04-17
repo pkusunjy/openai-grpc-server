@@ -8,43 +8,43 @@ name: ielts-ai ci
 jobs:
   my-job:
     name: Generate Artifact
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
     - name: checkout repository
       uses: actions/checkout@v4
 
+    - name: Switch to gcc10
+      uses: egor-tensin/setup-gcc@v1.3
+      with:
+        version: 10
+        platform: x64
+        cc: 1
+
     - name: Build
       run: |
-        bazel build //...
+        bazel build //... --platforms=//:linux_x86
         mkdir -p output/bin output/conf
         mv ./bazel-bin/src/ielts_ai output/bin/
         mv ./conf/* output/conf/
 
     - name: Deploy
-      run: |
-        mv output/* /home/work/ielts-ai
+      uses: appleboy/scp-action@v0.1.7
+      with:
+        host: ${{ secrets.SERVER_HOST }}
+        username: ${{ secrets.SERVER_USERNAME }}
+        password: ${{ secrets.SERVER_PASSWORD }}
+        port: ${{ secrets.SERVER_PORT }}
+        source: ./output/*
+        target: ${{ secrets.DEPLOY_PATH }}
+        strip_components: 1
 
-    - name: Check
-      run: |
-        ls /home/work/ielts-ai
-    # - name: Deploy
-    #   uses: appleboy/scp-action@v0.1.7
-    #   with:
-    #     host: ${{ secrets.SERVER_HOST }}
-    #     username: ${{ secrets.SERVER_USERNAME }}
-    #     password: ${{ secrets.SERVER_PASSWORD }}
-    #     port: ${{ secrets.SERVER_PORT }}
-    #     source: ./output/*
-    #     target: ${{ secrets.DEPLOY_PATH }}
-    #     strip_components: 1
-
-    # - name: Restart
-    #   uses: appleboy/ssh-action@master
-    #   with: 
-    #     host: ${{ secrets.SERVER_HOST }}
-    #     username: ${{ secrets.SERVER_USERNAME }}
-    #     password: ${{ secrets.SERVER_PASSWORD }}
-    #     port: ${{ secrets.SERVER_PORT }}
-    #     script: |
-    #       cd ${{ secrets.DEPLOY_PATH }}
-    #       ls -al
+    - name: Restart
+      uses: appleboy/ssh-action@master
+      with: 
+        host: ${{ secrets.SERVER_HOST }}
+        username: ${{ secrets.SERVER_USERNAME }}
+        password: ${{ secrets.SERVER_PASSWORD }}
+        port: ${{ secrets.SERVER_PORT }}
+        script: |
+          cd ${{ secrets.DEPLOY_PATH }}
+          ls -al
