@@ -13,10 +13,10 @@ jobs:
     - name: checkout repository
       uses: actions/checkout@v4
 
-    - name: Switch to gcc8
+    - name: Switch to gcc10
       uses: egor-tensin/setup-gcc@v1.3
       with:
-        version: 8
+        version: 10
         platform: x64
         cc: 1
 
