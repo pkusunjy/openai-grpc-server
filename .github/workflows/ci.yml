@@ -13,16 +13,9 @@ jobs:
     - name: checkout repository
       uses: actions/checkout@v4
 
-    - name: Switch to gcc10
-      uses: egor-tensin/setup-gcc@v1.3
-      with:
-        version: 10
-        platform: x64
-        cc: 1
-
     - name: Build
       run: |
-        bazel build //... --platforms=//:linux_x86
+        bazel build //...
         mkdir -p output/bin output/conf
         mv ./bazel-bin/src/ielts_ai output/bin/
         mv ./conf/* output/conf/
