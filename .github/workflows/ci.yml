@@ -13,23 +13,18 @@ jobs:
     - name: checkout repository
       uses: actions/checkout@v4
 
+    - name: Switch to gcc8
+      uses: egor-tensin/setup-gcc@v1.3
+      with:
+        version: 8
+        platform: x64
+
     - name: Build
       run: |
-        bazel build //...
+        bazel build //... --platforms=//:linux_x86
         mkdir -p output/bin output/conf
         mv ./bazel-bin/src/ielts_ai output/bin/
         mv ./conf/* output/conf/
-        # zip -r output output/*
-
-    # - uses: actions/upload-artifact@v4
-    #   with:
-    #     name: main-artifact
-    #     path: ./output/
-
-    # - uses: actions/download-artifact@v4
-    #   with:
-    #     name: main-artifact
-    #     path: ./output/
 
     - name: Deploy
       uses: appleboy/scp-action@v0.1.7
