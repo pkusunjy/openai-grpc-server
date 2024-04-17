@@ -7,8 +7,8 @@
 namespace plugin {
 
 DefaultLogSink::DefaultLogSink() :
-        _log_name("./ielts_ai.log"),
-        _log_name_wf("./ielts_ai.log.wf"),
+        _log_name("../logs/ielts_ai.log"),
+        _log_name_wf("../logs/ielts_ai.log.wf"),
         _os(_log_name, std::ios::app),
         _os_wf(_log_name_wf, std::ios::app) {
     _civil_hour = absl::ToCivilHour(absl::Now(), _time_zone);
