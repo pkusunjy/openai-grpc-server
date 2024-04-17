@@ -21,15 +21,15 @@ jobs:
         mv ./conf/* output/conf/
         # zip -r output output/*
 
-    - uses: actions/upload-artifact@v4
-      with:
-        name: main-artifact
-        path: ./output/
+    # - uses: actions/upload-artifact@v4
+    #   with:
+    #     name: main-artifact
+    #     path: ./output/
 
-    - uses: actions/download-artifact@v4
-      with:
-        name: main-artifact
-        path: ./output/
+    # - uses: actions/download-artifact@v4
+    #   with:
+    #     name: main-artifact
+    #     path: ./output/
 
     - name: Deploy
       uses: appleboy/scp-action@v0.1.7
