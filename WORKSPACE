@@ -43,3 +43,10 @@ http_archive(
     strip_prefix = 'yaml-cpp-0.8.0',
     sha256 = 'fbe74bbdcee21d656715688706da3c8becfd946d92cd44705cc6098bb23b3a16',
 )
+
+http_archive(
+    name = 'com_github_pkusunjy_openai_server_proto',
+    urls = ['https://github.com/pkusunjy/openai-server-proto/archive/v0.0.1.tar.gz'],
+    strip_prefix = 'openai-server-proto-0.0.1',
+    sha256 = '6112d5a21547b685b14007bc9e5602f00c73e76bb6405549d75bdde3ed66f033',
+)

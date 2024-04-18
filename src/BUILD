@@ -21,7 +21,7 @@ cc_binary(
     name = 'client_article',
     srcs = ['client_article.cpp'],
     deps = [
-        '//proto:chat_completion_cc_grpc',
+        '@com_github_pkusunjy_openai_server_proto//:chat_completion_cc_grpc',
         '@com_github_grpc_grpc//:grpc++',
         '@com_google_absl//absl/flags:flag',
         '@com_google_absl//absl/flags:parse',
@@ -32,7 +32,7 @@ cc_binary(
     name = 'client_transcribe',
     srcs = ['client_transcribe.cpp'],
     deps = [
-        '//proto:chat_completion_cc_grpc',
+        '@com_github_pkusunjy_openai_server_proto//:chat_completion_cc_grpc',
         '@com_github_grpc_grpc//:grpc++',
         '@com_google_absl//absl/flags:flag',
         '@com_google_absl//absl/flags:parse',

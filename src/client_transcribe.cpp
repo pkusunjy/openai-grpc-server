@@ -8,7 +8,7 @@
 
 #include <grpcpp/grpcpp.h>
 
-#include "proto/chat_completion.grpc.pb.h"
+#include "chat_completion.grpc.pb.h"
 
 ABSL_FLAG(std::string, target, "localhost:8123", "Server address");
 ABSL_FLAG(std::string, query, "", "your input");

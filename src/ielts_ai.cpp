@@ -9,7 +9,7 @@
 #include "absl/log/log_sink_registry.h"
 #include "absl/strings/str_format.h"
 
-#include "proto/chat_completion.pb.h"
+#include "chat_completion.pb.h"
 #include "src/plugin/log_sink.h"
 #include "src/service/ielts_ai.h"
 
@@ -51,6 +51,7 @@ int32_t main(int32_t argc, char* argv[]) {
     LOG(INFO) << "Server listening on " << server_addr;
 
     server->Wait();
-    
+
+    LOG(INFO) << "Server stopped on " << server_addr;
     return 0;
 }
