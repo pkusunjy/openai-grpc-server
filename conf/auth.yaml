@@ -1,2 +1,3 @@
+openai_api_key: OPENAI_API_KEY
 wx_appid: TOKEN_WX_APPID
 wx_secret: TOKEN_WX_SECRET

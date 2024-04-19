@@ -19,6 +19,7 @@ jobs:
         mkdir -p output/bin output/conf
         mv ./bazel-bin/src/ielts_ai output/bin/
         mv ./conf/* output/conf/
+        sed -i "s/OPENAI_API_KEY/${{ secrets.OPENAI_API_KEY }}/g" output/conf/auth.yaml
         sed -i "s/TOKEN_WX_APPID/${{ secrets.TOKEN_WX_APPID }}/g" output/conf/auth.yaml
         sed -i "s/TOKEN_WX_SECRET/${{ secrets.TOKEN_WX_SECRET }}/g" output/conf/auth.yaml
 

@@ -30,12 +30,16 @@ int32_t main(int32_t argc, char* argv[]) {
 
     LOG(INFO) << "cpp version: " << __cplusplus;
 
-    if (plugin::TokenFactory::instance().initialize() != 0) {
+    auto& token_instance = plugin::TokenFactory::instance();
+    if (token_instance.initialize() != 0) {
         return 0;
     }
 
-    if (!liboai::Authorization::Authorizer().SetKeyEnv("OPENAI_API_KEY")) {
-        LOG(WARNING) << "OPENAI_API_KEY not found in env, server quit";
+    std::string openai_api_key = token_instance.get_token_by_name("openai_api_key");
+    LOG(INFO) << "openai_api_key: " << openai_api_key;
+
+    if (!liboai::Authorization::Authorizer().SetKey(openai_api_key)) {
+        LOG(WARNING) << "OPENAI_API_KEY not found, server quit";
         return 0;
     }
 
