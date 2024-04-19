@@ -9,7 +9,8 @@ namespace auth {
 
 grpc::Status AuthImpl::get_wx_miniprogram_token(grpc::ServerContext* ctx, const AuthRequest* req, AuthResponse* resp) {
     auto& instance = plugin::TokenFactory::instance();
-    resp->set_token(instance.get_token_by_name("wx_miniprogram"));
+    resp->set_appid(instance.get_token_by_name("wx_appid"));
+    resp->set_secret(instance.get_token_by_name("wx_secret"));
     return grpc::Status::OK;
 }
 

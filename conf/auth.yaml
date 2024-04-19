@@ -1,1 +1,2 @@
-wx_miniprogram: TOKEN_WX_MINIPROGRAM
+wx_appid: TOKEN_WX_APPID
+wx_secret: TOKEN_WX_SECRET
