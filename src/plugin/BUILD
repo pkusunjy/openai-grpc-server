@@ -12,3 +12,17 @@ cc_library(
         '@com_google_absl//absl/time',
     ],
 )
+
+cc_library(
+    name = 'token',
+    srcs = ['token.cpp'],
+    hdrs = ['token.h'],
+    deps = [
+        '@com_github_jbeder_yaml_cpp//:yaml-cpp',
+        '@com_google_absl//absl/flags:flag',
+        '@com_google_absl//absl/flags:parse',
+        '@com_google_absl//absl/log',
+        '@com_google_absl//absl/strings',
+        '@com_google_absl//absl/time',
+    ],
+)

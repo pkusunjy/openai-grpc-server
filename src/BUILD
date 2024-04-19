@@ -7,6 +7,8 @@ cc_binary(
     srcs = ['ielts_ai.cpp'],
     deps = [
         '//src/plugin:log_sink',
+        '//src/plugin:token',
+        '//src/service:auth',
         '//src/service:ielts_ai',
         '@com_google_absl//absl/flags:flag',
         '@com_google_absl//absl/flags:parse',

@@ -6,7 +6,7 @@
 
 #include "components/audio.h"
 #include "components/chat.h"
-#include "chat_completion.grpc.pb.h"
+#include "chat_completion/chat_completion.grpc.pb.h"
 
 namespace chat_completion {
 
