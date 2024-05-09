@@ -9,10 +9,12 @@
 namespace auth {
 
 class AuthImpl final : public AuthService::Service {
-public:
-    AuthImpl() = default;
-    virtual ~AuthImpl() = default;
-    grpc::Status get_wx_miniprogram_token(grpc::ServerContext*, const AuthRequest*, AuthResponse*) override;
+ public:
+  AuthImpl() = default;
+  virtual ~AuthImpl() = default;
+  grpc::Status get_wx_miniprogram_token(grpc::ServerContext*,
+                                        const AuthRequest*,
+                                        AuthResponse*) override;
 };
 
-}
+}  // namespace auth
