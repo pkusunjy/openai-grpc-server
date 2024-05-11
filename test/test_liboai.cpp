@@ -11,8 +11,7 @@ TEST(liboai, chat_completion) {
   liboai::Conversation convo;
   convo.AddUserData("What is the point of taxes?");
 
-  liboai::Response response =
-      oai.ChatCompletion->create("gpt-3.5-turbo", convo);
+  liboai::Response response = oai.ChatCompletion->create("gpt-3.5-turbo", convo);
   convo.Update(response);
   EXPECT_FALSE(convo.GetLastResponse().empty());
   std::cout << convo.GetLastResponse() << std::endl;

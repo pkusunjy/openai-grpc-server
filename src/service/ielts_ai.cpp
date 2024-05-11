@@ -1,4 +1,4 @@
-#include "ielts_ai.h"
+#include "src/service/ielts_ai.h"
 
 #include <regex>
 
@@ -29,65 +29,54 @@ int32_t IeltsAI::initialize() {
   return 0;
 }
 
-grpc::Status IeltsAI::ask(grpc::ServerContext* ctx, const ChatMessage* req,
-                          ChatMessage* resp) {
+grpc::Status IeltsAI::ask(grpc::ServerContext* ctx, const ChatMessage* req, ChatMessage* resp) {
   if (_chat_completion == nullptr) {
     LOG(WARNING) << "openai chat completion not ready";
-    return grpc::Status(grpc::StatusCode::UNAUTHENTICATED,
-                        "openai chat completion nullptr");
+    return grpc::Status(grpc::StatusCode::UNAUTHENTICATED, "openai chat completion nullptr");
   }
   absl::Time step1 = absl::Now();
   liboai::Conversation convo;
   if (!convo.SetSystemData(_system_data)) {
     LOG(WARNING) << "set system data failed";
-    return grpc::Status(grpc::StatusCode::FAILED_PRECONDITION,
-                        "conversion system data not set");
+    return grpc::Status(grpc::StatusCode::FAILED_PRECONDITION, "conversion system data not set");
   }
   absl::Time step2 = absl::Now();
   if (!convo.AddUserData(req->content())) {
     LOG(WARNING) << "input data empty";
-    return grpc::Status(grpc::StatusCode::INVALID_ARGUMENT,
-                        "input empty, check your input");
+    return grpc::Status(grpc::StatusCode::INVALID_ARGUMENT, "input empty, check your input");
   }
   absl::Time step3 = absl::Now();
-  liboai::Response openai_resp =
-      _chat_completion->create("gpt-3.5-turbo", convo);
+  liboai::Response openai_resp = _chat_completion->create("gpt-3.5-turbo", convo);
   absl::Time step4 = absl::Now();
   if (!convo.Update(openai_resp)) {
     LOG(WARNING) << "update conversion failed";
     return grpc::Status(grpc::StatusCode::INTERNAL, "internal error");
   }
   absl::Time step5 = absl::Now();
-  LOG(INFO) << "dealing with " << req->content() << " SetSystemData "
-            << absl::ToDoubleMilliseconds(step2 - step1) << " AddUserData "
-            << absl::ToDoubleMilliseconds(step3 - step2) << " CreateCompletion "
-            << absl::ToDoubleMilliseconds(step4 - step3) << " Update "
-            << absl::ToDoubleMilliseconds(step5 - step4) << ", total cost time "
-            << absl::ToDoubleMilliseconds(step5 - step1);
+  LOG(INFO) << "dealing with " << req->content() << " SetSystemData " << absl::ToDoubleMilliseconds(step2 - step1)
+            << " AddUserData " << absl::ToDoubleMilliseconds(step3 - step2) << " CreateCompletion "
+            << absl::ToDoubleMilliseconds(step4 - step3) << " Update " << absl::ToDoubleMilliseconds(step5 - step4)
+            << ", total cost time " << absl::ToDoubleMilliseconds(step5 - step1);
   resp->set_content(convo.GetLastResponse());
   return grpc::Status::OK;
 }
 
-grpc::Status IeltsAI::write_article_by_title(
-    grpc::ServerContext* ctx, const ChatMessage* req,
-    grpc::ServerWriter<ChatMessage>* stream) {
+grpc::Status IeltsAI::write_article_by_title(grpc::ServerContext* ctx, const ChatMessage* req,
+                                             grpc::ServerWriter<ChatMessage>* stream) {
   if (_chat_completion == nullptr) {
     LOG(WARNING) << "openai chat completion not ready";
-    return grpc::Status(grpc::StatusCode::UNAUTHENTICATED,
-                        "openai chat completion nullptr");
+    return grpc::Status(grpc::StatusCode::UNAUTHENTICATED, "openai chat completion nullptr");
   }
   absl::Time step1 = absl::Now();
   liboai::Conversation convo;
   if (!convo.SetSystemData(_system_data)) {
     LOG(WARNING) << "set system data failed";
-    return grpc::Status(grpc::StatusCode::FAILED_PRECONDITION,
-                        "conversion system data not set");
+    return grpc::Status(grpc::StatusCode::FAILED_PRECONDITION, "conversion system data not set");
   }
   absl::Time step2 = absl::Now();
   if (!convo.AddUserData(req->content())) {
     LOG(WARNING) << "input data empty";
-    return grpc::Status(grpc::StatusCode::INVALID_ARGUMENT,
-                        "input empty, check your input");
+    return grpc::Status(grpc::StatusCode::INVALID_ARGUMENT, "input empty, check your input");
   }
 
   std::regex pattern{"\"content\":\"(.*?)\""};
@@ -106,35 +95,28 @@ grpc::Status IeltsAI::write_article_by_title(
   };
 
   absl::Time step3 = absl::Now();
-  auto openai_resp = _chat_completion->create_async(
-      "gpt-3.5-turbo", convo, std::nullopt, std::nullopt, std::nullopt,
-      stream_handler);
+  auto openai_resp =
+      _chat_completion->create_async("gpt-3.5-turbo", convo, std::nullopt, std::nullopt, std::nullopt, stream_handler);
 
   openai_resp.wait();
 
   absl::Time step4 = absl::Now();
-  LOG(INFO) << "logid " << req->logid() << " uid " << req->uid() << " content "
-            << req->content() << " SetSystemData "
-            << absl::ToDoubleMilliseconds(step2 - step1) << " AddUserData "
-            << absl::ToDoubleMilliseconds(step3 - step2) << " CreateCompletion "
-            << absl::ToDoubleMilliseconds(step4 - step3) << ", total cost time "
+  LOG(INFO) << "logid " << req->logid() << " uid " << req->uid() << " content " << req->content() << " SetSystemData "
+            << absl::ToDoubleMilliseconds(step2 - step1) << " AddUserData " << absl::ToDoubleMilliseconds(step3 - step2)
+            << " CreateCompletion " << absl::ToDoubleMilliseconds(step4 - step3) << ", total cost time "
             << absl::ToDoubleMilliseconds(step4 - step1);
   return grpc::Status::OK;
 }
 
-grpc::Status IeltsAI::transcribe_judge(grpc::ServerContext* ctx,
-                                       const ChatMessage* req,
-                                       ChatMessage* resp) {
+grpc::Status IeltsAI::transcribe_judge(grpc::ServerContext* ctx, const ChatMessage* req, ChatMessage* resp) {
   if (_audio == nullptr) {
     LOG(WARNING) << "openai audio not ready";
-    return grpc::Status(grpc::StatusCode::UNAUTHENTICATED,
-                        "openai audio nullptr");
+    return grpc::Status(grpc::StatusCode::UNAUTHENTICATED, "openai audio nullptr");
   }
   absl::Time step1 = absl::Now();
   // 1. write audio data to local file (up to 25MB, according to official
   // documents);
-  std::string filename =
-      absl::StrFormat("./temp_%llu_%llu.mp3", req->uid(), req->logid());
+  std::string filename = absl::StrFormat("./temp_%llu_%llu.mp3", req->uid(), req->logid());
   std::ofstream os(filename, std::ios::trunc | std::ios::binary);
   os << req->content();
   os.close();
@@ -148,17 +130,14 @@ grpc::Status IeltsAI::transcribe_judge(grpc::ServerContext* ctx,
   if (unlink(filename.c_str()) < 0) {
     char buf[256];
     strerror_r(errno, buf, 256);
-    LOG(WARNING) << "unlink failed file: " << filename << ", errno: " << errno
-                 << ", errmsg: " << buf;
+    LOG(WARNING) << "unlink failed file: " << filename << ", errno: " << errno << ", errmsg: " << buf;
   }
   absl::Time step4 = absl::Now();
-  LOG(INFO) << "logid " << req->logid() << " uid " << req->uid()
-            << " write_disk " << absl::ToDoubleMilliseconds(step2 - step1)
-            << " transcribe " << absl::ToDoubleMilliseconds(step3 - step2)
-            << " unlink " << absl::ToDoubleMilliseconds(step4 - step3)
-            << ", total cost time "
+  LOG(INFO) << "logid " << req->logid() << " uid " << req->uid() << " write_disk "
+            << absl::ToDoubleMilliseconds(step2 - step1) << " transcribe " << absl::ToDoubleMilliseconds(step3 - step2)
+            << " unlink " << absl::ToDoubleMilliseconds(step4 - step3) << ", total cost time "
             << absl::ToDoubleMilliseconds(step4 - step1);
   return grpc::Status::OK;
 }
 
-}  // namespace chat_completion
+} // namespace chat_completion

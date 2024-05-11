@@ -21,4 +21,4 @@ std::string TokenFactory::get_token_by_name(const std::string& name) {
   return _config[name] ? _config[name].as<std::string>() : "";
 }
 
-}  // namespace plugin
+} // namespace plugin

@@ -1,11 +1,11 @@
 cc_test(
-    name = "test_babylon",
+    name = "test_graph",
     srcs = [
         "main.cpp",
-        "test_babylon.cpp",
+        "test_graph.cpp",
     ],
     deps = [
-        "@com_github_baidu_babylon//:anyflow",
+        "//src/processor",
         "@com_google_googletest//:gtest",
     ],
 )

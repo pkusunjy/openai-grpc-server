@@ -1,2 +1,7 @@
 Language: Cpp
-BasedOnStyle:	Google
+BasedOnStyle: Google
+ColumnLimit: 120
+MaxEmptyLinesToKeep: 1
+SpacesBeforeTrailingComments: 1
+AllowShortFunctionsOnASingleLine: Empty
+AllowShortLambdasOnASingleLine: Empty

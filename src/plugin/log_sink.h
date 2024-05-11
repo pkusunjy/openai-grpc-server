@@ -25,4 +25,4 @@ class DefaultLogSink : public absl::LogSink {
   std::mutex _mu;
 };
 
-}  // namespace plugin
+} // namespace plugin

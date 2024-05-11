@@ -35,8 +35,7 @@ int32_t main(int32_t argc, char* argv[]) {
     return 0;
   }
 
-  std::string openai_api_key =
-      token_instance.get_token_by_name("openai_api_key");
+  std::string openai_api_key = token_instance.get_token_by_name("openai_api_key");
   LOG(INFO) << "openai_api_key: " << openai_api_key;
 
   if (!liboai::Authorization::Authorizer().SetKey(openai_api_key)) {
@@ -49,8 +48,7 @@ int32_t main(int32_t argc, char* argv[]) {
 
   grpc::ServerBuilder builder;
 
-  std::string server_addr =
-      absl::StrFormat("0.0.0.0:%d", absl::GetFlag(FLAGS_port));
+  std::string server_addr = absl::StrFormat("0.0.0.0:%d", absl::GetFlag(FLAGS_port));
   builder.AddListeningPort(server_addr, grpc::InsecureServerCredentials());
 
   // auth

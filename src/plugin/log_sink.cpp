@@ -27,16 +27,14 @@ void DefaultLogSink::Send(const absl::LogEntry& entry) {
     std::unique_lock<std::mutex> lock_guard(_mu);
     // xxx.log.2024010106
     _os.close();
-    std::string old_log = absl::StrFormat(
-        "%s.%llu%02d%02d%02d", _log_name, _civil_hour.year(),
-        _civil_hour.month(), _civil_hour.day(), _civil_hour.hour());
+    std::string old_log = absl::StrFormat("%s.%llu%02d%02d%02d", _log_name, _civil_hour.year(), _civil_hour.month(),
+                                          _civil_hour.day(), _civil_hour.hour());
     rename(_log_name.c_str(), old_log.c_str());
     _os.open(_log_name, std::ios::app);
     // xxx.log.wf.2024010106
     _os_wf.close();
-    std::string old_log_wf = absl::StrFormat(
-        "%s.%llu%02d%02d%02d", _log_name_wf, _civil_hour.year(),
-        _civil_hour.month(), _civil_hour.day(), _civil_hour.hour());
+    std::string old_log_wf = absl::StrFormat("%s.%llu%02d%02d%02d", _log_name_wf, _civil_hour.year(),
+                                             _civil_hour.month(), _civil_hour.day(), _civil_hour.hour());
     rename(_log_name_wf.c_str(), old_log_wf.c_str());
     _os_wf.open(_log_name_wf, std::ios::app);
     _civil_hour = cur;
@@ -50,4 +48,4 @@ void DefaultLogSink::Send(const absl::LogEntry& entry) {
   }
 }
 
-}  // namespace plugin
+} // namespace plugin

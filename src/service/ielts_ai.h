@@ -15,13 +15,10 @@ class IeltsAI final : public ChatService::Service {
   IeltsAI() = default;
   virtual ~IeltsAI() = default;
   int32_t initialize();
-  grpc::Status ask(grpc::ServerContext*, const ChatMessage*,
-                   ChatMessage*) override;
-  grpc::Status write_article_by_title(
-      grpc::ServerContext*, const ChatMessage*,
-      grpc::ServerWriter<ChatMessage>*) override;
-  grpc::Status transcribe_judge(grpc::ServerContext*, const ChatMessage*,
-                                ChatMessage*) override;
+  grpc::Status ask(grpc::ServerContext*, const ChatMessage*, ChatMessage*) override;
+  grpc::Status write_article_by_title(grpc::ServerContext*, const ChatMessage*,
+                                      grpc::ServerWriter<ChatMessage>*) override;
+  grpc::Status transcribe_judge(grpc::ServerContext*, const ChatMessage*, ChatMessage*) override;
 
  private:
   std::unique_ptr<liboai::Audio> _audio;
@@ -30,4 +27,4 @@ class IeltsAI final : public ChatService::Service {
   std::string _system_data;
 };
 
-}  // namespace chat_completion
+} // namespace chat_completion

@@ -19,4 +19,4 @@ class TokenFactory final {
   YAML::Node _config;
 };
 
-}  // namespace plugin
+} // namespace plugin
