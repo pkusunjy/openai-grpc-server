@@ -1,5 +1,6 @@
 #include "src/service/ielts_ai.h"
 
+#include <fstream>
 #include <iostream>
 #include <memory>
 #include <string>
@@ -11,6 +12,7 @@
 #include "absl/log/log_sink_registry.h"
 #include "absl/strings/str_format.h"
 #include "auth/auth.pb.h"
+#include "boost/scope_exit.hpp"
 #include "chat_completion/chat_completion.pb.h"
 #include "liboai.h"
 #include "src/plugin/log_sink.h"
@@ -18,8 +20,15 @@
 #include "src/service/auth.h"
 
 ABSL_FLAG(uint16_t, port, 8123, "Server port for the service");
-// ABSL_FLAG(std::string, log_file, "test.log", "File to write log messages
-// to");
+
+std::string ReadFileContent(std::string_view filename) {
+  std::ifstream ifs(filename.data());
+  BOOST_SCOPE_EXIT(&ifs) {
+    ifs.close();
+  }
+  BOOST_SCOPE_EXIT_END
+  return std::string((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
+}
 
 int32_t main(int32_t argc, char* argv[]) {
   absl::ParseCommandLine(argc, argv);
@@ -47,9 +56,13 @@ int32_t main(int32_t argc, char* argv[]) {
   grpc::reflection::InitProtoReflectionServerBuilderPlugin();
 
   grpc::ServerBuilder builder;
+  grpc::SslServerCredentialsOptions ssl_opts;
+  ssl_opts.pem_root_certs = "";
+  ssl_opts.pem_key_cert_pairs.push_back(grpc::SslServerCredentialsOptions::PemKeyCertPair{
+      ReadFileContent("./cert/privkey.key"), ReadFileContent("./cert/cert_chain.pem")});
 
   std::string server_addr = absl::StrFormat("0.0.0.0:%d", absl::GetFlag(FLAGS_port));
-  builder.AddListeningPort(server_addr, grpc::InsecureServerCredentials());
+  builder.AddListeningPort(server_addr, grpc::SslServerCredentials(ssl_opts));
 
   // auth
   auth::AuthImpl auth_service;
