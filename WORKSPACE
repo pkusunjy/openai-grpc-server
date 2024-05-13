@@ -68,9 +68,9 @@ load("@com_github_nelhage_rules_boost//:boost/boost.bzl", "boost_deps")
 
 boost_deps()
 
-http_archive(
-    name = "com_github_baidu_babylon",
-    sha256 = "626c30f7df34dee8b735d8cabd8779ceb1a9274fd73285ec850f522ad36aa7eb",
-    strip_prefix = "babylon-1.1.3",
-    urls = ["https://github.com/baidu/babylon/archive/v1.1.3.tar.gz"],
-)
+# http_archive(
+#     name = "com_github_baidu_babylon",
+#     sha256 = "626c30f7df34dee8b735d8cabd8779ceb1a9274fd73285ec850f522ad36aa7eb",
+#     strip_prefix = "babylon-1.1.3",
+#     urls = ["https://github.com/baidu/babylon/archive/v1.1.3.tar.gz"],
+# )

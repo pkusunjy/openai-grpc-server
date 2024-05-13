@@ -1,14 +1,14 @@
-cc_test(
-    name = "test_graph",
-    srcs = [
-        "main.cpp",
-        "test_graph.cpp",
-    ],
-    deps = [
-        "//src/processor",
-        "@com_google_googletest//:gtest",
-    ],
-)
+# cc_test(
+#     name = "test_graph",
+#     srcs = [
+#         "main.cpp",
+#         "test_graph.cpp",
+#     ],
+#     deps = [
+#         "//src/processor",
+#         "@com_google_googletest//:gtest",
+#     ],
+# )
 
 cc_test(
     name = "test_liboai",

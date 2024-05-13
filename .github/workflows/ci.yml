@@ -15,16 +15,14 @@ jobs:
 
     - name: Build
       run: |
+        sed -i "s/OPENAI_API_KEY/${{ secrets.OPENAI_API_KEY }}/g" ./conf/auth.yaml
+        sed -i "s/TOKEN_WX_APPID/${{ secrets.TOKEN_WX_APPID }}/g" ./conf/auth.yaml
+        sed -i "s/TOKEN_WX_SECRET/${{ secrets.TOKEN_WX_SECRET }}/g" ./conf/auth.yaml
         bazel build //...
         mkdir -p output/bin output/cert output/conf
         mv ./bazel-bin/src/ielts_ai output/bin/
         mv ./cert/* output/cert/
         mv ./conf/* output/conf/
-        sed -i "s/OPENAI_API_KEY/${{ secrets.OPENAI_API_KEY }}/g" output/conf/auth.yaml
-        sed -i "s/TOKEN_WX_APPID/${{ secrets.TOKEN_WX_APPID }}/g" output/conf/auth.yaml
-        sed -i "s/TOKEN_WX_SECRET/${{ secrets.TOKEN_WX_SECRET }}/g" output/conf/auth.yaml
-        sed -i "s/CERTIFICATE/${{ secrets.CERTIFICATE }}/g" output/cert/cert_chain.pem
-        sed -i "s/RSA_PRIVATE_KEY/${{ secrets.RSA_PRIVATE_KEY }}/g" output/cert/privkey.key
 
     - name: Backup old version
       uses: appleboy/ssh-action@master
