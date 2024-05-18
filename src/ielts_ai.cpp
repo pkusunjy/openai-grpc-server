@@ -21,6 +21,8 @@
 
 ABSL_FLAG(uint16_t, port, 8123, "Server port for the service");
 ABSL_FLAG(bool, offline_mode, false, "Whether enable ssl certification");
+ABSL_FLAG(std::string, private_key, "/home/work/cert/privkey.key", "private key file");
+ABSL_FLAG(std::string, cert_chain, "/home/work/cert/cert_chain.pem", "cert chain file");
 
 std::string ReadFileContent(std::string_view filename) {
   std::ifstream ifs(filename.data());
@@ -64,7 +66,7 @@ int32_t main(int32_t argc, char* argv[]) {
     grpc::SslServerCredentialsOptions ssl_opts;
     ssl_opts.pem_root_certs = "";
     ssl_opts.pem_key_cert_pairs.push_back(grpc::SslServerCredentialsOptions::PemKeyCertPair{
-        ReadFileContent("./cert/privkey.key"), ReadFileContent("./cert/cert_chain.pem")});
+        ReadFileContent(absl::GetFlag(FLAGS_private_key)), ReadFileContent(absl::GetFlag(FLAGS_cert_chain))});
     builder.AddListeningPort(server_addr, grpc::SslServerCredentials(ssl_opts));
   }
 

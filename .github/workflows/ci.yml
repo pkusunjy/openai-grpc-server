@@ -14,19 +14,13 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Build
-      env:
-        CERTIFICATE: ${{ secrets.CERTIFICATE }}
-        RSA_PRIVATE_KEY: ${{ secrets.RSA_PRIVATE_KEY }}
       run: |
-        echo -e ${CERTIFICATE} > ./cert/cert_chain.pem
-        echo -e ${RSA_PRIVATE_KEY} > ./cert/privkey.key
         sed -i "s/OPENAI_API_KEY/${{ secrets.OPENAI_API_KEY }}/g" ./conf/auth.yaml
         sed -i "s/TOKEN_WX_APPID/${{ secrets.TOKEN_WX_APPID }}/g" ./conf/auth.yaml
         sed -i "s/TOKEN_WX_SECRET/${{ secrets.TOKEN_WX_SECRET }}/g" ./conf/auth.yaml
         bazel build //...
-        mkdir -p output/bin output/cert output/conf
+        mkdir -p output/bin output/conf
         mv ./bazel-bin/src/ielts_ai output/bin/
-        mv ./cert/* output/cert/
         mv ./conf/* output/conf/
 
     - name: Backup old version
