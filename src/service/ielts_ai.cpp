@@ -24,8 +24,10 @@ int32_t IeltsAI::initialize() {
   }
   _model = "gpt-3.5-turbo";
   _system_data =
-      "You are an ielts teacher, I give you a title, you generate a writing "
-      "article";
+      "You are now an ielts teacher. "
+      "I give you a title, you generate a writing article. "
+      "This article should have at least 250 words and at most 300 words. "
+      "This article should not talk anything about Chinese politics";
   return 0;
 }
 

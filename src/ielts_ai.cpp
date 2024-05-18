@@ -20,6 +20,7 @@
 #include "src/service/auth.h"
 
 ABSL_FLAG(uint16_t, port, 8123, "Server port for the service");
+ABSL_FLAG(bool, offline_mode, false, "Whether enable ssl certification");
 
 std::string ReadFileContent(std::string_view filename) {
   std::ifstream ifs(filename.data());
@@ -56,13 +57,16 @@ int32_t main(int32_t argc, char* argv[]) {
   grpc::reflection::InitProtoReflectionServerBuilderPlugin();
 
   grpc::ServerBuilder builder;
-  grpc::SslServerCredentialsOptions ssl_opts;
-  ssl_opts.pem_root_certs = "";
-  ssl_opts.pem_key_cert_pairs.push_back(grpc::SslServerCredentialsOptions::PemKeyCertPair{
-      ReadFileContent("./cert/privkey.key"), ReadFileContent("./cert/cert_chain.pem")});
-
   std::string server_addr = absl::StrFormat("0.0.0.0:%d", absl::GetFlag(FLAGS_port));
-  builder.AddListeningPort(server_addr, grpc::SslServerCredentials(ssl_opts));
+  if (absl::GetFlag(FLAGS_offline_mode)) {
+    builder.AddListeningPort(server_addr, grpc::InsecureServerCredentials());
+  } else {
+    grpc::SslServerCredentialsOptions ssl_opts;
+    ssl_opts.pem_root_certs = "";
+    ssl_opts.pem_key_cert_pairs.push_back(grpc::SslServerCredentialsOptions::PemKeyCertPair{
+        ReadFileContent("./cert/privkey.key"), ReadFileContent("./cert/cert_chain.pem")});
+    builder.AddListeningPort(server_addr, grpc::SslServerCredentials(ssl_opts));
+  }
 
   // auth
   auth::AuthImpl auth_service;
