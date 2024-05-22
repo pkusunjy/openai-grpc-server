@@ -26,3 +26,13 @@ cc_library(
         "@com_google_absl//absl/time",
     ],
 )
+
+cc_library(
+    name = "redis_client",
+    srcs = ["redis_client.cpp"],
+    hdrs = ["redis_client.h"],
+    deps = [
+        "@com_github_cpp_redis//:cpp_redis",
+        "//src/plugin:log_sink",
+    ],
+)

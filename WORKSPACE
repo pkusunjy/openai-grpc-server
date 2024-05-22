@@ -68,6 +68,20 @@ load("@com_github_nelhage_rules_boost//:boost/boost.bzl", "boost_deps")
 
 boost_deps()
 
+http_archive(
+    name = "tacopie",
+    sha256 = "bbdebecdb68d5f9eb64170217000daf844e0aee18b8c4d3dd373d07efd9f7316",
+    strip_prefix = "tacopie-master",
+    url = "https://github.com/cylix/tacopie/archive/master.zip",
+)
+
+http_archive(
+    name = "com_github_cpp_redis",
+    sha256 = "a759911f535266c2ecde1e426bc8d4f17c26cef09e8a3d94ae973160de988d8b",
+    strip_prefix = "cpp_redis-master",
+    urls = ["https://github.com/cpp-redis/cpp_redis/archive/refs/heads/master.zip"],
+)
+
 # http_archive(
 #     name = "com_github_baidu_babylon",
 #     sha256 = "626c30f7df34dee8b735d8cabd8779ceb1a9274fd73285ec850f522ad36aa7eb",

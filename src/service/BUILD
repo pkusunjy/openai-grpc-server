@@ -20,6 +20,7 @@ cc_library(
     hdrs = ["ielts_ai.h"],
     deps = [
         "//src/plugin:log_sink",
+        "//src/plugin:redis_client",
         "@com_github_d7ead_liboai//:oai",
         "@com_github_grpc_grpc//:grpc++",
         "@com_github_grpc_grpc//:grpc++_reflection",
