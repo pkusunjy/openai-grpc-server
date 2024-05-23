@@ -32,11 +32,11 @@ cc_library(
     srcs = ["redis_client.cpp"],
     hdrs = ["redis_client.h"],
     deps = [
+        "//src/plugin:log_sink",
+        "@com_github_cpp_redis//:cpp_redis",
         "@com_github_jbeder_yaml_cpp//:yaml-cpp",
         "@com_google_absl//absl/flags:flag",
         "@com_google_absl//absl/flags:parse",
         "@com_google_absl//absl/log",
-        "@com_github_cpp_redis//:cpp_redis",
-        "//src/plugin:log_sink",
     ],
 )

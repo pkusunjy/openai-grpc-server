@@ -1,16 +1,15 @@
-#include "src/service/ielts_ai.h"
-
 #include <regex>
 
 #include "absl/log/log.h"
 #include "absl/strings/str_format.h"
 #include "absl/strings/str_split.h"
 #include "absl/time/time.h"
+#include "src/service/ielts_ai.h"
 
 namespace chat_completion {
 
 grpc::Status IeltsAI::ielts_speaking_p1_generate(grpc::ServerContext* ctx, const ChatMessage* req,
-                                             grpc::ServerWriter<ChatMessage>* stream) {
+                                                 grpc::ServerWriter<ChatMessage>* stream) {
   if (_audio == nullptr || _chat_completion == nullptr) {
     LOG(WARNING) << "ielts_speaking_p1_generate not ready";
     return grpc::Status(grpc::StatusCode::FAILED_PRECONDITION, "ielts_speaking_p1_generate not ready");
@@ -35,9 +34,9 @@ grpc::Status IeltsAI::ielts_speaking_p1_generate(grpc::ServerContext* ctx, const
   }
   absl::Time step4 = absl::Now();
   liboai::Conversation convo;
-  std::string system_data = 
+  std::string system_data =
       "You are now an ielts speaking teacher. "
-      "I give you a question, which transcribed from an audio. "
+      "I give you a question, which is transcribed from an audio by openai whisper. "
       "You should give an appropriate answer with no more than 1000 characters. ";
   if (!convo.SetSystemData(system_data)) {
     LOG(WARNING) << "set system data failed";
