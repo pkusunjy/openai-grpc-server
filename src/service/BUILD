@@ -16,7 +16,10 @@ cc_library(
 
 cc_library(
     name = "ielts_ai",
-    srcs = ["ielts_ai.cpp"],
+    srcs = [
+        "ielts_ai.cpp",
+        "ielts_speaking_p1_generate.cpp",
+    ],
     hdrs = ["ielts_ai.h"],
     deps = [
         "//src/plugin:log_sink",

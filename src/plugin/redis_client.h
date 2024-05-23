@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cpp_redis/cpp_redis>
+#include "yaml-cpp/yaml.h"
 
 namespace plugin {
 
@@ -13,10 +14,11 @@ public:
     RedisClient() = default;
     ~RedisClient() = default;
     int32_t initialize();
-    void sync_commit();
+    void commit();
 
 private:
     cpp_redis::client _client;
+    YAML::Node _config;
 };
 
 }

@@ -19,6 +19,9 @@ class IeltsAI final : public ChatService::Service {
   grpc::Status write_article_by_title(grpc::ServerContext*, const ChatMessage*,
                                       grpc::ServerWriter<ChatMessage>*) override;
   grpc::Status transcribe_judge(grpc::ServerContext*, const ChatMessage*, ChatMessage*) override;
+  // 雅思口语P1
+  grpc::Status ielts_speaking_p1_generate(grpc::ServerContext*, const ChatMessage*,
+                                      grpc::ServerWriter<ChatMessage>*) override;
 
  private:
   std::unique_ptr<liboai::Audio> _audio;

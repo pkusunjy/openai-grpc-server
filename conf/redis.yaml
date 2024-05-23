@@ -1,0 +1,3 @@
+host: REDIS_HOST
+port: REDIS_PORT
+db: 10
