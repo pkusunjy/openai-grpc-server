@@ -23,11 +23,6 @@ int32_t IeltsAI::initialize() {
     return -1;
   }
   _model = "gpt-3.5-turbo";
-  _system_data =
-      "You are now an ielts teacher. "
-      "I give you a title, you generate a writing article. "
-      "This article should have at least 250 words and at most 300 words. "
-      "This article should not talk anything about Chinese politics";
   return 0;
 }
 
@@ -38,7 +33,12 @@ grpc::Status IeltsAI::ask(grpc::ServerContext* ctx, const ChatMessage* req, Chat
   }
   absl::Time step1 = absl::Now();
   liboai::Conversation convo;
-  if (!convo.SetSystemData(_system_data)) {
+  std::string system_data =
+      "You are now an ielts teacher. "
+      "I give you a title, you generate a writing article. "
+      "This article should have at least 250 words and at most 300 words. "
+      "This article should not talk anything about Chinese politics";
+  if (!convo.SetSystemData(system_data)) {
     LOG(WARNING) << "set system data failed";
     return grpc::Status(grpc::StatusCode::FAILED_PRECONDITION, "conversion system data not set");
   }
@@ -48,7 +48,7 @@ grpc::Status IeltsAI::ask(grpc::ServerContext* ctx, const ChatMessage* req, Chat
     return grpc::Status(grpc::StatusCode::INVALID_ARGUMENT, "input empty, check your input");
   }
   absl::Time step3 = absl::Now();
-  liboai::Response openai_resp = _chat_completion->create("gpt-3.5-turbo", convo);
+  liboai::Response openai_resp = _chat_completion->create(_model, convo);
   absl::Time step4 = absl::Now();
   if (!convo.Update(openai_resp)) {
     LOG(WARNING) << "update conversion failed";
@@ -71,7 +71,12 @@ grpc::Status IeltsAI::write_article_by_title(grpc::ServerContext* ctx, const Cha
   }
   absl::Time step1 = absl::Now();
   liboai::Conversation convo;
-  if (!convo.SetSystemData(_system_data)) {
+  std::string system_data =
+      "You are now an ielts teacher. "
+      "I give you a title, you generate a writing article. "
+      "This article should have at least 250 words and at most 300 words. "
+      "This article should not talk anything about Chinese politics";
+  if (!convo.SetSystemData(system_data)) {
     LOG(WARNING) << "set system data failed";
     return grpc::Status(grpc::StatusCode::FAILED_PRECONDITION, "conversion system data not set");
   }
@@ -98,7 +103,7 @@ grpc::Status IeltsAI::write_article_by_title(grpc::ServerContext* ctx, const Cha
 
   absl::Time step3 = absl::Now();
   auto openai_resp =
-      _chat_completion->create_async("gpt-3.5-turbo", convo, std::nullopt, std::nullopt, std::nullopt, stream_handler);
+      _chat_completion->create_async(_model, convo, std::nullopt, std::nullopt, std::nullopt, stream_handler);
 
   openai_resp.wait();
 
