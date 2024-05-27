@@ -7,6 +7,7 @@ cc_binary(
     srcs = ["ielts_ai.cpp"],
     deps = [
         "//src/plugin:log_sink",
+        "//src/plugin:oss",
         "//src/plugin:token",
         "//src/service:auth",
         "//src/service:ielts_ai",
