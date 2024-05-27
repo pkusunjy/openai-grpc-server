@@ -82,6 +82,14 @@ http_archive(
     urls = ["https://github.com/cpp-redis/cpp_redis/archive/refs/heads/master.zip"],
 )
 
+http_archive(
+    name = "com_github_aliyun_oss_sdk",
+    build_file = "//bazel:aliyun_oss_sdk.BUILD",
+    sha256 = "5cb6e840b966c1c05f01260e82967e791da90c641ad932bf42c14bbc5757a18c",
+    strip_prefix = "aliyun-oss-cpp-sdk-master",
+    urls = ["https://github.com/aliyun/aliyun-oss-cpp-sdk/archive/master.zip"],
+)
+
 # http_archive(
 #     name = "com_github_baidu_babylon",
 #     sha256 = "626c30f7df34dee8b735d8cabd8779ceb1a9274fd73285ec850f522ad36aa7eb",
