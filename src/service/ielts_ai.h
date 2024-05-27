@@ -7,6 +7,7 @@
 #include "chat_completion/chat_completion.grpc.pb.h"
 #include "components/audio.h"
 #include "components/chat.h"
+#include "src/plugin/oss.h"
 
 namespace chat_completion {
 
@@ -89,6 +90,7 @@ class IeltsAI final : public ChatService::Service {
   std::unique_ptr<liboai::Audio> _audio;
   std::unique_ptr<liboai::ChatCompletion> _chat_completion;
   std::string _model;
+  std::unique_ptr<plugin::OssClient> _oss;
 };
 
 } // namespace chat_completion

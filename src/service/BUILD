@@ -56,6 +56,7 @@ cc_library(
     ],
     deps = [
         "//src/plugin:log_sink",
+        "//src/plugin:oss",
         "//src/plugin:redis_client",
         "@com_github_d7ead_liboai//:oai",
         "@com_github_grpc_grpc//:grpc++",

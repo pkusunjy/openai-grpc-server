@@ -23,6 +23,15 @@ int32_t IeltsAI::initialize() {
     return -1;
   }
   _model = "gpt-3.5-turbo";
+  _oss = std::make_unique<plugin::OssClient>();
+  if (_oss == nullptr) {
+    LOG(WARNING) << "ielts init failed";
+    return -1;
+  }
+  if (_oss->initialize() != 0) {
+    LOG(WARNING) << "oss client init failed";
+    return -1;
+  }
   return 0;
 }
 

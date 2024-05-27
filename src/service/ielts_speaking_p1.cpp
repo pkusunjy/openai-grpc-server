@@ -16,11 +16,16 @@ grpc::Status IeltsAI::ielts_speaking_p1_generate(grpc::ServerContext* ctx, const
   }
   absl::Time step1 = absl::Now();
   LOG(INFO) << "received url: " << req->content();
+  std::string filename = req->content();
+  if (_oss->get_object() != 0) {
+    LOG(WARNING) << "OssClient get_object failed";
+    return grpc::Status(grpc::StatusCode::FAILED_PRECONDITION, "oss error");
+  }
   // 1. write audio data to local file (up to 25MB, according to official documents);
-  std::string filename = absl::StrFormat("./temp_%llu_%llu.mp3", req->uid(), req->logid());
-  std::ofstream os(filename, std::ios::trunc | std::ios::binary);
-  os << req->media_buf();
-  os.close();
+  // std::string filename = absl::StrFormat("./temp_%llu_%llu.mp3", req->uid(), req->logid());
+  // std::ofstream os(filename, std::ios::trunc | std::ios::binary);
+  // os << req->media_buf();
+  // os.close();
   absl::Time step2 = absl::Now();
   // 2. call api
   auto res = _audio->transcribe(filename, "whisper-1");
@@ -85,6 +90,7 @@ grpc::Status IeltsAI::ielts_speaking_p1_enrich(grpc::ServerContext* ctx, const C
     return grpc::Status(grpc::StatusCode::FAILED_PRECONDITION, "ielts_speaking_p1_enrich not ready");
   }
   absl::Time step1 = absl::Now();
+  LOG(INFO) << "logid " << req->logid() << " uid " << req->uid() << " received object: " << req->content();
   // 1. write audio data to local file (up to 25MB, according to official documents);
   std::string filename = absl::StrFormat("./temp_%llu_%llu.mp3", req->uid(), req->logid());
   std::ofstream os(filename, std::ios::trunc | std::ios::binary);
