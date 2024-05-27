@@ -15,6 +15,7 @@ grpc::Status IeltsAI::ielts_speaking_p1_generate(grpc::ServerContext* ctx, const
     return grpc::Status(grpc::StatusCode::FAILED_PRECONDITION, "ielts_speaking_p1_generate not ready");
   }
   absl::Time step1 = absl::Now();
+  LOG(INFO) << "received url: " << req->content();
   // 1. write audio data to local file (up to 25MB, according to official documents);
   std::string filename = absl::StrFormat("./temp_%llu_%llu.mp3", req->uid(), req->logid());
   std::ofstream os(filename, std::ios::trunc | std::ios::binary);
