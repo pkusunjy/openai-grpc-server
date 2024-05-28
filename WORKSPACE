@@ -52,9 +52,9 @@ http_archive(
 
 http_archive(
     name = "com_github_pkusunjy_openai_server_proto",
-    sha256 = "39a605166e4aba14037614feeaa271a44c5f2094d1ba3331bfa013d9929f099c",
-    strip_prefix = "openai-server-proto-1.0.8",
-    urls = ["https://github.com/pkusunjy/openai-server-proto/archive/v1.0.8.tar.gz"],
+    sha256 = "3de192da63a6ff90f8a9e5e8d98ab8c7001f18b018889b835b181cd94c1ee735",
+    strip_prefix = "openai-server-proto-1.0.9",
+    urls = ["https://github.com/pkusunjy/openai-server-proto/archive/v1.0.9.tar.gz"],
 )
 
 http_archive(
@@ -80,6 +80,42 @@ http_archive(
     sha256 = "a759911f535266c2ecde1e426bc8d4f17c26cef09e8a3d94ae973160de988d8b",
     strip_prefix = "cpp_redis-master",
     urls = ["https://github.com/cpp-redis/cpp_redis/archive/refs/heads/master.zip"],
+)
+
+# Rule repository, note that it's recommended to use a pinned commit to a released version of the rules
+http_archive(
+   name = "rules_foreign_cc",
+   sha256 = "5303e3363fe22cbd265c91fce228f84cf698ab0f98358ccf1d95fba227b308f6",
+   strip_prefix = "rules_foreign_cc-0.9.0",
+   url = "https://github.com/bazelbuild/rules_foreign_cc/archive/0.9.0.zip",
+)
+
+load("@rules_foreign_cc//foreign_cc:repositories.bzl", "rules_foreign_cc_dependencies")
+
+# This sets up some common toolchains for building targets. For more details, please see
+# https://github.com/bazelbuild/rules_foreign_cc/tree/main/docs#rules_foreign_cc_dependencies
+rules_foreign_cc_dependencies()
+
+http_archive(
+    name = "rules_perl",  # 2021-09-23T03:21:58Z
+    sha256 = "55fbe071971772758ad669615fc9aac9b126db6ae45909f0f36de499f6201dd3",
+    strip_prefix = "rules_perl-2f4f36f454375e678e81e5ca465d4d497c5c02da",
+    urls = [
+        "https://github.com/bazelbuild/rules_perl/archive/2f4f36f454375e678e81e5ca465d4d497c5c02da.tar.gz",
+    ],
+)
+load("@rules_perl//perl:deps.bzl", "perl_register_toolchains")
+perl_register_toolchains()
+
+http_archive(
+    name = "openssl",  # 2021-12-14T15:45:01Z
+    build_file = "//bazel:openssl.BUILD",
+    sha256 = "f89199be8b23ca45fc7cb9f1d8d3ee67312318286ad030f5316aca6462db6c96",
+    strip_prefix = "openssl-1.1.1m",
+    urls = [
+        "https://www.openssl.org/source/openssl-1.1.1m.tar.gz",
+        "https://github.com/openssl/openssl/archive/OpenSSL_1_1_1m.tar.gz",
+    ],
 )
 
 http_archive(

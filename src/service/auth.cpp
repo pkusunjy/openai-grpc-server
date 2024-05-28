@@ -15,4 +15,12 @@ grpc::Status AuthImpl::get_wx_miniprogram_token(grpc::ServerContext* ctx, const 
   return grpc::Status::OK;
 }
 
+grpc::Status AuthImpl::get_oss_token(grpc::ServerContext* ctx, const AuthRequest* req, AuthResponse* resp) {
+  auto& instance = plugin::TokenFactory::instance();
+  resp->set_oss_endpoint(instance.get_token_by_name("oss_endpoint"));
+  resp->set_oss_access_key_id(instance.get_token_by_name("oss_access_key_id"));
+  resp->set_oss_access_key_secret(instance.get_token_by_name("oss_access_key_secret"));
+  return grpc::Status::OK;
+}
+
 } // namespace auth

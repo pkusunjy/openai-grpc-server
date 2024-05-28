@@ -1,3 +1,6 @@
 openai_api_key: OPENAI_API_KEY
 wx_appid: TOKEN_WX_APPID
 wx_secret: TOKEN_WX_SECRET
+oss_endpoint: OSS_ACCESS_ENDPOINT
+oss_access_key_id: OSS_ACCESS_KEY_ID
+oss_access_key_secret: OSS_ACCESS_KEY_SECRET

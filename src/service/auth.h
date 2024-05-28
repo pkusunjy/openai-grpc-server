@@ -13,6 +13,7 @@ class AuthImpl final : public AuthService::Service {
   AuthImpl() = default;
   virtual ~AuthImpl() = default;
   grpc::Status get_wx_miniprogram_token(grpc::ServerContext*, const AuthRequest*, AuthResponse*) override;
+  grpc::Status get_oss_token(grpc::ServerContext*, const AuthRequest*, AuthResponse*) override;
 };
 
 } // namespace auth

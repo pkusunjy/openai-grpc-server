@@ -17,7 +17,7 @@ grpc::Status IeltsAI::ielts_speaking_p1_generate(grpc::ServerContext* ctx, const
   absl::Time step1 = absl::Now();
   LOG(INFO) << "received url: " << req->content();
   std::string filename = req->content();
-  if (_oss->get_object() != 0) {
+  if (_oss->get_object(filename, filename) != 0) {
     LOG(WARNING) << "OssClient get_object failed";
     return grpc::Status(grpc::StatusCode::FAILED_PRECONDITION, "oss error");
   }
@@ -33,12 +33,12 @@ grpc::Status IeltsAI::ielts_speaking_p1_generate(grpc::ServerContext* ctx, const
   // 3. response
   auto transcribe_res = res["text"].get<std::string>();
   LOG(INFO) << "logid " << req->logid() << " uid " << req->uid() << " transcribe_res: " << transcribe_res;
-  // 4. delete audio file on disk
-  if (unlink(filename.c_str()) < 0) {
-    char buf[256];
-    strerror_r(errno, buf, 256);
-    LOG(WARNING) << "unlink failed file: " << filename << ", errno: " << errno << ", errmsg: " << buf;
-  }
+  // // 4. delete audio file on disk
+  // if (unlink(filename.c_str()) < 0) {
+  //   char buf[256];
+  //   strerror_r(errno, buf, 256);
+  //   LOG(WARNING) << "unlink failed file: " << filename << ", errno: " << errno << ", errmsg: " << buf;
+  // }
   absl::Time step4 = absl::Now();
   liboai::Conversation convo;
   std::string system_data =

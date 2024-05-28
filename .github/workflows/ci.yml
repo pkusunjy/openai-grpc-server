@@ -15,9 +15,9 @@ jobs:
 
     - name: Build
       run: |
-        sed -i "s/OSS_ACCESS_ENDPOINT/${{ secrets.OSS_ACCESS_ENDPOINT }}/g" ./conf/aliyun_oss.yaml
-        sed -i "s/OSS_ACCESS_KEY_ID/${{ secrets.OSS_ACCESS_KEY_ID }}/g" ./conf/aliyun_oss.yaml
-        sed -i "s/OSS_ACCESS_KEY_SECRET/${{ secrets.OSS_ACCESS_KEY_SECRET }}/g" ./conf/aliyun_oss.yaml
+        sed -i "s/OSS_ACCESS_ENDPOINT/${{ secrets.OSS_ACCESS_ENDPOINT }}/g" ./conf/auth.yaml
+        sed -i "s/OSS_ACCESS_KEY_ID/${{ secrets.OSS_ACCESS_KEY_ID }}/g" ./conf/auth.yaml
+        sed -i "s/OSS_ACCESS_KEY_SECRET/${{ secrets.OSS_ACCESS_KEY_SECRET }}/g" ./conf/auth.yaml
         sed -i "s/OPENAI_API_KEY/${{ secrets.OPENAI_API_KEY }}/g" ./conf/auth.yaml
         sed -i "s/TOKEN_WX_APPID/${{ secrets.TOKEN_WX_APPID }}/g" ./conf/auth.yaml
         sed -i "s/TOKEN_WX_SECRET/${{ secrets.TOKEN_WX_SECRET }}/g" ./conf/auth.yaml
