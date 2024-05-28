@@ -56,15 +56,15 @@ cc_library(
     linkopts = [
         "-lpthread",
         "-lcurl",
-        # "-lcrypto",
-        # "-lssl",
+        "-lcrypto",
+        "-lssl",
     ],
     linkstatic = True,
     strip_include_prefix = "sdk/src",
     deps = [
         ":aliyun_oss_header",
-        "@openssl//:ssl",
-        "@openssl//:crypto",
-        "@com_github_curl_curl//:curl",
+        # "@openssl//:ssl",
+        # "@openssl//:crypto",
+        # "@com_github_curl_curl//:curl",
     ],
 )
