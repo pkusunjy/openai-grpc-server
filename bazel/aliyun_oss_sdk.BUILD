@@ -56,15 +56,21 @@ cc_library(
     linkopts = [
         "-lpthread",
         "-lcurl",
-        "-lcrypto",
-        "-lssl",
-    ],
+    ] + select({
+        "@platforms//os:linux": [
+            "-lcrypto",
+            "-lssl",
+        ],
+        "//conditions:default": [],
+    }),
     linkstatic = True,
     strip_include_prefix = "sdk/src",
     deps = [
         ":aliyun_oss_header",
-        # "@openssl//:ssl",
-        # "@openssl//:crypto",
-        # "@com_github_curl_curl//:curl",
-    ],
+    ] + select({
+        "@platforms//os:macos": [
+            "@openssl//:ssl",
+            "@openssl//:crypto",
+        ]
+    }),
 )
