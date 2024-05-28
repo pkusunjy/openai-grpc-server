@@ -8,7 +8,17 @@ jobs:
   build-and-deploy:
     name: Build & Deploy
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        compiler:
+          - llvm-13.0.0
+          - gcc-11
     steps:
+    - name: Setup Cpp
+      uses: aminya/setup-cpp@v1
+      with:
+        compiler: ${{ matrix.compiler }}
+
     - name: Install Dependencies
       run: |
         sudo apt-get install -y libcurl4-openssl-dev libssl-dev

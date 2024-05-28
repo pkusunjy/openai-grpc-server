@@ -55,7 +55,7 @@ cc_library(
     ],
     linkopts = [
         "-lpthread",
-        # "-lcurl",
+        "-lcurl",
         # "-lcrypto",
         # "-lssl",
     ],
