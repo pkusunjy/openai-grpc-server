@@ -55,7 +55,7 @@ cc_library(
     ],
     linkopts = [
         "-lpthread",
-        "-lcurl",
+        # "-lcurl",
         # "-lcrypto",
         # "-lssl",
     ],
@@ -65,5 +65,6 @@ cc_library(
         ":aliyun_oss_header",
         "@openssl//:ssl",
         "@openssl//:crypto",
+        "@com_github_curl_curl//:curl",
     ],
 )
