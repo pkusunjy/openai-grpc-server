@@ -25,6 +25,17 @@ cc_test(
 )
 
 cc_test(
+    name = "test_oss",
+    srcs = [
+        "test_oss.cpp",
+    ],
+    deps = [
+        "//src/plugin:oss",
+        "@com_google_googletest//:gtest_main",
+    ],
+)
+
+cc_test(
     name = "test_util",
     srcs = [
         "test_util.cpp",
