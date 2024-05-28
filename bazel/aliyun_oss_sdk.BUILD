@@ -71,6 +71,7 @@ cc_library(
         "@platforms//os:macos": [
             "@openssl//:ssl",
             "@openssl//:crypto",
-        ]
+        ],
+        "//conditions:default": [],
     }),
 )
