@@ -30,12 +30,14 @@ grpc::Status IeltsAI::ielts_speaking_p1_generate(grpc::ServerContext* ctx, const
   // 3. response
   auto transcribe_res = res["text"].get<std::string>();
   LOG(INFO) << "logid " << req->logid() << " uid " << req->uid() << " transcribe_res: " << transcribe_res;
-  // // 4. delete audio file on disk
-  // if (unlink(local_filename.c_str()) < 0) {
-  //   char buf[256];
-  //   strerror_r(errno, buf, 256);
-  //   LOG(WARNING) << "logid " << req->logid() << "unlink failed file: " << local_filename << ", errno: " << errno << ", errmsg: " << buf;
-  // }
+  // 4. delete audio file on disk
+  if (unlink(local_filename.c_str()) < 0) {
+    char buf[256];
+    strerror_r(errno, buf, 256);
+    LOG(WARNING) << "logid " << req->logid() << "unlink failed file: " << local_filename << ", errno: " << errno << ", errmsg: " << buf;
+  }
+  // 5. TODO: delete aliyun oos
+
   absl::Time step4 = absl::Now();
   liboai::Conversation convo;
   std::string system_data =
@@ -87,25 +89,27 @@ grpc::Status IeltsAI::ielts_speaking_p1_enrich(grpc::ServerContext* ctx, const C
     return grpc::Status(grpc::StatusCode::FAILED_PRECONDITION, "ielts_speaking_p1_enrich not ready");
   }
   absl::Time step1 = absl::Now();
-  LOG(INFO) << "logid " << req->logid() << " uid " << req->uid() << " received object: " << req->content();
-  // 1. write audio data to local file (up to 25MB, according to official documents);
-  std::string filename = absl::StrFormat("./temp_%llu_%llu.mp3", req->uid(), req->logid());
-  std::ofstream os(filename, std::ios::trunc | std::ios::binary);
-  os << req->media_buf();
-  os.close();
+   LOG(INFO) << "received url: " << req->content();
+  std::string filename = req->content();
+  std::string local_filename = absl::StrReplaceAll(filename, {{"/", "_"}});
+  if (_oss->get_object(filename, local_filename) != 0) {
+    LOG(WARNING) << "OssClient get_object failed";
+    return grpc::Status(grpc::StatusCode::FAILED_PRECONDITION, "oss error");
+  }
   absl::Time step2 = absl::Now();
   // 2. call api
-  auto res = _audio->transcribe(filename, "whisper-1");
+  auto res = _audio->transcribe(local_filename, "whisper-1");
   absl::Time step3 = absl::Now();
   // 3. response
   auto transcribe_res = res["text"].get<std::string>();
   LOG(INFO) << "logid " << req->logid() << " uid " << req->uid() << " transcribe_res: " << transcribe_res;
   // 4. delete audio file on disk
-  if (unlink(filename.c_str()) < 0) {
+  if (unlink(local_filename.c_str()) < 0) {
     char buf[256];
     strerror_r(errno, buf, 256);
-    LOG(WARNING) << "unlink failed file: " << filename << ", errno: " << errno << ", errmsg: " << buf;
+    LOG(WARNING) << "logid " << req->logid() << "unlink failed file: " << local_filename << ", errno: " << errno << ", errmsg: " << buf;
   }
+  // 5. TODO: delete aliyun oos
   absl::Time step4 = absl::Now();
   liboai::Conversation convo;
   std::string system_data =
