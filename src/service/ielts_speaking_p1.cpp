@@ -25,7 +25,7 @@ grpc::Status IeltsAI::ielts_speaking_p1_generate(grpc::ServerContext* ctx, const
   }
   absl::Time step2 = absl::Now();
   // 2. call api
-  auto res = _audio->transcribe(filename, "whisper-1");
+  auto res = _audio->transcribe(local_filename, "whisper-1");
   absl::Time step3 = absl::Now();
   // 3. response
   auto transcribe_res = res["text"].get<std::string>();
