@@ -3,6 +3,7 @@
 #include "absl/log/log.h"
 #include "absl/strings/str_format.h"
 #include "absl/strings/str_split.h"
+#include "absl/strings/str_replace.h"
 #include "absl/time/time.h"
 #include "src/service/ielts_ai.h"
 
@@ -17,15 +18,11 @@ grpc::Status IeltsAI::ielts_speaking_p1_generate(grpc::ServerContext* ctx, const
   absl::Time step1 = absl::Now();
   LOG(INFO) << "received url: " << req->content();
   std::string filename = req->content();
-  if (_oss->get_object(filename, filename) != 0) {
+  std::string local_filename = absl::StrReplaceAll(filename, {{"/", "_"}});
+  if (_oss->get_object(filename, local_filename) != 0) {
     LOG(WARNING) << "OssClient get_object failed";
     return grpc::Status(grpc::StatusCode::FAILED_PRECONDITION, "oss error");
   }
-  // 1. write audio data to local file (up to 25MB, according to official documents);
-  // std::string filename = absl::StrFormat("./temp_%llu_%llu.mp3", req->uid(), req->logid());
-  // std::ofstream os(filename, std::ios::trunc | std::ios::binary);
-  // os << req->media_buf();
-  // os.close();
   absl::Time step2 = absl::Now();
   // 2. call api
   auto res = _audio->transcribe(filename, "whisper-1");
@@ -34,10 +31,10 @@ grpc::Status IeltsAI::ielts_speaking_p1_generate(grpc::ServerContext* ctx, const
   auto transcribe_res = res["text"].get<std::string>();
   LOG(INFO) << "logid " << req->logid() << " uid " << req->uid() << " transcribe_res: " << transcribe_res;
   // // 4. delete audio file on disk
-  // if (unlink(filename.c_str()) < 0) {
+  // if (unlink(local_filename.c_str()) < 0) {
   //   char buf[256];
   //   strerror_r(errno, buf, 256);
-  //   LOG(WARNING) << "unlink failed file: " << filename << ", errno: " << errno << ", errmsg: " << buf;
+  //   LOG(WARNING) << "logid " << req->logid() << "unlink failed file: " << local_filename << ", errno: " << errno << ", errmsg: " << buf;
   // }
   absl::Time step4 = absl::Now();
   liboai::Conversation convo;
