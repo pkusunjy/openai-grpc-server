@@ -17,9 +17,10 @@ grpc::Status IeltsAI::ielts_writing_t1_enrich(grpc::ServerContext* ctx, const Ch
   absl::Time step1 = absl::Now();
   liboai::Conversation convo;
   std::string system_data =
-      "You are now an ielts speaking teacher. I am an ielts student. "
-      "I give you my writing, you should help me enrich it at grammar and vocabulary. "
-      "You should give an enriched article with no more than 2000 characters. ";
+      "You are now an ielts teacher. "
+      "I give you a title, you generate a writing article. "
+      "This article should have at least 250 words and at most 300 words. "
+      "This article should not talk anything about Chinese politics";
   if (!convo.SetSystemData(system_data)) {
     LOG(WARNING) << "set system data failed";
     return grpc::Status(grpc::StatusCode::FAILED_PRECONDITION, "conversion system data not set");
@@ -29,25 +30,27 @@ grpc::Status IeltsAI::ielts_writing_t1_enrich(grpc::ServerContext* ctx, const Ch
     return grpc::Status(grpc::StatusCode::INVALID_ARGUMENT, "input empty, check your input");
   }
 
-  std::regex pattern{"\"content\":\"(.*?)\""};
-  std::smatch matches;
+  std::queue<std::string> stream_buf;
   auto stream_handler = [&](std::string data, intptr_t ptr) -> bool {
-    auto reg_begin = std::sregex_iterator(data.begin(), data.end(), pattern);
-    if (reg_begin == std::sregex_iterator()) {
-      LOG(WARNING) << "regex match failed, raw: " << data;
-    }
-    for (auto i = reg_begin; i != std::sregex_iterator(); ++i) {
-      ChatMessage resp{};
-      resp.set_content((*i)[1]);
-      stream->Write(std::move(resp));
-    }
+    stream_buf.push(data);
     return true;
   };
+
+  LOG(INFO) << "stream_buf size: " << stream_buf.size();
 
   auto openai_resp =
       _chat_completion->create_async(_model, convo, std::nullopt, std::nullopt, std::nullopt, stream_handler);
 
   openai_resp.wait();
+
+  LOG(INFO) << "stream_buf size: " << stream_buf.size();
+  while (!stream_buf.empty()) {
+    LOG(INFO) << stream_buf.front();
+    stream_buf.pop();
+    ChatMessage resp{};
+    resp.set_content("abcabc");
+    stream->Write(std::move(resp));
+  }
 
   absl::Time step2 = absl::Now();
   LOG(INFO) << "logid " << req->logid() << " uid " << req->uid() << ", enrich total cost time "

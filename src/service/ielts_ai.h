@@ -9,6 +9,8 @@
 #include "components/chat.h"
 #include "src/plugin/oss.h"
 
+#include <queue>
+
 namespace chat_completion {
 
 class IeltsAI final : public ChatService::Service {
