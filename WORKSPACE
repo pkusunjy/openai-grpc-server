@@ -85,9 +85,9 @@ http_archive(
 # Rule repository, note that it's recommended to use a pinned commit to a released version of the rules
 http_archive(
    name = "rules_foreign_cc",
-   sha256 = "5303e3363fe22cbd265c91fce228f84cf698ab0f98358ccf1d95fba227b308f6",
-   strip_prefix = "rules_foreign_cc-0.9.0",
-   url = "https://github.com/bazelbuild/rules_foreign_cc/archive/0.9.0.zip",
+   sha256 = "c905d5ba97d102153b7b8cacc8fa1f1c29623a710264c992cd2cddcb9d616527",
+   strip_prefix = "rules_foreign_cc-0.10.1",
+   url = "https://github.com/bazelbuild/rules_foreign_cc/archive/0.10.1.zip",
 )
 
 load("@rules_foreign_cc//foreign_cc:repositories.bzl", "rules_foreign_cc_dependencies")
