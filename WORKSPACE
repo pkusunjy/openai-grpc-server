@@ -98,10 +98,10 @@ rules_foreign_cc_dependencies()
 
 http_archive(
     name = "rules_perl",  # 2021-09-23T03:21:58Z
-    sha256 = "55fbe071971772758ad669615fc9aac9b126db6ae45909f0f36de499f6201dd3",
-    strip_prefix = "rules_perl-2f4f36f454375e678e81e5ca465d4d497c5c02da",
+    sha256 = "cd67b3c262714e2504e28fa71bf23fca5bf27035d225019c44ed70b36939517b",
+    strip_prefix = "rules_perl-6d3f98c36e0cb756cb5e34f2d7e8f1053e9506cc",
     urls = [
-        "https://github.com/bazelbuild/rules_perl/archive/2f4f36f454375e678e81e5ca465d4d497c5c02da.tar.gz",
+        "https://github.com/bazelbuild/rules_perl/archive/6d3f98c36e0cb756cb5e34f2d7e8f1053e9506cc.tar.gz",
     ],
 )
 load("@rules_perl//perl:deps.bzl", "perl_register_toolchains")
