@@ -19,9 +19,9 @@ grpc_extra_deps()
 
 http_archive(
     name = "com_github_googleapis_google_cloud_cpp",
-    sha256 = "8d398958cad2338087ed5321db1d2c70a078d5d9d4dde720449395a3365a9ced",
-    strip_prefix = "google-cloud-cpp-2.24.0",
-    urls = ["https://github.com/googleapis/google-cloud-cpp/archive/refs/tags/v2.24.0.tar.gz"],
+    sha256 = "6f58213e2af16326392da84cd8a52af78cb80bc47338eb87e87d14c14c0e6bad",
+    strip_prefix = "google-cloud-cpp-2.25.0",
+    urls = ["https://github.com/googleapis/google-cloud-cpp/archive/refs/tags/v2.25.0.tar.gz"],
 )
 
 load("@com_github_googleapis_google_cloud_cpp//bazel:google_cloud_cpp_deps.bzl", "google_cloud_cpp_deps")
