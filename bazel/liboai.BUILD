@@ -45,6 +45,6 @@ cc_library(
     strip_include_prefix = '//include',
     deps = [
         '@com_github_curl_curl//:curl',
-        '@com_github_nlohmann_json//:nlohmann_json',
+        '@com_github_nlohmann_json//:json',
     ],
 )

@@ -41,7 +41,7 @@ cc_test(
         "test_util.cpp",
     ],
     deps = [
-        "@com_github_nlohmann_json//:nlohmann_json",
+        "@com_github_nlohmann_json//:json",
         "@com_google_googletest//:gtest_main",
     ],
 )
