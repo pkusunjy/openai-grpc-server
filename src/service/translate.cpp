@@ -1,9 +1,3 @@
-#include <regex>
-
-#include "absl/log/log.h"
-#include "absl/strings/str_format.h"
-#include "absl/strings/str_split.h"
-#include "absl/time/time.h"
 #include "src/service/ielts_ai.h"
 
 namespace chat_completion {
@@ -47,8 +41,8 @@ grpc::Status IeltsAI::cn_to_en(grpc::ServerContext* ctx, const ChatMessage* req,
   openai_resp.wait();
 
   absl::Time step2 = absl::Now();
-  LOG(INFO) << "logid " << req->logid() << " uid " << req->uid() << ", total cost time "
-            << absl::ToDoubleMilliseconds(step2 - step1);
+  LOG(INFO) << "logid " << req->logid() << " uid " << req->uid() << " content " << req->content()
+            << " total cost time " << absl::ToDoubleMilliseconds(step2 - step1);
   return grpc::Status::OK;
 }
 
@@ -91,8 +85,8 @@ grpc::Status IeltsAI::en_to_cn(grpc::ServerContext* ctx, const ChatMessage* req,
   openai_resp.wait();
 
   absl::Time step2 = absl::Now();
-  LOG(INFO) << "logid " << req->logid() << " uid " << req->uid() << ", total cost time "
-            << absl::ToDoubleMilliseconds(step2 - step1);
+  LOG(INFO) << "logid " << req->logid() << " uid " << req->uid() << " content " << req->content()
+            << " total cost time " << absl::ToDoubleMilliseconds(step2 - step1);
   return grpc::Status::OK;
 }
 

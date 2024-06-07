@@ -1,9 +1,15 @@
 #pragma once
 
+#include <regex>
 #include <grpcpp/ext/proto_server_reflection_plugin.h>
 #include <grpcpp/grpcpp.h>
 #include <grpcpp/health_check_service_interface.h>
 
+#include "absl/log/log.h"
+#include "absl/strings/str_format.h"
+#include "absl/strings/str_split.h"
+#include "absl/strings/str_replace.h"
+#include "absl/time/time.h"
 #include "chat_completion/chat_completion.grpc.pb.h"
 #include "components/audio.h"
 #include "components/chat.h"

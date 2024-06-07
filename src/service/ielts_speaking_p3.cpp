@@ -1,43 +1,15 @@
-#include <regex>
-
-#include "absl/log/log.h"
-#include "absl/strings/str_format.h"
-#include "absl/strings/str_split.h"
-#include "absl/strings/str_replace.h"
-#include "absl/time/time.h"
 #include "src/service/ielts_ai.h"
 
 namespace chat_completion {
 
 grpc::Status IeltsAI::ielts_speaking_p3_generate(grpc::ServerContext* ctx, const ChatMessage* req,
                                                  grpc::ServerWriter<ChatMessage>* stream) {
-  if (_audio == nullptr || _chat_completion == nullptr) {
+  if (_chat_completion == nullptr) {
     LOG(WARNING) << "ielts_speaking_p3_generate not ready";
     return grpc::Status(grpc::StatusCode::FAILED_PRECONDITION, "ielts_speaking_p3_generate not ready");
   }
   absl::Time step1 = absl::Now();
-    LOG(INFO) << "received url: " << req->content();
-  std::string filename = req->content();
-  std::string local_filename = absl::StrReplaceAll(filename, {{"/", "_"}});
-  if (_oss->get_object(filename, local_filename) != 0) {
-    LOG(WARNING) << "OssClient get_object failed";
-    return grpc::Status(grpc::StatusCode::FAILED_PRECONDITION, "oss error");
-  }
-  absl::Time step2 = absl::Now();
-  // 2. call api
-  auto res = _audio->transcribe(local_filename, "whisper-1");
-  absl::Time step3 = absl::Now();
-  // 3. response
-  auto transcribe_res = res["text"].get<std::string>();
-  LOG(INFO) << "logid " << req->logid() << " uid " << req->uid() << " transcribe_res: " << transcribe_res;
-  // 4. delete audio file on disk
-  if (unlink(local_filename.c_str()) < 0) {
-    char buf[256];
-    strerror_r(errno, buf, 256);
-    LOG(WARNING) << "logid " << req->logid() << "unlink failed file: " << local_filename << ", errno: " << errno << ", errmsg: " << buf;
-  }
-  // 5. TODO: delete aliyun oos
-  absl::Time step4 = absl::Now();
+
   liboai::Conversation convo;
   std::string system_data =
       "You are now an ielts speaking teacher. I am an ielts student. "
@@ -47,7 +19,7 @@ grpc::Status IeltsAI::ielts_speaking_p3_generate(grpc::ServerContext* ctx, const
     LOG(WARNING) << "set system data failed";
     return grpc::Status(grpc::StatusCode::FAILED_PRECONDITION, "conversion system data not set");
   }
-  if (!convo.AddUserData(transcribe_res)) {
+  if (!convo.AddUserData(req->content())) {
     LOG(WARNING) << "input data empty";
     return grpc::Status(grpc::StatusCode::INVALID_ARGUMENT, "input empty, check your input");
   }
@@ -72,44 +44,20 @@ grpc::Status IeltsAI::ielts_speaking_p3_generate(grpc::ServerContext* ctx, const
 
   openai_resp.wait();
 
-  absl::Time step5 = absl::Now();
-  LOG(INFO) << "logid " << req->logid() << " uid " << req->uid() << " write_disk "
-            << absl::ToDoubleMilliseconds(step2 - step1) << " transcribe " << absl::ToDoubleMilliseconds(step3 - step2)
-            << " unlink " << absl::ToDoubleMilliseconds(step4 - step3) << ", total cost time "
-            << " chat " << absl::ToDoubleMilliseconds(step5 - step4) << ", total cost time "
-            << absl::ToDoubleMilliseconds(step5 - step1);
+  absl::Time step2 = absl::Now();
+  LOG(INFO) << "logid " << req->logid() << " uid " << req->uid() << " content " << req->content()
+            << " total cost time " << absl::ToDoubleMilliseconds(step2 - step1);
   return grpc::Status::OK;
 }
 
 grpc::Status IeltsAI::ielts_speaking_p3_enrich(grpc::ServerContext* ctx, const ChatMessage* req,
                                                grpc::ServerWriter<ChatMessage>* stream) {
-  if (_audio == nullptr || _chat_completion == nullptr) {
+  if (_chat_completion == nullptr) {
     LOG(WARNING) << "ielts_speaking_p3_enrich not ready";
     return grpc::Status(grpc::StatusCode::FAILED_PRECONDITION, "ielts_speaking_p3_enrich not ready");
   }
   absl::Time step1 = absl::Now();
-    LOG(INFO) << "received url: " << req->content();
-  std::string filename = req->content();
-  std::string local_filename = absl::StrReplaceAll(filename, {{"/", "_"}});
-  if (_oss->get_object(filename, local_filename) != 0) {
-    LOG(WARNING) << "OssClient get_object failed";
-    return grpc::Status(grpc::StatusCode::FAILED_PRECONDITION, "oss error");
-  }
-  absl::Time step2 = absl::Now();
-  // 2. call api
-  auto res = _audio->transcribe(local_filename, "whisper-1");
-  absl::Time step3 = absl::Now();
-  // 3. response
-  auto transcribe_res = res["text"].get<std::string>();
-  LOG(INFO) << "logid " << req->logid() << " uid " << req->uid() << " transcribe_res: " << transcribe_res;
-  // 4. delete audio file on disk
-  if (unlink(local_filename.c_str()) < 0) {
-    char buf[256];
-    strerror_r(errno, buf, 256);
-    LOG(WARNING) << "logid " << req->logid() << "unlink failed file: " << local_filename << ", errno: " << errno << ", errmsg: " << buf;
-  }
-  // 5. TODO: delete aliyun oos
-  absl::Time step4 = absl::Now();
+
   liboai::Conversation convo;
   std::string system_data =
       "You are now an ielts speaking teacher. I am an ielts student. "
@@ -119,7 +67,7 @@ grpc::Status IeltsAI::ielts_speaking_p3_enrich(grpc::ServerContext* ctx, const C
     LOG(WARNING) << "set system data failed";
     return grpc::Status(grpc::StatusCode::FAILED_PRECONDITION, "conversion system data not set");
   }
-  if (!convo.AddUserData(transcribe_res)) {
+  if (!convo.AddUserData(req->content())) {
     LOG(WARNING) << "input data empty";
     return grpc::Status(grpc::StatusCode::INVALID_ARGUMENT, "input empty, check your input");
   }
@@ -144,12 +92,9 @@ grpc::Status IeltsAI::ielts_speaking_p3_enrich(grpc::ServerContext* ctx, const C
 
   openai_resp.wait();
 
-  absl::Time step5 = absl::Now();
-  LOG(INFO) << "logid " << req->logid() << " uid " << req->uid() << " write_disk "
-            << absl::ToDoubleMilliseconds(step2 - step1) << " transcribe " << absl::ToDoubleMilliseconds(step3 - step2)
-            << " unlink " << absl::ToDoubleMilliseconds(step4 - step3) << ", total cost time "
-            << " chat " << absl::ToDoubleMilliseconds(step5 - step4) << ", total cost time "
-            << absl::ToDoubleMilliseconds(step5 - step1);
+  absl::Time step2 = absl::Now();
+  LOG(INFO) << "logid " << req->logid() << " uid " << req->uid() << " content " << req->content()
+            << " total cost time " << absl::ToDoubleMilliseconds(step2 - step1);
   return grpc::Status::OK;
 }
 

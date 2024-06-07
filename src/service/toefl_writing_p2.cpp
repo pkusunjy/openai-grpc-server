@@ -1,16 +1,10 @@
-#include <regex>
-
-#include "absl/log/log.h"
-#include "absl/strings/str_format.h"
-#include "absl/strings/str_split.h"
-#include "absl/time/time.h"
 #include "src/service/ielts_ai.h"
 
 namespace chat_completion {
 
 grpc::Status IeltsAI::toefl_writing_p2_enrich(grpc::ServerContext* ctx, const ChatMessage* req,
                                               grpc::ServerWriter<ChatMessage>* stream) {
-  if (_audio == nullptr || _chat_completion == nullptr) {
+  if (_chat_completion == nullptr) {
     LOG(WARNING) << "toefl_writing_p2_enrich not ready";
     return grpc::Status(grpc::StatusCode::FAILED_PRECONDITION, "toefl_writing_p2_enrich not ready");
   }
@@ -50,14 +44,14 @@ grpc::Status IeltsAI::toefl_writing_p2_enrich(grpc::ServerContext* ctx, const Ch
   openai_resp.wait();
 
   absl::Time step2 = absl::Now();
-  LOG(INFO) << "logid " << req->logid() << " uid " << req->uid() << ", total cost time "
-            << absl::ToDoubleMilliseconds(step2 - step1);
+  LOG(INFO) << "logid " << req->logid() << " uid " << req->uid() << " content " << req->content()
+            << " total cost time " << absl::ToDoubleMilliseconds(step2 - step1);
   return grpc::Status::OK;
 }
 
 grpc::Status IeltsAI::toefl_writing_p2_score(grpc::ServerContext* ctx, const ChatMessage* req,
                                              grpc::ServerWriter<ChatMessage>* stream) {
-  if (_audio == nullptr || _chat_completion == nullptr) {
+  if (_chat_completion == nullptr) {
     LOG(WARNING) << "toefl_writing_p2_score not ready";
     return grpc::Status(grpc::StatusCode::FAILED_PRECONDITION, "toefl_writing_p2_score not ready");
   }
@@ -100,8 +94,8 @@ grpc::Status IeltsAI::toefl_writing_p2_score(grpc::ServerContext* ctx, const Cha
   openai_resp.wait();
 
   absl::Time step2 = absl::Now();
-  LOG(INFO) << "logid " << req->logid() << " uid " << req->uid() << ", total cost time "
-            << absl::ToDoubleMilliseconds(step2 - step1);
+  LOG(INFO) << "logid " << req->logid() << " uid " << req->uid() << " content " << req->content()
+            << " total cost time " << absl::ToDoubleMilliseconds(step2 - step1);
   return grpc::Status::OK;
 }
 

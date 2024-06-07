@@ -1,16 +1,10 @@
-#include <regex>
-
-#include "absl/log/log.h"
-#include "absl/strings/str_format.h"
-#include "absl/strings/str_split.h"
-#include "absl/time/time.h"
 #include "src/service/ielts_ai.h"
 
 namespace chat_completion {
 
 grpc::Status IeltsAI::ielts_speaking_words_synonyms(grpc::ServerContext* ctx, const ChatMessage* req,
                                                     grpc::ServerWriter<ChatMessage>* stream) {
-  if (_audio == nullptr || _chat_completion == nullptr) {
+  if (_chat_completion == nullptr) {
     LOG(WARNING) << "ielts_speaking_words_synonyms not ready";
     return grpc::Status(grpc::StatusCode::FAILED_PRECONDITION, "ielts_speaking_words_synonyms not ready");
   }
@@ -50,14 +44,14 @@ grpc::Status IeltsAI::ielts_speaking_words_synonyms(grpc::ServerContext* ctx, co
   openai_resp.wait();
 
   absl::Time step2 = absl::Now();
-  LOG(INFO) << "logid " << req->logid() << " uid " << req->uid() << ", total cost time "
-            << absl::ToDoubleMilliseconds(step2 - step1);
+  LOG(INFO) << "logid " << req->logid() << " uid " << req->uid() << " content " << req->content()
+            << " total cost time " << absl::ToDoubleMilliseconds(step2 - step1);
   return grpc::Status::OK;
 }
 
 grpc::Status IeltsAI::ielts_speaking_words_usage(grpc::ServerContext* ctx, const ChatMessage* req,
                                                  grpc::ServerWriter<ChatMessage>* stream) {
-  if (_audio == nullptr || _chat_completion == nullptr) {
+  if (_chat_completion == nullptr) {
     LOG(WARNING) << "ielts_speaking_words_usage not ready";
     return grpc::Status(grpc::StatusCode::FAILED_PRECONDITION, "ielts_speaking_words_usage not ready");
   }
@@ -98,8 +92,8 @@ grpc::Status IeltsAI::ielts_speaking_words_usage(grpc::ServerContext* ctx, const
   openai_resp.wait();
 
   absl::Time step2 = absl::Now();
-  LOG(INFO) << "logid " << req->logid() << " uid " << req->uid() << ", total cost time "
-            << absl::ToDoubleMilliseconds(step2 - step1);
+  LOG(INFO) << "logid " << req->logid() << " uid " << req->uid() << " content " << req->content()
+            << " total cost time " << absl::ToDoubleMilliseconds(step2 - step1);
   return grpc::Status::OK;
 }
 
@@ -147,14 +141,14 @@ grpc::Status IeltsAI::ielts_writing_words_theme(grpc::ServerContext* ctx, const 
   openai_resp.wait();
 
   absl::Time step2 = absl::Now();
-  LOG(INFO) << "logid " << req->logid() << " uid " << req->uid() << ", total cost time "
-            << absl::ToDoubleMilliseconds(step2 - step1);
+  LOG(INFO) << "logid " << req->logid() << " uid " << req->uid() << " content " << req->content()
+            << " total cost time " << absl::ToDoubleMilliseconds(step2 - step1);
   return grpc::Status::OK;
 }
 
 grpc::Status IeltsAI::ielts_writing_words_synonyms(grpc::ServerContext* ctx, const ChatMessage* req,
                                                    grpc::ServerWriter<ChatMessage>* stream) {
-  if (_audio == nullptr || _chat_completion == nullptr) {
+  if (_chat_completion == nullptr) {
     LOG(WARNING) << "ielts_speaking_words_usage not ready";
     return grpc::Status(grpc::StatusCode::FAILED_PRECONDITION, "ielts_speaking_words_usage not ready");
   }
@@ -194,14 +188,14 @@ grpc::Status IeltsAI::ielts_writing_words_synonyms(grpc::ServerContext* ctx, con
   openai_resp.wait();
 
   absl::Time step2 = absl::Now();
-  LOG(INFO) << "logid " << req->logid() << " uid " << req->uid() << ", total cost time "
-            << absl::ToDoubleMilliseconds(step2 - step1);
+  LOG(INFO) << "logid " << req->logid() << " uid " << req->uid() << " content " << req->content()
+            << " total cost time " << absl::ToDoubleMilliseconds(step2 - step1);
   return grpc::Status::OK;
 }
 
 grpc::Status IeltsAI::ielts_writing_words_combination(grpc::ServerContext* ctx, const ChatMessage* req,
                                                       grpc::ServerWriter<ChatMessage>* stream) {
-  if (_audio == nullptr || _chat_completion == nullptr) {
+  if (_chat_completion == nullptr) {
     LOG(WARNING) << "ielts_speaking_words_usage not ready";
     return grpc::Status(grpc::StatusCode::FAILED_PRECONDITION, "ielts_speaking_words_usage not ready");
   }
@@ -241,8 +235,8 @@ grpc::Status IeltsAI::ielts_writing_words_combination(grpc::ServerContext* ctx, 
   openai_resp.wait();
 
   absl::Time step2 = absl::Now();
-  LOG(INFO) << "logid " << req->logid() << " uid " << req->uid() << ", total cost time "
-            << absl::ToDoubleMilliseconds(step2 - step1);
+  LOG(INFO) << "logid " << req->logid() << " uid " << req->uid() << " content " << req->content()
+            << " total cost time " << absl::ToDoubleMilliseconds(step2 - step1);
   return grpc::Status::OK;
 }
 
