@@ -15,25 +15,6 @@ grpc::Status IeltsAI::ielts_speaking_words_synonyms(grpc::ServerContext* ctx, co
     return grpc::Status(grpc::StatusCode::FAILED_PRECONDITION, "ielts_speaking_words_synonyms not ready");
   }
   absl::Time step1 = absl::Now();
-  // 1. write audio data to local file (up to 25MB, according to official documents);
-  std::string filename = absl::StrFormat("./temp_%llu_%llu.mp3", req->uid(), req->logid());
-  std::ofstream os(filename, std::ios::trunc | std::ios::binary);
-  os << req->media_buf();
-  os.close();
-  absl::Time step2 = absl::Now();
-  // 2. call api
-  auto res = _audio->transcribe(filename, "whisper-1");
-  absl::Time step3 = absl::Now();
-  // 3. response
-  auto transcribe_res = res["text"].get<std::string>();
-  LOG(INFO) << "logid " << req->logid() << " uid " << req->uid() << " transcribe_res: " << transcribe_res;
-  // 4. delete audio file on disk
-  if (unlink(filename.c_str()) < 0) {
-    char buf[256];
-    strerror_r(errno, buf, 256);
-    LOG(WARNING) << "unlink failed file: " << filename << ", errno: " << errno << ", errmsg: " << buf;
-  }
-  absl::Time step4 = absl::Now();
   liboai::Conversation convo;
   std::string system_data =
       "You are now an ielts speaking teacher. I am an ielts student. "
@@ -43,7 +24,7 @@ grpc::Status IeltsAI::ielts_speaking_words_synonyms(grpc::ServerContext* ctx, co
     LOG(WARNING) << "set system data failed";
     return grpc::Status(grpc::StatusCode::FAILED_PRECONDITION, "conversion system data not set");
   }
-  if (!convo.AddUserData(transcribe_res)) {
+  if (!convo.AddUserData(req->content())) {
     LOG(WARNING) << "input data empty";
     return grpc::Status(grpc::StatusCode::INVALID_ARGUMENT, "input empty, check your input");
   }
@@ -68,12 +49,9 @@ grpc::Status IeltsAI::ielts_speaking_words_synonyms(grpc::ServerContext* ctx, co
 
   openai_resp.wait();
 
-  absl::Time step5 = absl::Now();
-  LOG(INFO) << "logid " << req->logid() << " uid " << req->uid() << " write_disk "
-            << absl::ToDoubleMilliseconds(step2 - step1) << " transcribe " << absl::ToDoubleMilliseconds(step3 - step2)
-            << " unlink " << absl::ToDoubleMilliseconds(step4 - step3) << ", total cost time "
-            << " chat " << absl::ToDoubleMilliseconds(step5 - step4) << ", total cost time "
-            << absl::ToDoubleMilliseconds(step5 - step1);
+  absl::Time step2 = absl::Now();
+  LOG(INFO) << "logid " << req->logid() << " uid " << req->uid() << ", total cost time "
+            << absl::ToDoubleMilliseconds(step2 - step1);
   return grpc::Status::OK;
 }
 
@@ -84,25 +62,6 @@ grpc::Status IeltsAI::ielts_speaking_words_usage(grpc::ServerContext* ctx, const
     return grpc::Status(grpc::StatusCode::FAILED_PRECONDITION, "ielts_speaking_words_usage not ready");
   }
   absl::Time step1 = absl::Now();
-  // 1. write audio data to local file (up to 25MB, according to official documents);
-  std::string filename = absl::StrFormat("./temp_%llu_%llu.mp3", req->uid(), req->logid());
-  std::ofstream os(filename, std::ios::trunc | std::ios::binary);
-  os << req->media_buf();
-  os.close();
-  absl::Time step2 = absl::Now();
-  // 2. call api
-  auto res = _audio->transcribe(filename, "whisper-1");
-  absl::Time step3 = absl::Now();
-  // 3. response
-  auto transcribe_res = res["text"].get<std::string>();
-  LOG(INFO) << "logid " << req->logid() << " uid " << req->uid() << " transcribe_res: " << transcribe_res;
-  // 4. delete audio file on disk
-  if (unlink(filename.c_str()) < 0) {
-    char buf[256];
-    strerror_r(errno, buf, 256);
-    LOG(WARNING) << "unlink failed file: " << filename << ", errno: " << errno << ", errmsg: " << buf;
-  }
-  absl::Time step4 = absl::Now();
   liboai::Conversation convo;
   std::string system_data =
       "You are now an ielts speaking teacher. I am an ielts student. "
@@ -113,7 +72,7 @@ grpc::Status IeltsAI::ielts_speaking_words_usage(grpc::ServerContext* ctx, const
     LOG(WARNING) << "set system data failed";
     return grpc::Status(grpc::StatusCode::FAILED_PRECONDITION, "conversion system data not set");
   }
-  if (!convo.AddUserData(transcribe_res)) {
+  if (!convo.AddUserData(req->content())) {
     LOG(WARNING) << "input data empty";
     return grpc::Status(grpc::StatusCode::INVALID_ARGUMENT, "input empty, check your input");
   }
@@ -138,12 +97,9 @@ grpc::Status IeltsAI::ielts_speaking_words_usage(grpc::ServerContext* ctx, const
 
   openai_resp.wait();
 
-  absl::Time step5 = absl::Now();
-  LOG(INFO) << "logid " << req->logid() << " uid " << req->uid() << " write_disk "
-            << absl::ToDoubleMilliseconds(step2 - step1) << " transcribe " << absl::ToDoubleMilliseconds(step3 - step2)
-            << " unlink " << absl::ToDoubleMilliseconds(step4 - step3) << ", total cost time "
-            << " chat " << absl::ToDoubleMilliseconds(step5 - step4) << ", total cost time "
-            << absl::ToDoubleMilliseconds(step5 - step1);
+  absl::Time step2 = absl::Now();
+  LOG(INFO) << "logid " << req->logid() << " uid " << req->uid() << ", total cost time "
+            << absl::ToDoubleMilliseconds(step2 - step1);
   return grpc::Status::OK;
 }
 

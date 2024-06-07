@@ -30,27 +30,25 @@ grpc::Status IeltsAI::ielts_writing_t1_enrich(grpc::ServerContext* ctx, const Ch
     return grpc::Status(grpc::StatusCode::INVALID_ARGUMENT, "input empty, check your input");
   }
 
-  std::queue<std::string> stream_buf;
+  std::regex pattern{"\"content\":\"(.*?)\""};
+  std::smatch matches;
   auto stream_handler = [&](std::string data, intptr_t ptr) -> bool {
-    stream_buf.push(data);
+    auto reg_begin = std::sregex_iterator(data.begin(), data.end(), pattern);
+    if (reg_begin == std::sregex_iterator()) {
+      LOG(WARNING) << "regex match failed, raw: " << data;
+    }
+    for (auto i = reg_begin; i != std::sregex_iterator(); ++i) {
+      ChatMessage resp{};
+      resp.set_content((*i)[1]);
+      stream->Write(std::move(resp));
+    }
     return true;
   };
-
-  LOG(INFO) << "stream_buf size: " << stream_buf.size();
 
   auto openai_resp =
       _chat_completion->create_async(_model, convo, std::nullopt, std::nullopt, std::nullopt, stream_handler);
 
   openai_resp.wait();
-
-  LOG(INFO) << "stream_buf size: " << stream_buf.size();
-  while (!stream_buf.empty()) {
-    LOG(INFO) << stream_buf.front();
-    stream_buf.pop();
-    ChatMessage resp{};
-    resp.set_content("abcabc");
-    stream->Write(std::move(resp));
-  }
 
   absl::Time step2 = absl::Now();
   LOG(INFO) << "logid " << req->logid() << " uid " << req->uid() << ", enrich total cost time "

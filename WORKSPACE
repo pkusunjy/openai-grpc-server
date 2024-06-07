@@ -18,24 +18,6 @@ load("@com_github_grpc_grpc//bazel:grpc_extra_deps.bzl", "grpc_extra_deps")
 grpc_extra_deps()
 
 http_archive(
-    name = "com_github_googleapis_google_cloud_cpp",
-    sha256 = "0c68782e57959c82e0c81def805c01460a042c1aae0c2feee905acaa2a2dc9bf",
-    strip_prefix = "google-cloud-cpp-2.22.0",
-    urls = ["https://github.com/googleapis/google-cloud-cpp/archive/refs/tags/v2.22.0.tar.gz"],
-)
-
-load("@com_github_googleapis_google_cloud_cpp//bazel:google_cloud_cpp_deps.bzl", "google_cloud_cpp_deps")
-
-google_cloud_cpp_deps()
-
-http_archive(
-    name = "com_github_neargye_magic_enum",
-    sha256 = "44ad80db5a72f5047e01d90e18315751d9ac90c0ab42cbea7a6f9ec66a4cd679",
-    strip_prefix = "magic_enum-0.9.5",
-    urls = ["https://github.com/Neargye/magic_enum/archive/v0.9.5.tar.gz"],
-)
-
-http_archive(
     name = "com_github_d7ead_liboai",
     build_file = "//bazel:liboai.BUILD",
     sha256 = "8b4797ef5bc5876cba760695563bb7d0341f432abd38488620d642509c698773",
@@ -52,9 +34,9 @@ http_archive(
 
 http_archive(
     name = "com_github_pkusunjy_openai_server_proto",
-    sha256 = "3de192da63a6ff90f8a9e5e8d98ab8c7001f18b018889b835b181cd94c1ee735",
-    strip_prefix = "openai-server-proto-1.0.9",
-    urls = ["https://github.com/pkusunjy/openai-server-proto/archive/v1.0.9.tar.gz"],
+    sha256 = "abe59587ceee6b09a537592398f059bd04541873103ea76d52c4c3ee3ff788e2",
+    strip_prefix = "openai-server-proto-1.1.0",
+    urls = ["https://github.com/pkusunjy/openai-server-proto/archive/v1.1.0.tar.gz"],
 )
 
 http_archive(
