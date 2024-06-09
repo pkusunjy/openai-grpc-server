@@ -8,14 +8,10 @@ namespace plugin {
 
 class RedisClient {
  public:
-  static RedisClient& instance() {
-    static RedisClient instance;
-    return instance;
-  }
-  RedisClient() = default;
-  ~RedisClient() = default;
   int32_t initialize();
-  void commit();
+  void sync_commit();
+  void set(const std::string& key, const std::string& value);
+  std::string get(const std::string& key);
 
  private:
   cpp_redis::client _client;

@@ -13,8 +13,12 @@ class ExercisePoolImpl final : public ExercisePoolService::Service {
  public:
   ExercisePoolImpl() = default;
   virtual ~ExercisePoolImpl() = default;
+  int32_t initialize();
   grpc::Status get(grpc::ServerContext*, const ExercisePoolRequest*, ExercisePoolResponse*) override;
   grpc::Status set(grpc::ServerContext*, const ExercisePoolRequest*, ExercisePoolResponse*) override;
+
+ private:
+  std::unique_ptr<plugin::RedisClient> _redis_client;
 };
 
 } // namespace exercise_pool

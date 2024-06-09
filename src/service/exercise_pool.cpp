@@ -8,6 +8,20 @@
 
 namespace exercise_pool {
 
+int32_t ExercisePoolImpl::initialize() {
+  // redis client
+  _redis_client = std::make_unique<plugin::RedisClient>();
+  if (_redis_client == nullptr) {
+    LOG(WARNING) << "redis client plugin ctor failed";
+    return -1;
+  }
+  if (_redis_client->initialize() != 0) {
+    LOG(WARNING) << "redis client plugin initialize failed";
+    return -1;
+  }
+  return 0;
+}
+
 grpc::Status ExercisePoolImpl::get(grpc::ServerContext* ctx, const ExercisePoolRequest* req,
                                    ExercisePoolResponse* resp) {
   auto scene = req->scene();

@@ -10,6 +10,7 @@ cc_binary(
         "//src/plugin:oss",
         "//src/plugin:token",
         "//src/service:auth",
+        "//src/service:exercise_pool",
         "//src/service:ielts_ai",
         "@boost//:scope_exit",
         "@com_github_d7ead_liboai//:oai",
