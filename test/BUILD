@@ -36,6 +36,17 @@ cc_test(
 )
 
 cc_test(
+    name = "test_prompt",
+    srcs = [
+        "test_prompt.cpp",
+    ],
+    deps = [
+        "//src/plugin:prompt",
+        "@com_google_googletest//:gtest_main",
+    ],
+)
+
+cc_test(
     name = "test_util",
     srcs = [
         "test_util.cpp",
