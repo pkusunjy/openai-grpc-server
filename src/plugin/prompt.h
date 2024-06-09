@@ -8,7 +8,7 @@ namespace plugin {
 class Prompt {
  public:
   int32_t initialize();
-  int32_t get_prompt_by_name(const std::string&, std::string&);
+  std::string get_prompt_by_name(const std::string&);
 
  private:
   YAML::Node _config;

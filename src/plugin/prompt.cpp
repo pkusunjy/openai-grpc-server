@@ -11,19 +11,14 @@ namespace plugin {
 int32_t Prompt::initialize() {
   _config = YAML::LoadFile(absl::GetFlag(FLAGS_prompt_conf));
   if (_config.size() == 0) {
-    LOG(WARNING) << "aliyun_oss.yaml error";
+    LOG(WARNING) << "load prompt.yaml error";
     return -1;
   }
   return 0;
 }
 
-int32_t Prompt::get_prompt_by_name(const std::string& name, std::string& prompt) {
-  if (!_config[name]) {
-    LOG(WARNING) << "prompt " << name << " not found";
-    return -1;
-  }
-  prompt.assign(_config[name].as<std::string>());
-  return 0;
+std::string Prompt::get_prompt_by_name(const std::string& name) {
+  return _config[name] ? _config[name].as<std::string>() : "";
 }
 
 } // namespace plugin

@@ -10,8 +10,7 @@ grpc::Status IeltsAI::cn_to_en(grpc::ServerContext* ctx, const ChatMessage* req,
   }
   absl::Time step1 = absl::Now();
   liboai::Conversation convo;
-  std::string system_data = "I give you a Chinese sentence, translate it into English and return to me. ";
-  if (!convo.SetSystemData(system_data)) {
+  if (!convo.SetSystemData(_prompt_plugin->get_prompt_by_name(__FUNCTION__))) {
     LOG(WARNING) << "set system data failed";
     return grpc::Status(grpc::StatusCode::FAILED_PRECONDITION, "conversion system data not set");
   }
@@ -54,8 +53,7 @@ grpc::Status IeltsAI::en_to_cn(grpc::ServerContext* ctx, const ChatMessage* req,
   }
   absl::Time step1 = absl::Now();
   liboai::Conversation convo;
-  std::string system_data = "I give you an English sentence, translate it into Chinese and return to me. ";
-  if (!convo.SetSystemData(system_data)) {
+  if (!convo.SetSystemData(_prompt_plugin->get_prompt_by_name(__FUNCTION__))) {
     LOG(WARNING) << "set system data failed";
     return grpc::Status(grpc::StatusCode::FAILED_PRECONDITION, "conversion system data not set");
   }

@@ -10,12 +10,7 @@ grpc::Status IeltsAI::ielts_writing_t2_generate(grpc::ServerContext* ctx, const 
   }
   absl::Time step1 = absl::Now();
   liboai::Conversation convo;
-  std::string system_data =
-      "You are now an ielts speaking teacher. I am an ielts student. "
-      "I give you a title, you generate a writing article. "
-      "This article should have at least 250 words and at most 300 words. "
-      "This article should not talk anything about Chinese politics";
-  if (!convo.SetSystemData(system_data)) {
+  if (!convo.SetSystemData(_prompt_plugin->get_prompt_by_name(__FUNCTION__))) {
     LOG(WARNING) << "set system data failed";
     return grpc::Status(grpc::StatusCode::FAILED_PRECONDITION, "conversion system data not set");
   }
@@ -59,11 +54,7 @@ grpc::Status IeltsAI::ielts_writing_t2_enrich(grpc::ServerContext* ctx, const Ch
   absl::Time step1 = absl::Now();
 
   liboai::Conversation convo;
-  std::string system_data =
-      "You are now an ielts speaking teacher. I am an ielts student. "
-      "I give you my writing, you should help me enrich it at grammar and vocabulary. "
-      "You should give an enriched article with no more than 3000 characters. ";
-  if (!convo.SetSystemData(system_data)) {
+  if (!convo.SetSystemData(_prompt_plugin->get_prompt_by_name(__FUNCTION__))) {
     LOG(WARNING) << "set system data failed";
     return grpc::Status(grpc::StatusCode::FAILED_PRECONDITION, "conversion system data not set");
   }
@@ -106,17 +97,7 @@ grpc::Status IeltsAI::ielts_writing_t2_score(grpc::ServerContext* ctx, const Cha
   }
   absl::Time step1 = absl::Now();
   liboai::Conversation convo;
-  std::string system_data =
-      "You are now an ielts speaking teacher. I am an ielts student. "
-      "I give you my writing, you should help me score it. The total score is 7.0. "
-      "And you should give some analysis, from the following four aspects: "
-      "1. Task Response; "
-      "2. Logicality and Coherence; "
-      "3. Lexical Resources; "
-      "4. Grammatical Range and Accuracy, Spelling. "
-      "Each of these four aspects has a total score of 7.0. "
-      "You should give scores and analysis of each aspect. ";
-  if (!convo.SetSystemData(system_data)) {
+  if (!convo.SetSystemData(_prompt_plugin->get_prompt_by_name(__FUNCTION__))) {
     LOG(WARNING) << "set system data failed";
     return grpc::Status(grpc::StatusCode::FAILED_PRECONDITION, "conversion system data not set");
   }

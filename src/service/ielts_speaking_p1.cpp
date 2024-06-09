@@ -11,11 +11,7 @@ grpc::Status IeltsAI::ielts_speaking_p1_generate(grpc::ServerContext* ctx, const
 
   absl::Time step1 = absl::Now();
   liboai::Conversation convo;
-  std::string system_data =
-      "You are now an ielts speaking teacher. I am an ielts student. "
-      "I give you a question, which is transcribed from an audio by openai whisper. "
-      "You should give an appropriate answer with no more than 1000 characters. ";
-  if (!convo.SetSystemData(system_data)) {
+  if (!convo.SetSystemData(_prompt_plugin->get_prompt_by_name(__FUNCTION__))) {
     LOG(WARNING) << "set system data failed";
     return grpc::Status(grpc::StatusCode::FAILED_PRECONDITION, "conversion system data not set");
   }
@@ -59,11 +55,7 @@ grpc::Status IeltsAI::ielts_speaking_p1_enrich(grpc::ServerContext* ctx, const C
   absl::Time step1 = absl::Now();
   
   liboai::Conversation convo;
-  std::string system_data =
-      "You are now an ielts speaking teacher. I am an ielts student. "
-      "I give you my answer, you should enrich it and make it more formal. "
-      "Your response should contain no more than 1000 characters. ";
-  if (!convo.SetSystemData(system_data)) {
+  if (!convo.SetSystemData(_prompt_plugin->get_prompt_by_name(__FUNCTION__))) {
     LOG(WARNING) << "set system data failed";
     return grpc::Status(grpc::StatusCode::FAILED_PRECONDITION, "conversion system data not set");
   }

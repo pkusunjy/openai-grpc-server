@@ -14,6 +14,7 @@
 #include "components/audio.h"
 #include "components/chat.h"
 #include "src/plugin/oss.h"
+#include "src/plugin/prompt.h"
 
 #include <queue>
 
@@ -99,6 +100,7 @@ class IeltsAI final : public ChatService::Service {
   std::unique_ptr<liboai::ChatCompletion> _chat_completion;
   std::string _model;
   std::unique_ptr<plugin::OssClient> _oss;
+  std::unique_ptr<plugin::Prompt> _prompt_plugin;
 };
 
 } // namespace chat_completion

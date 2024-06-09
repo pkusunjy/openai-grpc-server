@@ -10,11 +10,7 @@ grpc::Status IeltsAI::toefl_writing_p1_enrich(grpc::ServerContext* ctx, const Ch
   }
   absl::Time step1 = absl::Now();
   liboai::Conversation convo;
-  std::string system_data =
-      "You are now a toefl teacher. I am a toefl student. "
-      "I give you my article, you should enrich and optimize it. "
-      "And you should return a new article with no more than 2000 characters. ";
-  if (!convo.SetSystemData(system_data)) {
+  if (!convo.SetSystemData(_prompt_plugin->get_prompt_by_name(__FUNCTION__))) {
     LOG(WARNING) << "set system data failed";
     return grpc::Status(grpc::StatusCode::FAILED_PRECONDITION, "conversion system data not set");
   }
@@ -57,14 +53,7 @@ grpc::Status IeltsAI::toefl_writing_p1_score(grpc::ServerContext* ctx, const Cha
   }
   absl::Time step1 = absl::Now();
   liboai::Conversation convo;
-  std::string system_data =
-      "You are now a toefl teacher. I am a toefl student. "
-      "I give you my article. You should judge and score it. "
-      "The total score is 20. "
-      "And you should give some analysis, from the following four aspects: "
-      "Fluency and Coherence, Lexical Resource, Grammatical Range and Accuracy, and Pronunciation. "
-      "Each of the four aspects has a total score of 5.0. ";
-  if (!convo.SetSystemData(system_data)) {
+  if (!convo.SetSystemData(_prompt_plugin->get_prompt_by_name(__FUNCTION__))) {
     LOG(WARNING) << "set system data failed";
     return grpc::Status(grpc::StatusCode::FAILED_PRECONDITION, "conversion system data not set");
   }

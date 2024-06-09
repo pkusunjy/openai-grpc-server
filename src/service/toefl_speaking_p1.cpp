@@ -11,11 +11,7 @@ grpc::Status IeltsAI::toefl_speaking_p1_generate(grpc::ServerContext* ctx, const
   absl::Time step1 = absl::Now();
 
   liboai::Conversation convo;
-  std::string system_data =
-      "You are now a toefl speaking student. I am a toefl teacher. "
-      "I ask you a question, which is transcribed from an audio by openai whisper. "
-      "You should give a response. The response should be limited to 45s and within 1500 characters";
-  if (!convo.SetSystemData(system_data)) {
+  if (!convo.SetSystemData(_prompt_plugin->get_prompt_by_name(__FUNCTION__))) {
     LOG(WARNING) << "set system data failed";
     return grpc::Status(grpc::StatusCode::FAILED_PRECONDITION, "conversion system data not set");
   }
@@ -59,11 +55,7 @@ grpc::Status IeltsAI::toefl_speaking_p1_enrich(grpc::ServerContext* ctx, const C
   absl::Time step1 = absl::Now();
 
   liboai::Conversation convo;
-  std::string system_data =
-      "You are now a toefl speaking teacher. I am a toefl student. "
-      "I give you an oral response, which is transcribed from an audio by openai whisper. "
-      "You should give an enriched and better response with no more than 1500 characters. ";
-  if (!convo.SetSystemData(system_data)) {
+  if (!convo.SetSystemData(_prompt_plugin->get_prompt_by_name(__FUNCTION__))) {
     LOG(WARNING) << "set system data failed";
     return grpc::Status(grpc::StatusCode::FAILED_PRECONDITION, "conversion system data not set");
   }
@@ -107,14 +99,7 @@ grpc::Status IeltsAI::toefl_speaking_p1_score(grpc::ServerContext* ctx, const Ch
   absl::Time step1 = absl::Now();
 
   liboai::Conversation convo;
-  std::string system_data =
-      "You are now a toefl speaking teacher. I am a toefl student. "
-      "I give you a paragraph, which is transcribed from an audio by openai whisper. "
-      "You should give it a score. The total score is 30, just like a normal TOEFL exam. "
-      "And you should give some analysis, from the following four aspects: "
-      "Fluency and Coherence, Lexical Resource, Grammatical Range and Accuracy, and Pronunciation. "
-      "The total amount of characters should be no more than 2000. ";
-  if (!convo.SetSystemData(system_data)) {
+  if (!convo.SetSystemData(_prompt_plugin->get_prompt_by_name(__FUNCTION__))) {
     LOG(WARNING) << "set system data failed";
     return grpc::Status(grpc::StatusCode::FAILED_PRECONDITION, "conversion system data not set");
   }

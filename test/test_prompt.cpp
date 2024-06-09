@@ -5,9 +5,9 @@ TEST(prompt, prompt) {
   plugin::Prompt prompt;
   ASSERT_EQ(prompt.initialize(), 0);
   std::string res;
-  ASSERT_EQ(prompt.get_prompt_by_name("ielts_writing_t1_enrich", res), 0);
-  EXPECT_EQ(res,
+  EXPECT_EQ(prompt.get_prompt_by_name("ielts_writing_t1_enrich"),
             "You are now an ielts teacher. "
             "I give you a title, you generate a writing article. "
             "This article should have at least 250 words and at most 300 words.");
+  EXPECT_EQ(prompt.get_prompt_by_name("some_key_not_exist"), "");
 }

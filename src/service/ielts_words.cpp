@@ -10,11 +10,7 @@ grpc::Status IeltsAI::ielts_speaking_words_synonyms(grpc::ServerContext* ctx, co
   }
   absl::Time step1 = absl::Now();
   liboai::Conversation convo;
-  std::string system_data =
-      "You are now an ielts speaking teacher. I am an ielts student. "
-      "I give you a word or a phrase, you should return a better word with similar meanings. "
-      "And you should also return its Chinese explantions, and you should also return an example sentence. ";
-  if (!convo.SetSystemData(system_data)) {
+  if (!convo.SetSystemData(_prompt_plugin->get_prompt_by_name(__FUNCTION__))) {
     LOG(WARNING) << "set system data failed";
     return grpc::Status(grpc::StatusCode::FAILED_PRECONDITION, "conversion system data not set");
   }
@@ -57,12 +53,7 @@ grpc::Status IeltsAI::ielts_speaking_words_usage(grpc::ServerContext* ctx, const
   }
   absl::Time step1 = absl::Now();
   liboai::Conversation convo;
-  std::string system_data =
-      "You are now an ielts speaking teacher. I am an ielts student. "
-      "I give you a word or a phrase, you should return a better word with similar meanings. "
-      "And you should also return its Chinese explantions, and you should also return an example sentence. ";
-
-  if (!convo.SetSystemData(system_data)) {
+  if (!convo.SetSystemData(_prompt_plugin->get_prompt_by_name(__FUNCTION__))) {
     LOG(WARNING) << "set system data failed";
     return grpc::Status(grpc::StatusCode::FAILED_PRECONDITION, "conversion system data not set");
   }
@@ -106,12 +97,7 @@ grpc::Status IeltsAI::ielts_writing_words_theme(grpc::ServerContext* ctx, const 
   absl::Time step1 = absl::Now();
 
   liboai::Conversation convo;
-  std::string system_data =
-      "You are now an ielts speaking teacher. I am an ielts student. "
-      "I give you a theme, you should return multiple words related to the theme. "
-      "And you should also return their Chinese explantions. "
-      "And you should make an example sentence for each of the word. ";
-  if (!convo.SetSystemData(system_data)) {
+  if (!convo.SetSystemData(_prompt_plugin->get_prompt_by_name(__FUNCTION__))) {
     LOG(WARNING) << "set system data failed";
     return grpc::Status(grpc::StatusCode::FAILED_PRECONDITION, "conversion system data not set");
   }
@@ -154,11 +140,7 @@ grpc::Status IeltsAI::ielts_writing_words_synonyms(grpc::ServerContext* ctx, con
   }
   absl::Time step1 = absl::Now();
   liboai::Conversation convo;
-  std::string system_data =
-      "You are now an ielts speaking teacher. I am an ielts student. "
-      "I give you a word, you should return a better word with similar meanings. "
-      "And you should also return its Chinese explantions, and you should also return an example sentence. ";
-  if (!convo.SetSystemData(system_data)) {
+  if (!convo.SetSystemData(_prompt_plugin->get_prompt_by_name(__FUNCTION__))) {
     LOG(WARNING) << "set system data failed";
     return grpc::Status(grpc::StatusCode::FAILED_PRECONDITION, "conversion system data not set");
   }
@@ -201,11 +183,7 @@ grpc::Status IeltsAI::ielts_writing_words_combination(grpc::ServerContext* ctx, 
   }
   absl::Time step1 = absl::Now();
   liboai::Conversation convo;
-  std::string system_data =
-      "You are now an ielts speaking teacher. I am an ielts student. "
-      "I give you a word, you should return some phrases combined with the given word. "
-      "And you should also return its Chinese explantions, and you should also return an example sentence. ";
-  if (!convo.SetSystemData(system_data)) {
+  if (!convo.SetSystemData(_prompt_plugin->get_prompt_by_name(__FUNCTION__))) {
     LOG(WARNING) << "set system data failed";
     return grpc::Status(grpc::StatusCode::FAILED_PRECONDITION, "conversion system data not set");
   }

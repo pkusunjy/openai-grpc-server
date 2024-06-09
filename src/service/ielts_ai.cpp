@@ -6,23 +6,34 @@ int32_t IeltsAI::initialize() {
   // audio
   _audio = std::make_unique<liboai::Audio>();
   if (_audio == nullptr) {
-    LOG(WARNING) << "ielts init failed";
+    LOG(WARNING) << "liboai audio ctor failed";
     return -1;
   }
   // chat
   _chat_completion = std::make_unique<liboai::ChatCompletion>();
   if (_chat_completion == nullptr) {
-    LOG(WARNING) << "ielts init failed";
+    LOG(WARNING) << "liboai completion ctor failed";
     return -1;
   }
   _model = "gpt-3.5-turbo";
+  // aliyun oss
   _oss = std::make_unique<plugin::OssClient>();
   if (_oss == nullptr) {
-    LOG(WARNING) << "ielts init failed";
+    LOG(WARNING) << "aliyun oss ctor failed";
     return -1;
   }
   if (_oss->initialize() != 0) {
-    LOG(WARNING) << "oss client init failed";
+    LOG(WARNING) << "aliyun oss client init failed";
+    return -1;
+  }
+  // prompt
+  _prompt_plugin = std::make_unique<plugin::Prompt>();
+  if (_prompt_plugin == nullptr) {
+    LOG(WARNING) << "prompt plugin ctor failed";
+    return -1;
+  }
+  if (_prompt_plugin->initialize() != 0) {
+    LOG(WARNING) << "prompt plugin initialize failed";
     return -1;
   }
   return 0;
