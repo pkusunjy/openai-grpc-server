@@ -52,7 +52,7 @@ grpc::Status ExercisePoolImpl::set(grpc::ServerContext* ctx, const ExercisePoolR
   LOG(INFO) << "received scene: " << scene;
   auto table_name = absl::StrFormat("%s_%d", _table_name_base, scene);
   std::vector<std::pair<std::string, std::string>> kv;
-  for (const auto& item: req->items()) {
+  for (const auto& item : req->items()) {
     auto key = absl::StrReplaceAll(item.title(), {{" ", "__"}});
     std::string value;
     if (::google::protobuf::util::MessageToJsonString(item, &value).ok()) {
@@ -75,7 +75,7 @@ grpc::Status ExercisePoolImpl::del(grpc::ServerContext* ctx, const ExercisePoolR
   LOG(INFO) << "received scene: " << scene;
   auto table_name = absl::StrFormat("%s_%d", _table_name_base, scene);
   std::vector<std::string> keys;
-  for (const auto& item: req->items()) {
+  for (const auto& item : req->items()) {
     keys.emplace_back(absl::StrReplaceAll(item.title(), {{" ", "__"}}));
   }
   _redis_client->hdel(table_name, keys);
