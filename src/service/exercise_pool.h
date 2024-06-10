@@ -4,9 +4,9 @@
 #include <grpcpp/grpcpp.h>
 #include <grpcpp/health_check_service_interface.h>
 
+#include "absl/strings/str_replace.h"
 #include "exercise_pool/exercise_pool.grpc.pb.h"
 #include "src/plugin/redis_client.h"
-#include "google/protobuf/util/json_util.h"
 
 namespace exercise_pool {
 
@@ -17,6 +17,7 @@ class ExercisePoolImpl final : public ExercisePoolService::Service {
   int32_t initialize();
   grpc::Status get(grpc::ServerContext*, const ExercisePoolRequest*, ExercisePoolResponse*) override;
   grpc::Status set(grpc::ServerContext*, const ExercisePoolRequest*, ExercisePoolResponse*) override;
+  grpc::Status del(grpc::ServerContext*, const ExercisePoolRequest*, ExercisePoolResponse*) override;
 
  private:
   std::string _table_name_base { "mikiai_exercise_pool" };

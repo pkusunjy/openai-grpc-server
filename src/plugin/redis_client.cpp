@@ -125,4 +125,16 @@ std::vector<std::pair<std::string, std::string>> RedisClient::hgetall(const std:
   return res;
 }
 
+void RedisClient::hdel(const std::string& table_name, const std::vector<std::string>& keys) {
+  std::stringstream ss;
+  ss << "table_name:" << table_name << " keys:";
+  for (const auto& key: keys) {
+    ss << key << ",";
+  }
+  _client.hdel(table_name, keys, [&](cpp_redis::reply& reply) {
+    ss << " reply:" << reply;
+  }).sync_commit();
+  LOG(INFO) << "RedisClient hdel " << ss.str();
+}
+
 } // namespace plugin
