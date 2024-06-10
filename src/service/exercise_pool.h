@@ -6,6 +6,7 @@
 
 #include "exercise_pool/exercise_pool.grpc.pb.h"
 #include "src/plugin/redis_client.h"
+#include "google/protobuf/util/json_util.h"
 
 namespace exercise_pool {
 
@@ -18,6 +19,7 @@ class ExercisePoolImpl final : public ExercisePoolService::Service {
   grpc::Status set(grpc::ServerContext*, const ExercisePoolRequest*, ExercisePoolResponse*) override;
 
  private:
+  std::string _table_name_base { "mikiai_exercise_pool" };
   std::unique_ptr<plugin::RedisClient> _redis_client;
 };
 

@@ -43,22 +43,85 @@ void RedisClient::sync_commit() {
 
 void RedisClient::set(const std::string& key, const std::string& value) {
   std::stringstream ss;
+  ss << "key:" << key << " value:" << value;
   _client.set(key, value, [&](cpp_redis::reply& reply) {
-      ss << reply;
+      ss << " reply:" << reply;
   }).sync_commit();
-  LOG(INFO) << "RedisClient set key:" << key << " value:" << value << " reply:" << ss.str();
+  LOG(INFO) << "RedisClient set " << ss.str();
 }
 
 std::string RedisClient::get(const std::string& key) {
   std::stringstream ss;
+  ss << "key:" << key;
   std::string res;
   _client.get(key, [&](cpp_redis::reply& reply) {
-    ss << reply;
     if (reply.is_string()) {
       res.assign(reply.as_string());
+      ss << " value:" << res;
+    }
+    ss << "reply:" << reply;
+  }).sync_commit();
+  LOG(INFO) << "RedisClient get " << ss.str();
+  return res;
+}
+
+void RedisClient::hmset(const std::string& table_name, const std::vector<std::pair<std::string, std::string>>& kv) {
+  std::stringstream ss;
+  ss << "table_name:" << table_name << " kv:";
+  for (const auto& [k, v]: kv) {
+    ss << "[" << k << "," << v << "]";
+  }
+  _client.hmset(table_name, kv, [&](cpp_redis::reply& reply) {
+    ss << " reply:" << reply;
+  }).sync_commit();
+  LOG(INFO) << "RedisClient hmset " << ss.str();
+}
+
+std::vector<std::string> RedisClient::hmget(const std::string& table_name, const std::vector<std::string>& keys) {
+  std::stringstream ss;
+  ss << "table_name:" << table_name << " keys:";
+  for (const auto& k: keys) {
+    ss << k << ",";
+  }
+  std::vector<std::string> values;
+  values.reserve(keys.size());
+  _client.hmget(table_name, keys, [&](cpp_redis::reply& reply) {
+    if (reply.is_array()) {
+      const std::vector<cpp_redis::reply>& arr = reply.as_array();
+      for (const cpp_redis::reply& elem : arr) {
+        if (elem.is_string()) {
+          values.emplace_back(elem.as_string());
+        }
+      }
     }
   }).sync_commit();
-  LOG(INFO) << "RedisClient get key:" << key << " value:" << res << ", reply:" << ss.str();
+  ss << " values:";
+  for (const auto& value: values) {
+    ss << value << ",";
+  }
+  LOG(INFO) << "RedisClient hmget " << ss.str();
+  return values;
+}
+std::vector<std::pair<std::string, std::string>> RedisClient::hgetall(const std::string& table_name) {
+  std::stringstream ss;
+  ss << "table_name:" << table_name;
+  std::vector<std::pair<std::string, std::string>> res;
+  _client.hgetall(table_name, [&](cpp_redis::reply& reply) {
+    if (reply.is_array()) {
+      const std::vector<cpp_redis::reply>& arr = reply.as_array();
+      size_t idx = 0;
+      for (; idx < arr.size() - 1; idx += 2) {
+        if (arr[idx].is_string() && arr[idx + 1].is_string()) {
+          std::pair<std::string, std::string> pair = std::make_pair(
+            arr[idx].as_string(), arr[idx + 1].as_string()
+          );
+          ss << "[" << pair.first << "," << pair.second << "]";
+          res.emplace_back(pair);
+        }
+      }
+    }
+  }).sync_commit();
+  LOG(INFO) << "RedisClient hgetall " << ss.str();
   return res;
 }
 

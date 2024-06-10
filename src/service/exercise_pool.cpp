@@ -30,7 +30,16 @@ grpc::Status ExercisePoolImpl::get(grpc::ServerContext* ctx, const ExercisePoolR
     return grpc::Status(grpc::StatusCode::FAILED_PRECONDITION, "invalid scene");
   }
   LOG(INFO) << "received scene: " << scene;
-  // TODO: impl
+  auto table_name = absl::StrFormat("%s_%d", _table_name_base, scene);
+  LOG(INFO) << "table_name:" << table_name;
+  auto kv_pairs = _redis_client->hgetall(table_name);
+  for (const auto& [k, v] : kv_pairs) {
+    auto item = resp->add_items();
+    auto status = ::google::protobuf::util::JsonStringToMessage(v, item);
+    if (status != absl::Status::ok) {
+      LOG(WARNING) << "JsonStringToMessage failed raw:" << v;
+    }
+  }
   return grpc::Status::OK;
 }
 
