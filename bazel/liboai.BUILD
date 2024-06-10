@@ -41,10 +41,10 @@ cc_library(
         'include/core/response.h',
         'include/liboai.h',
     ],
-    # copts = ['-DLIBOAI_DEBUG'],
+    copts = ['-DLIBOAI_DEBUG'],
     strip_include_prefix = '//include',
     deps = [
-        '@com_github_curl_curl//:curl',
-        '@com_github_nlohmann_json//:nlohmann_json',
+        '@curl',
+        '@nlohmann_json//:json',
     ],
 )
