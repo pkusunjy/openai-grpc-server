@@ -11,10 +11,10 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/grpclog"
 
-	auth "proto/auth"
-	chat "proto/chat_completion"
-	pool "proto/exercise_pool"
-	user "proto/user"
+	auth "github.com/pkusunjy/openai-grpc-server/auth"
+	chat "github.com/pkusunjy/openai-grpc-server/chat_completion"
+	pool "github.com/pkusunjy/openai-grpc-server/exercise_pool"
+	user "github.com/pkusunjy/openai-grpc-server/user"
 )
 
 var (
