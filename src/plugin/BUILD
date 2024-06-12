@@ -7,9 +7,9 @@ cc_library(
     srcs = ["log_sink.cpp"],
     hdrs = ["log_sink.h"],
     deps = [
-        "@com_google_absl//absl/log",
-        "@com_google_absl//absl/strings",
-        "@com_google_absl//absl/time",
+        "@abseil-cpp//absl/log",
+        "@abseil-cpp//absl/strings",
+        "@abseil-cpp//absl/time",
     ],
 )
 
@@ -19,12 +19,12 @@ cc_library(
     hdrs = ["oss.h"],
     deps = [
         "//src/plugin:log_sink",
+        "@abseil-cpp//absl/flags:flag",
+        "@abseil-cpp//absl/flags:parse",
+        "@abseil-cpp//absl/log",
         "@com_github_aliyun_oss_sdk//:aliyun_oss",
         "@com_github_cpp_redis//:cpp_redis",
-        "@com_github_jbeder_yaml_cpp//:yaml-cpp",
-        "@com_google_absl//absl/flags:flag",
-        "@com_google_absl//absl/flags:parse",
-        "@com_google_absl//absl/log",
+        "@yaml-cpp//:yaml-cpp",
     ],
 )
 
@@ -34,10 +34,10 @@ cc_library(
     hdrs = ["prompt.h"],
     deps = [
         "//src/plugin:log_sink",
-        "@com_github_jbeder_yaml_cpp//:yaml-cpp",
-        "@com_google_absl//absl/flags:flag",
-        "@com_google_absl//absl/flags:parse",
-        "@com_google_absl//absl/log",
+        "@abseil-cpp//absl/flags:flag",
+        "@abseil-cpp//absl/flags:parse",
+        "@abseil-cpp//absl/log",
+        "@yaml-cpp//:yaml-cpp",
     ],
 )
 
@@ -47,11 +47,11 @@ cc_library(
     hdrs = ["redis_client.h"],
     deps = [
         "//src/plugin:log_sink",
+        "@abseil-cpp//absl/flags:flag",
+        "@abseil-cpp//absl/flags:parse",
+        "@abseil-cpp//absl/log",
         "@com_github_cpp_redis//:cpp_redis",
-        "@com_github_jbeder_yaml_cpp//:yaml-cpp",
-        "@com_google_absl//absl/flags:flag",
-        "@com_google_absl//absl/flags:parse",
-        "@com_google_absl//absl/log",
+        "@yaml-cpp//:yaml-cpp",
     ],
 )
 
@@ -60,11 +60,11 @@ cc_library(
     srcs = ["token.cpp"],
     hdrs = ["token.h"],
     deps = [
-        "@com_github_jbeder_yaml_cpp//:yaml-cpp",
-        "@com_google_absl//absl/flags:flag",
-        "@com_google_absl//absl/flags:parse",
-        "@com_google_absl//absl/log",
-        "@com_google_absl//absl/strings",
-        "@com_google_absl//absl/time",
+        "@abseil-cpp//absl/flags:flag",
+        "@abseil-cpp//absl/flags:parse",
+        "@abseil-cpp//absl/log",
+        "@abseil-cpp//absl/strings",
+        "@abseil-cpp//absl/time",
+        "@yaml-cpp//:yaml-cpp",
     ],
 )

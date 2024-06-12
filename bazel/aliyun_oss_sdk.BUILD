@@ -2,21 +2,6 @@ package(
     default_visibility = ["//visibility:public"],
 )
 
-# config_setting(
-#     name = "msvc-cl",
-#     flag_values = {"@bazel_tools//tools/cpp:compiler": "msvc-cl"},
-# )
-# 
-# config_setting(
-#     name = "clang-cl",
-#     flag_values = {"@bazel_tools//tools/cpp:compiler": "clang-cl"},
-# )
-# 
-# config_setting(
-#     name = "opt",
-#     values = {"compilation_mode": "opt"},
-# )
-
 cc_library(
     name = "aliyun_oss_header",
     srcs = glob([
@@ -69,8 +54,8 @@ cc_library(
         ":aliyun_oss_header",
     ] + select({
         "@platforms//os:macos": [
-            "@openssl//:ssl",
-            "@openssl//:crypto",
+            "@boringssl//:ssl",
+            "@boringssl//:crypto",
         ],
         "//conditions:default": [],
     }),

@@ -3,17 +3,6 @@ workspace(name = "openai-grpc-server")
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 http_archive(
-    name = "com_github_curl_curl",
-    urls = [
-        "https://storage.googleapis.com/cloud-cpp-community-archive/com_github_curl_curl/curl-7.69.1.tar.gz",
-        "https://curl.haxx.se/download/curl-7.69.1.tar.gz",
-    ],
-    strip_prefix = "curl-7.69.1",
-    build_file = "//bazel:curl.BUILD",
-    sha256 = "01ae0c123dee45b01bbaef94c0bc00ed2aec89cb2ee0fd598e0d302a6b5e0a98",
-)
-
-http_archive(
     name = "com_github_d7ead_liboai",
     build_file = "//bazel:liboai.BUILD",
     sha256 = "8b4797ef5bc5876cba760695563bb7d0341f432abd38488620d642509c698773",
@@ -21,30 +10,12 @@ http_archive(
     urls = ["https://github.com/pkusunjy/liboai/archive/v1.0.1.tar.gz"],
 )
 
-http_archive(
-    name = "com_github_jbeder_yaml_cpp",
-    sha256 = "fbe74bbdcee21d656715688706da3c8becfd946d92cd44705cc6098bb23b3a16",
-    strip_prefix = "yaml-cpp-0.8.0",
-    urls = ["https://github.com/jbeder/yaml-cpp/archive/0.8.0.tar.gz"],
-)
-
-http_archive(
-    name = "com_github_pkusunjy_openai_server_proto",
-    sha256 = "dfa5647db8636e3f06df910e106d75ab7c9be649cc2d60380be7cc51eaa2e96c",
-    strip_prefix = "openai-server-proto-1.1.4",
-    urls = ["https://github.com/pkusunjy/openai-server-proto/archive/v1.1.4.tar.gz"],
-)
-
-http_archive(
-    name = "com_github_nelhage_rules_boost",
-    sha256 = "2215e6910eb763a971b1f63f53c45c0f2b7607df38c96287666d94d954da8cdc",
-    strip_prefix = "rules_boost-4ab574f9a84b42b1809978114a4664184716f4bf",
-    urls = ["https://github.com/nelhage/rules_boost/archive/4ab574f9a84b42b1809978114a4664184716f4bf.tar.gz"],
-)
-
-load("@com_github_nelhage_rules_boost//:boost/boost.bzl", "boost_deps")
-
-boost_deps()
+# http_archive(
+#     name = "com_github_pkusunjy_openai_server_proto",
+#     sha256 = "dfa5647db8636e3f06df910e106d75ab7c9be649cc2d60380be7cc51eaa2e96c",
+#     strip_prefix = "openai-server-proto-1.1.4",
+#     urls = ["https://github.com/pkusunjy/openai-server-proto/archive/v1.1.4.tar.gz"],
+# )
 
 http_archive(
     name = "tacopie",
@@ -58,39 +29,6 @@ http_archive(
     sha256 = "a759911f535266c2ecde1e426bc8d4f17c26cef09e8a3d94ae973160de988d8b",
     strip_prefix = "cpp_redis-master",
     urls = ["https://github.com/cpp-redis/cpp_redis/archive/refs/heads/master.zip"],
-)
-
-http_archive(
-   name = "rules_foreign_cc",
-   sha256 = "5303e3363fe22cbd265c91fce228f84cf698ab0f98358ccf1d95fba227b308f6",
-   strip_prefix = "rules_foreign_cc-0.9.0",
-   url = "https://github.com/bazelbuild/rules_foreign_cc/archive/0.9.0.zip",
-)
-
-load("@rules_foreign_cc//foreign_cc:repositories.bzl", "rules_foreign_cc_dependencies")
-
-rules_foreign_cc_dependencies()
-
-http_archive(
-    name = "rules_perl",
-    sha256 = "55fbe071971772758ad669615fc9aac9b126db6ae45909f0f36de499f6201dd3",
-    strip_prefix = "rules_perl-2f4f36f454375e678e81e5ca465d4d497c5c02da",
-    urls = [
-        "https://github.com/bazelbuild/rules_perl/archive/2f4f36f454375e678e81e5ca465d4d497c5c02da.tar.gz",
-    ],
-)
-load("@rules_perl//perl:deps.bzl", "perl_register_toolchains")
-perl_register_toolchains()
-
-http_archive(
-    name = "openssl",
-    build_file = "//bazel:openssl.BUILD",
-    sha256 = "f89199be8b23ca45fc7cb9f1d8d3ee67312318286ad030f5316aca6462db6c96",
-    strip_prefix = "openssl-1.1.1m",
-    urls = [
-        "https://www.openssl.org/source/openssl-1.1.1m.tar.gz",
-        "https://github.com/openssl/openssl/archive/OpenSSL_1_1_1m.tar.gz",
-    ],
 )
 
 http_archive(

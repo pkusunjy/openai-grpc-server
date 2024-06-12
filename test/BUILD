@@ -52,8 +52,8 @@ cc_test(
         "test_util.cpp",
     ],
     deps = [
-        "@nlohmann_json//:json",
         "@googletest//:gtest_main",
+        "@nlohmann_json//:json",
     ],
 )
 
@@ -63,7 +63,7 @@ cc_test(
         "test_yaml_parser.cpp",
     ],
     deps = [
-        "@com_github_jbeder_yaml_cpp//:yaml-cpp",
         "@googletest//:gtest_main",
+        "@yaml-cpp//:yaml-cpp",
     ],
 )

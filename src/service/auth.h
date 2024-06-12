@@ -4,7 +4,7 @@
 #include <grpcpp/grpcpp.h>
 #include <grpcpp/health_check_service_interface.h>
 
-#include "auth/auth.grpc.pb.h"
+#include "proto/auth/auth.grpc.pb.h"
 
 namespace auth {
 

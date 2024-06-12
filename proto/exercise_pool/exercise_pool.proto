@@ -1,0 +1,50 @@
+syntax="proto3";
+package exercise_pool;
+option go_package = "github.com/pkusunjy/openai-server-proto/exercise_pool";
+
+enum Scene {
+    ILLEGAL = 0;
+    IELTS_SPEAKING_P1 = 1;
+    IELTS_SPEAKING_P2 = 2;
+    IELTS_SPEAKING_P3 = 3;
+    IELTS_WRITING_T1 = 4; // 不带题库，占位
+    IELTS_WRITING_T2 = 5;
+    IELTS_SPEAKING_WORDS = 6; // 不带题库，占位
+    IELTS_WRITING_WORDS = 7; // 不带题库，占位
+    TOEFL_WRITING_P1 = 8; // 不带题库，占位
+    TOEFL_WRITING_P2 = 9; // 不带题库，占位
+    TOEFL_WRITING_P3 = 10; // 不带题库，占位
+    TRANSLATE_CN_TO_EN = 11; // 不带题库，占位
+    TRANSLATE_EN_TO_CN = 12; // 不带题库，占位
+    IELTS_SPEAKING_EXERCISE = 13;
+    IELTS_SPEAKING_EXAM = 14;
+}
+
+message ExerciseItem {
+    string title = 1;
+    repeated string content = 2;
+    string author = 3;
+    uint64 create_time = 4;
+    uint64 expire_time = 5;
+    repeated uint32 content_index = 6;
+};
+
+message ExercisePoolRequest {
+    Scene scene = 1;
+    uint32 count = 2;
+    repeated ExerciseItem items = 3;
+};
+
+message ExercisePoolResponse {
+    uint32 err_no = 1;
+    string err_msg = 2;
+    repeated ExerciseItem items = 3;
+};
+
+service ExercisePoolService {
+    rpc get (ExercisePoolRequest) returns (ExercisePoolResponse) {}
+    rpc set (ExercisePoolRequest) returns (ExercisePoolResponse) {}
+    rpc del_by_title (ExercisePoolRequest) returns (ExercisePoolResponse) {}
+    rpc del_by_content_index (ExercisePoolRequest) returns (ExercisePoolResponse) {}
+};
+

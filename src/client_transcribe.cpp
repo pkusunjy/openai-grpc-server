@@ -7,7 +7,7 @@
 #include "absl/flags/flag.h"
 #include "absl/flags/parse.h"
 #include "absl/log/log.h"
-#include "chat_completion/chat_completion.grpc.pb.h"
+#include "proto/chat_completion/chat_completion.grpc.pb.h"
 
 ABSL_FLAG(std::string, target, "localhost:8123", "Server address");
 ABSL_FLAG(std::string, query, "", "your input");
