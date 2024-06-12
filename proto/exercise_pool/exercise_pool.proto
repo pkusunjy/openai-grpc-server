@@ -1,6 +1,6 @@
 syntax="proto3";
 package exercise_pool;
-option go_package = "github.com/pkusunjy/openai-server-proto/exercise_pool";
+option go_package = "github.com/pkusunjy/openai-grpc-server/exercise_pool";
 
 enum Scene {
     ILLEGAL = 0;
