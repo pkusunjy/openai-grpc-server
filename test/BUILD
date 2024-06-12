@@ -9,7 +9,7 @@ package(
 #     ],
 #     deps = [
 #         "//src/processor:graph_processor",
-#         "@com_google_googletest//:gtest_main",
+#         "@googletest//:gtest_main",
 #     ],
 # )
 
@@ -20,7 +20,7 @@ cc_test(
     ],
     deps = [
         "@com_github_d7ead_liboai//:oai",
-        "@com_google_googletest//:gtest_main",
+        "@googletest//:gtest_main",
     ],
 )
 
@@ -31,7 +31,7 @@ cc_test(
     ],
     deps = [
         "//src/plugin:oss",
-        "@com_google_googletest//:gtest_main",
+        "@googletest//:gtest_main",
     ],
 )
 
@@ -42,7 +42,7 @@ cc_test(
     ],
     deps = [
         "//src/plugin:prompt",
-        "@com_google_googletest//:gtest_main",
+        "@googletest//:gtest_main",
     ],
 )
 
@@ -52,8 +52,8 @@ cc_test(
         "test_util.cpp",
     ],
     deps = [
-        "@com_github_nlohmann_json//:nlohmann_json",
-        "@com_google_googletest//:gtest_main",
+        "@nlohmann_json//:json",
+        "@googletest//:gtest_main",
     ],
 )
 
@@ -64,6 +64,6 @@ cc_test(
     ],
     deps = [
         "@com_github_jbeder_yaml_cpp//:yaml-cpp",
-        "@com_google_googletest//:gtest_main",
+        "@googletest//:gtest_main",
     ],
 )

@@ -3,19 +3,15 @@ workspace(name = "openai-grpc-server")
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 http_archive(
-    name = "com_github_grpc_grpc",
-    sha256 = "f40bde4ce2f31760f65dc49a2f50876f59077026494e67dccf23992548b1b04f",
-    strip_prefix = "grpc-1.62.0",
-    urls = ["https://github.com/grpc/grpc/archive/refs/tags/v1.62.0.tar.gz"],
+    name = "com_github_curl_curl",
+    urls = [
+        "https://storage.googleapis.com/cloud-cpp-community-archive/com_github_curl_curl/curl-7.69.1.tar.gz",
+        "https://curl.haxx.se/download/curl-7.69.1.tar.gz",
+    ],
+    strip_prefix = "curl-7.69.1",
+    build_file = "//bazel:curl.BUILD",
+    sha256 = "01ae0c123dee45b01bbaef94c0bc00ed2aec89cb2ee0fd598e0d302a6b5e0a98",
 )
-
-load("@com_github_grpc_grpc//bazel:grpc_deps.bzl", "grpc_deps")
-
-grpc_deps()
-
-load("@com_github_grpc_grpc//bazel:grpc_extra_deps.bzl", "grpc_extra_deps")
-
-grpc_extra_deps()
 
 http_archive(
     name = "com_github_d7ead_liboai",
@@ -64,7 +60,6 @@ http_archive(
     urls = ["https://github.com/cpp-redis/cpp_redis/archive/refs/heads/master.zip"],
 )
 
-# Rule repository, note that it's recommended to use a pinned commit to a released version of the rules
 http_archive(
    name = "rules_foreign_cc",
    sha256 = "5303e3363fe22cbd265c91fce228f84cf698ab0f98358ccf1d95fba227b308f6",
@@ -74,12 +69,10 @@ http_archive(
 
 load("@rules_foreign_cc//foreign_cc:repositories.bzl", "rules_foreign_cc_dependencies")
 
-# This sets up some common toolchains for building targets. For more details, please see
-# https://github.com/bazelbuild/rules_foreign_cc/tree/main/docs#rules_foreign_cc_dependencies
 rules_foreign_cc_dependencies()
 
 http_archive(
-    name = "rules_perl",  # 2021-09-23T03:21:58Z
+    name = "rules_perl",
     sha256 = "55fbe071971772758ad669615fc9aac9b126db6ae45909f0f36de499f6201dd3",
     strip_prefix = "rules_perl-2f4f36f454375e678e81e5ca465d4d497c5c02da",
     urls = [
@@ -90,7 +83,7 @@ load("@rules_perl//perl:deps.bzl", "perl_register_toolchains")
 perl_register_toolchains()
 
 http_archive(
-    name = "openssl",  # 2021-12-14T15:45:01Z
+    name = "openssl",
     build_file = "//bazel:openssl.BUILD",
     sha256 = "f89199be8b23ca45fc7cb9f1d8d3ee67312318286ad030f5316aca6462db6c96",
     strip_prefix = "openssl-1.1.1m",

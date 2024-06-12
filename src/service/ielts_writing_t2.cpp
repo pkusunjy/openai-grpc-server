@@ -84,8 +84,8 @@ grpc::Status IeltsAI::ielts_writing_t2_enrich(grpc::ServerContext* ctx, const Ch
   openai_resp.wait();
 
   absl::Time step2 = absl::Now();
-  LOG(INFO) << "logid " << req->logid() << " uid " << req->uid() << ", enrich total cost time "
-            << absl::ToDoubleMilliseconds(step2 - step1);
+  LOG(INFO) << "logid " << req->logid() << " uid " << req->uid() << " content " << req->content()
+            << ", enrich total cost time " << absl::ToDoubleMilliseconds(step2 - step1);
   return grpc::Status::OK;
 }
 
@@ -127,8 +127,8 @@ grpc::Status IeltsAI::ielts_writing_t2_score(grpc::ServerContext* ctx, const Cha
   openai_resp.wait();
 
   absl::Time step2 = absl::Now();
-  LOG(INFO) << "logid " << req->logid() << " uid " << req->uid() << ", score total cost time "
-            << absl::ToDoubleMilliseconds(step2 - step1);
+  LOG(INFO) << "logid " << req->logid() << " uid " << req->uid() << " content " << req->content()
+            << ", score total cost time " << absl::ToDoubleMilliseconds(step2 - step1);
   return grpc::Status::OK;
 }
 
