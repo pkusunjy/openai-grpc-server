@@ -3,6 +3,17 @@ workspace(name = "openai-grpc-server")
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 http_archive(
+    name = "com_github_curl_curl",
+    urls = [
+        "https://storage.googleapis.com/cloud-cpp-community-archive/com_github_curl_curl/curl-7.69.1.tar.gz",
+        "https://curl.haxx.se/download/curl-7.69.1.tar.gz",
+    ],
+    strip_prefix = "curl-7.69.1",
+    build_file = "//bazel:curl.BUILD",
+    sha256 = "01ae0c123dee45b01bbaef94c0bc00ed2aec89cb2ee0fd598e0d302a6b5e0a98",
+)
+
+http_archive(
     name = "com_github_d7ead_liboai",
     build_file = "//bazel:liboai.BUILD",
     sha256 = "8b4797ef5bc5876cba760695563bb7d0341f432abd38488620d642509c698773",

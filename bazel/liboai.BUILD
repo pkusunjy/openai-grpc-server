@@ -41,10 +41,8 @@ cc_library(
     ],
     # copts = ["-DLIBOAI_DEBUG"],
     strip_include_prefix = "//include",
-    linkopts = [
-        "-lcurl",
-    ],
     deps = [
+        "@com_github_curl_curl//:curl",
         "@nlohmann_json//:json",
     ],
 )
