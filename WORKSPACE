@@ -34,9 +34,9 @@ http_archive(
 
 http_archive(
     name = "com_github_pkusunjy_openai_server_proto",
-    sha256 = "7321afeb70ab08cbd7a5be22fb32ce36e867f31b0f2c87110b29591ac5efdef7",
-    strip_prefix = "openai-server-proto-1.1.2",
-    urls = ["https://github.com/pkusunjy/openai-server-proto/archive/v1.1.2.tar.gz"],
+    sha256 = "dfa5647db8636e3f06df910e106d75ab7c9be649cc2d60380be7cc51eaa2e96c",
+    strip_prefix = "openai-server-proto-1.1.4",
+    urls = ["https://github.com/pkusunjy/openai-server-proto/archive/v1.1.4.tar.gz"],
 )
 
 http_archive(

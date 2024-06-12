@@ -12,7 +12,7 @@ class RedisClient {
   void sync_commit();
   void set(const std::string& key, const std::string& value);
   std::string get(const std::string& key);
-  bool exists(const std::vector<std::string>& keys);
+  bool exists(const std::string& key);
   // hashmap operators
   void hmset(const std::string& table_name, const std::vector<std::pair<std::string, std::string>>& kv);
   std::vector<std::string> hmget(const std::string& table_name, const std::vector<std::string>& keys);

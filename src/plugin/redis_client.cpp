@@ -59,7 +59,7 @@ std::string RedisClient::get(const std::string& key) {
   std::stringstream ss;
   ss << "key:" << key;
   std::string res;
-  if (!exists({key})) {
+  if (!exists(key)) {
     ss << " not exist";
   } else {
     _client
@@ -77,15 +77,12 @@ std::string RedisClient::get(const std::string& key) {
   return res;
 }
 
-bool RedisClient::exists(const std::vector<std::string>& keys) {
+bool RedisClient::exists(const std::string& key) {
   std::stringstream ss;
-  ss << "keys:";
-  for (const auto& key : keys) {
-    ss << key << ",";
-  }
+  ss << "key:" << key;
   bool ret = false;
   _client
-      .exists(keys,
+      .exists({key},
               [&](cpp_redis::reply& reply) {
                 if (reply.is_integer() && reply.as_integer() == 1) {
                   ret = true;
@@ -125,6 +122,9 @@ std::vector<std::string> RedisClient::hmget(const std::string& table_name, const
                if (reply.is_array()) {
                  const std::vector<cpp_redis::reply>& arr = reply.as_array();
                  for (const cpp_redis::reply& elem : arr) {
+                   if (elem.is_null()) {
+                     values.emplace_back("{}");
+                   }
                    if (elem.is_string()) {
                      values.emplace_back(elem.as_string());
                    }
@@ -143,7 +143,7 @@ std::vector<std::pair<std::string, std::string>> RedisClient::hgetall(const std:
   std::stringstream ss;
   ss << "table_name:" << table_name;
   std::vector<std::pair<std::string, std::string>> res;
-  if (!exists({table_name})) {
+  if (!exists(table_name)) {
     ss << " not exist";
   } else {
     _client

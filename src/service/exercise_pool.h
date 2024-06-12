@@ -17,7 +17,8 @@ class ExercisePoolImpl final : public ExercisePoolService::Service {
   int32_t initialize();
   grpc::Status get(grpc::ServerContext*, const ExercisePoolRequest*, ExercisePoolResponse*) override;
   grpc::Status set(grpc::ServerContext*, const ExercisePoolRequest*, ExercisePoolResponse*) override;
-  grpc::Status del(grpc::ServerContext*, const ExercisePoolRequest*, ExercisePoolResponse*) override;
+  grpc::Status del_by_title(grpc::ServerContext*, const ExercisePoolRequest*, ExercisePoolResponse*) override;
+  grpc::Status del_by_content_index(grpc::ServerContext*, const ExercisePoolRequest*, ExercisePoolResponse*) override;
 
  private:
   std::string _table_name_base { "mikiai_exercise_pool" };
