@@ -95,30 +95,7 @@ int32_t WxPaymentImpl::generate_http_authorization(const AuthorizationInput& inp
   LOG(INFO) << "sig: " << std::string(sig.begin(), sig.end());
 
   // base64 encode
-  BIO* bio = BIO_new(BIO_s_mem());
-  BIO* b64 = BIO_new(BIO_f_base64());
-  BIO_set_flags(b64, BIO_FLAGS_BASE64_NO_NL);
-  bio = BIO_push(b64, bio);
-  BOOST_SCOPE_EXIT(&bio) {
-    BIO_free_all(bio);
-  }
-  BOOST_SCOPE_EXIT_END
-
-  LOG(INFO) << "siglen:" << siglen << ", sig.size():" << sig.size();
-
-  if (auto ret = BIO_write(bio, sig.data(), sig.size()); ret < 0) {
-    LOG(WARNING) << "BIO write failed";
-    return ret;
-  }
-  if (auto ret = BIO_flush(bio); ret < 0) {
-    LOG(WARNING) << "BIO flush failed";
-    return ret;
-  }
-
-  BUF_MEM* bufferPtr;
-  BIO_get_mem_ptr(bio, &bufferPtr);
-
-  res.assign(bufferPtr->data, bufferPtr->length);
+  res.assign(base64_encode(sig.data(), sig.size()));
   return 0;
 }
 

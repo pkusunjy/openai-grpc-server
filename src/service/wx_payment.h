@@ -9,6 +9,7 @@
 
 #include "absl/log/log.h"
 #include "absl/strings/str_join.h"
+#include "base64.h"
 #include "boost/scope_exit.hpp"
 #include "openssl/evp.h"
 #include "openssl/pem.h"

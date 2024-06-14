@@ -18,5 +18,5 @@ TEST(wx_payment, http_authorization) {
     input.request_body = "{}";
     std::string res;
     ASSERT_EQ(0, impl.generate_http_authorization(input, res));
-    ASSERT_FALSE(!res.empty());
+    ASSERT_FALSE(res.empty());
 }

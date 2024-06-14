@@ -81,6 +81,7 @@ cc_library(
     deps = [
         "//src/plugin:log_sink",
         "@boost.scope_exit",
+        "@com_github_cpp_base64//:base64",
         "@com_github_grpc_grpc//:grpc++",
         "@com_github_grpc_grpc//:grpc++_reflection",
         "@com_github_pkusunjy_openai_server_proto//:wx_payment_cc_grpc",

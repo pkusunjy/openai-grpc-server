@@ -50,6 +50,14 @@ http_archive(
     urls = ["https://github.com/aliyun/aliyun-oss-cpp-sdk/archive/master.zip"],
 )
 
+http_archive(
+    name = "com_github_cpp_base64",
+    build_file = "//bazel:base64.BUILD",
+    sha256 = "0a7ada789a99c2664437f1db8c38b60fe5815cf82b75bea0f0c08933c1317828",
+    strip_prefix = "cpp-base64-2.rc.08",
+    urls = ["https://github.com/ReneNyffenegger/cpp-base64/archive/refs/tags/V2.rc.08.tar.gz"],
+)
+
 # http_archive(
 #     name = "com_github_baidu_babylon",
 #     sha256 = "626c30f7df34dee8b735d8cabd8779ceb1a9274fd73285ec850f522ad36aa7eb",
