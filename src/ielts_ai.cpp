@@ -18,6 +18,7 @@
 #include "src/service/auth.h"
 #include "src/service/exercise_pool.h"
 #include "src/service/ielts_ai.h"
+#include "src/service/wx_payment.h"
 
 ABSL_FLAG(uint16_t, port, 8123, "Server port for the service");
 ABSL_FLAG(bool, offline_mode, false, "Whether enable ssl certification");
@@ -89,6 +90,10 @@ int32_t main(int32_t argc, char* argv[]) {
     return 0;
   }
   builder.RegisterService(&chat_service);
+
+  // wx_payment
+  wx_payment::WxPaymentImpl wx_payment_service;
+  builder.RegisterService(&wx_payment_service);
 
   std::unique_ptr<grpc::Server> server(builder.BuildAndStart());
   LOG(INFO) << "Server listening on " << server_addr;

@@ -1,6 +1,17 @@
 #include "wx_payment.h"
 
 namespace wx_payment {
+
+int32_t WxPaymentImpl::initialize() {
+  OpenSSL_add_all_algorithms();
+  ERR_load_crypto_strings();
+  return 0;
+}
+
+grpc::Status WxPaymentImpl::notify_url(grpc::ServerContext* ctx, const NotifyUrlRequest* req, NotifyUrlResponse* resp) {
+  return grpc::Status::OK;
+}
+
 int32_t WxPaymentImpl::generate_nonce_str(std::string& res) {
   std::ifstream ifs("/dev/random", std::ios::in | std::ios::binary);
   BOOST_SCOPE_EXIT(&ifs) {
@@ -22,4 +33,93 @@ int32_t WxPaymentImpl::generate_nonce_str(std::string& res) {
   LOG(INFO) << "generate nonce_str success: " << res;
   return 0;
 }
+
+int32_t WxPaymentImpl::generate_http_authorization(const AuthorizationInput& input, std::string& res) {
+  auto input_vec = input.get_vec();
+  std::string data = absl::StrJoin(input_vec, "\n");
+  data.append("\n");
+
+  FILE* fp = fopen("/Users/sunjiayu01/projects/openai-grpc-server/apiclient_key.pem", "r");
+  if (fp == nullptr) {
+    LOG(WARNING) << "fopen apiclient_key.pem failed";
+    return -1;
+  }
+  BOOST_SCOPE_EXIT(&fp) {
+    fclose(fp);
+  }
+  BOOST_SCOPE_EXIT_END
+
+  EVP_PKEY* pkey = PEM_read_PrivateKey(fp, nullptr, nullptr, nullptr);
+  if (pkey == nullptr) {
+    LOG(WARNING) << "Failed to load private key";
+    return -1;
+  }
+  BOOST_SCOPE_EXIT(&pkey) {
+    EVP_PKEY_free(pkey);
+  }
+  BOOST_SCOPE_EXIT_END
+
+  EVP_MD_CTX* ctx = EVP_MD_CTX_new();
+  if (ctx == nullptr) {
+    LOG(WARNING) << "Failed to create EVP_MD_CTX";
+    return -1;
+  }
+  BOOST_SCOPE_EXIT(&ctx) {
+    EVP_MD_CTX_free(ctx);
+  }
+  BOOST_SCOPE_EXIT_END
+
+  if (EVP_DigestSignInit(ctx, nullptr, EVP_sha256(), nullptr, pkey) != 1) {
+    LOG(WARNING) << "EVP_DigestSignInit failed";
+    return -1;
+  }
+
+  if (EVP_DigestSignUpdate(ctx, data.c_str(), data.size()) != 1) {
+    LOG(WARNING) << "EVP_DigestSignUpdate failed";
+    return -1;
+  }
+
+  size_t siglen;
+  if (EVP_DigestSignFinal(ctx, nullptr, &siglen) != 1) {
+    LOG(WARNING) << "EVP_DigestSignFinal (size) failed";
+    return -1;
+  }
+  LOG(INFO) << "dgst final siglen:" << siglen;
+
+  std::vector<unsigned char> sig(siglen);
+  if (EVP_DigestSignFinal(ctx, sig.data(), &siglen) != 1) {
+    LOG(WARNING) << "EVP_DigestSignFinal failed";
+    return -1;
+  }
+
+  LOG(INFO) << "sig: " << std::string(sig.begin(), sig.end());
+
+  // base64 encode
+  BIO* bio = BIO_new(BIO_s_mem());
+  BIO* b64 = BIO_new(BIO_f_base64());
+  BIO_set_flags(b64, BIO_FLAGS_BASE64_NO_NL);
+  bio = BIO_push(b64, bio);
+  BOOST_SCOPE_EXIT(&bio) {
+    BIO_free_all(bio);
+  }
+  BOOST_SCOPE_EXIT_END
+
+  LOG(INFO) << "siglen:" << siglen << ", sig.size():" << sig.size();
+
+  if (auto ret = BIO_write(bio, sig.data(), sig.size()); ret < 0) {
+    LOG(WARNING) << "BIO write failed";
+    return ret;
+  }
+  if (auto ret = BIO_flush(bio); ret < 0) {
+    LOG(WARNING) << "BIO flush failed";
+    return ret;
+  }
+
+  BUF_MEM* bufferPtr;
+  BIO_get_mem_ptr(bio, &bufferPtr);
+
+  res.assign(bufferPtr->data, bufferPtr->length);
+  return 0;
+}
+
 }
