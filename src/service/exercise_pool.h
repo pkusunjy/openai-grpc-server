@@ -5,7 +5,7 @@
 #include <grpcpp/health_check_service_interface.h>
 
 #include "absl/strings/str_replace.h"
-#include "proto/exercise_pool/exercise_pool.grpc.pb.h"
+#include "exercise_pool/exercise_pool.grpc.pb.h"
 #include "src/plugin/redis_client.h"
 
 namespace exercise_pool {

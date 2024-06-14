@@ -12,6 +12,7 @@ cc_binary(
         "//src/service:auth",
         "//src/service:exercise_pool",
         "//src/service:ielts_ai",
+        "//src/service:wx_payment",
         "@abseil-cpp//absl/flags:flag",
         "@abseil-cpp//absl/flags:parse",
         "@abseil-cpp//absl/log:flags",
@@ -28,8 +29,7 @@ cc_binary(
     deps = [
         "@boost.scope_exit",
         "@com_github_grpc_grpc//:grpc++",
-        # "@com_github_pkusunjy_openai_server_proto//:chat_completion_cc_grpc",
-        "//proto:chat_completion_cc_grpc",
+        "@com_github_pkusunjy_openai_server_proto//:chat_completion_cc_grpc",
         "@abseil-cpp//absl/flags:flag",
         "@abseil-cpp//absl/flags:parse",
     ],
@@ -40,8 +40,7 @@ cc_binary(
     srcs = ["client_transcribe.cpp"],
     deps = [
         "@com_github_grpc_grpc//:grpc++",
-        # "@com_github_pkusunjy_openai_server_proto//:chat_completion_cc_grpc",
-        "//proto:chat_completion_cc_grpc",
+        "@com_github_pkusunjy_openai_server_proto//:chat_completion_cc_grpc",
         "@abseil-cpp//absl/flags:flag",
         "@abseil-cpp//absl/flags:parse",
     ],

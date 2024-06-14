@@ -14,8 +14,7 @@ cc_library(
         "//src/plugin:token",
         "@com_github_grpc_grpc//:grpc++",
         "@com_github_grpc_grpc//:grpc++_reflection",
-        # "@com_github_pkusunjy_openai_server_proto//:auth_cc_grpc",
-        "//proto:auth_cc_grpc",
+        "@com_github_pkusunjy_openai_server_proto//:auth_cc_grpc",
     ],
 )
 
@@ -32,8 +31,7 @@ cc_library(
         "//src/plugin:redis_client",
         "@com_github_grpc_grpc//:grpc++",
         "@com_github_grpc_grpc//:grpc++_reflection",
-        # "@com_github_pkusunjy_openai_server_proto//:exercise_pool_cc_grpc",
-        "//proto:exercise_pool_cc_grpc",
+        "@com_github_pkusunjy_openai_server_proto//:exercise_pool_cc_grpc",
     ],
 )
 
@@ -64,7 +62,23 @@ cc_library(
         "@com_github_d7ead_liboai//:oai",
         "@com_github_grpc_grpc//:grpc++",
         "@com_github_grpc_grpc//:grpc++_reflection",
-        # "@com_github_pkusunjy_openai_server_proto//:chat_completion_cc_grpc",
-        "//proto:chat_completion_cc_grpc",
+        "@com_github_pkusunjy_openai_server_proto//:chat_completion_cc_grpc",
+    ],
+)
+
+cc_library(
+    name = "wx_payment",
+    srcs = [
+        "wx_payment.cpp",
+    ],
+    hdrs = [
+        "wx_payment.h",
+    ],
+    deps = [
+        "//src/plugin:log_sink",
+        "@boost.scope_exit",
+        "@com_github_grpc_grpc//:grpc++",
+        "@com_github_grpc_grpc//:grpc++_reflection",
+        "@com_github_pkusunjy_openai_server_proto//:wx_payment_cc_grpc",
     ],
 )

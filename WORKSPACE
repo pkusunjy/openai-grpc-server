@@ -21,12 +21,12 @@ http_archive(
     urls = ["https://github.com/pkusunjy/liboai/archive/v1.0.1.tar.gz"],
 )
 
-# http_archive(
-#     name = "com_github_pkusunjy_openai_server_proto",
-#     sha256 = "dfa5647db8636e3f06df910e106d75ab7c9be649cc2d60380be7cc51eaa2e96c",
-#     strip_prefix = "openai-server-proto-1.1.4",
-#     urls = ["https://github.com/pkusunjy/openai-server-proto/archive/v1.1.4.tar.gz"],
-# )
+http_archive(
+    name = "com_github_pkusunjy_openai_server_proto",
+    sha256 = "b5035e07648992c7f19f7755ebf934ec3f499c18132dc9e9783264dfea9b4762",
+    strip_prefix = "openai-server-proto-1.1.5",
+    urls = ["https://github.com/pkusunjy/openai-server-proto/archive/v1.1.5.tar.gz"],
+)
 
 http_archive(
     name = "tacopie",
