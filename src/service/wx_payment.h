@@ -1,22 +1,11 @@
 #pragma once
 
-#include <fstream>
-#include <sstream>
-
 #include <grpcpp/ext/proto_server_reflection_plugin.h>
 #include <grpcpp/grpcpp.h>
 #include <grpcpp/health_check_service_interface.h>
 
 #include "absl/log/log.h"
 #include "absl/strings/str_join.h"
-#include "base64.h"
-#include "boost/scope_exit.hpp"
-#include "openssl/evp.h"
-#include "openssl/pem.h"
-#include "openssl/sha.h"
-#include "openssl/bio.h"
-#include "openssl/err.h"
-#include "openssl/buffer.h"
 #include "wx_payment/wx_payment.grpc.pb.h"
 
 namespace wx_payment {
@@ -32,19 +21,12 @@ struct AuthorizationInput {
   }
 };
 
-class WxPaymentImpl final : public WxPaymentService::Service {
+class NotifyServiceImpl final : public NotifyService::Service {
  public:
-  WxPaymentImpl() = default;
-  virtual ~WxPaymentImpl() {
-    EVP_cleanup();
-    ERR_free_strings();
-  }
+  NotifyServiceImpl() = default;
+  virtual ~NotifyServiceImpl() = default;
   int32_t initialize();
-  grpc::Status notify_url(grpc::ServerContext*, const NotifyUrlRequest*, NotifyUrlResponse*) override;
-
- public:
-  int32_t generate_nonce_str(std::string& res);
-  int32_t generate_http_authorization(const AuthorizationInput& input, std::string& res);
+  grpc::Status jsapi_notify_url(grpc::ServerContext*, const NotifyUrlRequest*, NotifyUrlResponse*) override;
 };
 
-} // namespace exercise_pool
+} // namespace wx_payment

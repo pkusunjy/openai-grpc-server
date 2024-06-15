@@ -91,9 +91,9 @@ int32_t main(int32_t argc, char* argv[]) {
   }
   builder.RegisterService(&chat_service);
 
-  // wx_payment
-  wx_payment::WxPaymentImpl wx_payment_service;
-  builder.RegisterService(&wx_payment_service);
+  // wx_payment notify
+  wx_payment::NotifyServiceImpl notify_service;
+  builder.RegisterService(&notify_service);
 
   std::unique_ptr<grpc::Server> server(builder.BuildAndStart());
   LOG(INFO) << "Server listening on " << server_addr;

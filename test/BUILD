@@ -58,17 +58,6 @@ cc_test(
 )
 
 cc_test(
-    name = "test_wx_payment",
-    srcs = [
-        "test_wx_payment.cpp",
-    ],
-    deps = [
-        "@googletest//:gtest_main",
-        "//src/service:wx_payment",
-    ],
-)
-
-cc_test(
     name = "test_yaml_parser",
     srcs = [
         "test_yaml_parser.cpp",
