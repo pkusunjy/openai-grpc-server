@@ -11,7 +11,6 @@ cc_binary(
         "//src/plugin:token",
         "//src/service:auth",
         "//src/service:ielts_ai",
-        "//src/service:wx_payment",
         "@abseil-cpp//absl/flags:flag",
         "@abseil-cpp//absl/flags:parse",
         "@abseil-cpp//absl/log:flags",

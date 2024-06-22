@@ -47,31 +47,3 @@ cc_library(
         "@com_github_pkusunjy_openai_server_proto//:chat_completion_cc_grpc",
     ],
 )
-
-cc_library(
-    name = "wx_payment",
-    srcs = [
-        "wx_payment.cpp",
-    ],
-    hdrs = [
-        "wx_payment.h",
-    ],
-    linkopts = [
-        "-lcrypto",
-        "-lssl",
-    ],
-    deps = [
-        "//src/plugin:log_sink",
-        "@boost.scope_exit",
-        "@com_github_cpp_base64//:base64",
-        "@com_github_grpc_grpc//:grpc++",
-        "@com_github_grpc_grpc//:grpc++_reflection",
-        "@com_github_pkusunjy_openai_server_proto//:wx_payment_cc_grpc",
-    ] + select({
-        "@platforms//os:macos": [
-            "@boringssl//:ssl",
-            "@boringssl//:crypto",
-        ],
-        "//conditions:default": [],
-    }),
-)
