@@ -23,7 +23,6 @@ cc_library(
         "@abseil-cpp//absl/flags:parse",
         "@abseil-cpp//absl/log",
         "@com_github_aliyun_oss_sdk//:aliyun_oss",
-        "@com_github_cpp_redis//:cpp_redis",
         "@yaml-cpp//:yaml-cpp",
     ],
 )
@@ -37,20 +36,6 @@ cc_library(
         "@abseil-cpp//absl/flags:flag",
         "@abseil-cpp//absl/flags:parse",
         "@abseil-cpp//absl/log",
-        "@yaml-cpp//:yaml-cpp",
-    ],
-)
-
-cc_library(
-    name = "redis_client",
-    srcs = ["redis_client.cpp"],
-    hdrs = ["redis_client.h"],
-    deps = [
-        "//src/plugin:log_sink",
-        "@abseil-cpp//absl/flags:flag",
-        "@abseil-cpp//absl/flags:parse",
-        "@abseil-cpp//absl/log",
-        "@com_github_cpp_redis//:cpp_redis",
         "@yaml-cpp//:yaml-cpp",
     ],
 )

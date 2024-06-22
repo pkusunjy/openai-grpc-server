@@ -10,7 +10,6 @@ cc_binary(
         "//src/plugin:oss",
         "//src/plugin:token",
         "//src/service:auth",
-        "//src/service:exercise_pool",
         "//src/service:ielts_ai",
         "//src/service:wx_payment",
         "@abseil-cpp//absl/flags:flag",

@@ -36,13 +36,6 @@ http_archive(
 )
 
 http_archive(
-    name = "com_github_cpp_redis",
-    sha256 = "a759911f535266c2ecde1e426bc8d4f17c26cef09e8a3d94ae973160de988d8b",
-    strip_prefix = "cpp_redis-master",
-    urls = ["https://github.com/cpp-redis/cpp_redis/archive/refs/heads/master.zip"],
-)
-
-http_archive(
     name = "com_github_aliyun_oss_sdk",
     build_file = "//bazel:aliyun_oss_sdk.BUILD",
     sha256 = "5cb6e840b966c1c05f01260e82967e791da90c641ad932bf42c14bbc5757a18c",

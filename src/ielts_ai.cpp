@@ -16,7 +16,6 @@
 #include "src/plugin/log_sink.h"
 #include "src/plugin/token.h"
 #include "src/service/auth.h"
-#include "src/service/exercise_pool.h"
 #include "src/service/ielts_ai.h"
 #include "src/service/wx_payment.h"
 
@@ -74,14 +73,6 @@ int32_t main(int32_t argc, char* argv[]) {
   // auth
   auth::AuthImpl auth_service;
   builder.RegisterService(&auth_service);
-
-  // exercise pool
-  exercise_pool::ExercisePoolImpl exercise_pool_service;
-  if (exercise_pool_service.initialize() != 0) {
-    LOG(WARNING) << "ExercisePool initialize failed, server quit";
-    return 0;
-  }
-  builder.RegisterService(&exercise_pool_service);
 
   // chat
   chat_completion::IeltsAI chat_service;

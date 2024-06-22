@@ -25,8 +25,6 @@ jobs:
         sed -i "s/OPENAI_API_KEY/${{ secrets.OPENAI_API_KEY }}/g" ./conf/auth.yaml
         sed -i "s/TOKEN_WX_APPID/${{ secrets.TOKEN_WX_APPID }}/g" ./conf/auth.yaml
         sed -i "s/TOKEN_WX_SECRET/${{ secrets.TOKEN_WX_SECRET }}/g" ./conf/auth.yaml
-        sed -i "s/REDIS_HOST/${{ secrets.REDIS_HOST }}/g" ./conf/redis.yaml
-        sed -i "s/REDIS_PORT/${{ secrets.REDIS_PORT }}/g" ./conf/redis.yaml
         bazel build --action_env=CC=clang-14 //...
         mkdir -p output/bin output/conf
         mv ./bazel-bin/src/ielts_ai output/bin/
