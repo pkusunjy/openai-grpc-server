@@ -9,7 +9,6 @@ cc_binary(
         "//src/plugin:log_sink",
         "//src/plugin:oss",
         "//src/plugin:token",
-        "//src/service:auth",
         "//src/service:ielts_ai",
         "@abseil-cpp//absl/flags:flag",
         "@abseil-cpp//absl/flags:parse",

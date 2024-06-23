@@ -15,7 +15,6 @@
 #include "liboai.h"
 #include "src/plugin/log_sink.h"
 #include "src/plugin/token.h"
-#include "src/service/auth.h"
 #include "src/service/ielts_ai.h"
 
 ABSL_FLAG(uint16_t, port, 8123, "Server port for the service");
@@ -68,10 +67,6 @@ int32_t main(int32_t argc, char* argv[]) {
         ReadFileContent(absl::GetFlag(FLAGS_private_key)), ReadFileContent(absl::GetFlag(FLAGS_cert_chain))});
     builder.AddListeningPort(server_addr, grpc::SslServerCredentials(ssl_opts));
   }
-
-  // auth
-  auth::AuthImpl auth_service;
-  builder.RegisterService(&auth_service);
 
   // chat
   chat_completion::IeltsAI chat_service;

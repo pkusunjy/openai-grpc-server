@@ -29,13 +29,6 @@ http_archive(
 )
 
 http_archive(
-    name = "tacopie",
-    sha256 = "bbdebecdb68d5f9eb64170217000daf844e0aee18b8c4d3dd373d07efd9f7316",
-    strip_prefix = "tacopie-master",
-    url = "https://github.com/cylix/tacopie/archive/master.zip",
-)
-
-http_archive(
     name = "com_github_aliyun_oss_sdk",
     build_file = "//bazel:aliyun_oss_sdk.BUILD",
     sha256 = "5cb6e840b966c1c05f01260e82967e791da90c641ad932bf42c14bbc5757a18c",
