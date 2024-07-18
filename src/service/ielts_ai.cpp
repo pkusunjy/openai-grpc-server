@@ -15,117 +15,19 @@ int32_t IeltsAI::initialize() {
     LOG(WARNING) << "liboai completion ctor failed";
     return -1;
   }
-  _model = "gpt-3.5-turbo";
   // aliyun oss
   _oss = std::make_unique<plugin::OssClient>();
-  if (_oss == nullptr) {
-    LOG(WARNING) << "aliyun oss ctor failed";
-    return -1;
-  }
-  if (_oss->initialize() != 0) {
+  if (_oss == nullptr || _oss->initialize() != 0) {
     LOG(WARNING) << "aliyun oss client init failed";
     return -1;
   }
   // prompt
   _prompt_plugin = std::make_unique<plugin::Prompt>();
-  if (_prompt_plugin == nullptr) {
-    LOG(WARNING) << "prompt plugin ctor failed";
-    return -1;
-  }
-  if (_prompt_plugin->initialize() != 0) {
+  if (_prompt_plugin == nullptr || _prompt_plugin->initialize() != 0) {
     LOG(WARNING) << "prompt plugin initialize failed";
     return -1;
   }
   return 0;
-}
-
-grpc::Status IeltsAI::ask(grpc::ServerContext* ctx, const ChatMessage* req, ChatMessage* resp) {
-  if (_chat_completion == nullptr) {
-    LOG(WARNING) << "openai chat completion not ready";
-    return grpc::Status(grpc::StatusCode::UNAUTHENTICATED, "openai chat completion nullptr");
-  }
-  absl::Time step1 = absl::Now();
-  liboai::Conversation convo;
-  std::string system_data =
-      "You are now an ielts teacher. "
-      "I give you a title, you generate a writing article. "
-      "This article should have at least 250 words and at most 300 words. "
-      "This article should not talk anything about Chinese politics";
-  if (!convo.SetSystemData(system_data)) {
-    LOG(WARNING) << "set system data failed";
-    return grpc::Status(grpc::StatusCode::FAILED_PRECONDITION, "conversion system data not set");
-  }
-  absl::Time step2 = absl::Now();
-  if (!convo.AddUserData(req->content())) {
-    LOG(WARNING) << "input data empty";
-    return grpc::Status(grpc::StatusCode::INVALID_ARGUMENT, "input empty, check your input");
-  }
-  absl::Time step3 = absl::Now();
-  liboai::Response openai_resp = _chat_completion->create(_model, convo);
-  absl::Time step4 = absl::Now();
-  if (!convo.Update(openai_resp)) {
-    LOG(WARNING) << "update conversion failed";
-    return grpc::Status(grpc::StatusCode::INTERNAL, "internal error");
-  }
-  absl::Time step5 = absl::Now();
-  LOG(INFO) << "dealing with " << req->content() << " SetSystemData " << absl::ToDoubleMilliseconds(step2 - step1)
-            << " AddUserData " << absl::ToDoubleMilliseconds(step3 - step2) << " CreateCompletion "
-            << absl::ToDoubleMilliseconds(step4 - step3) << " Update " << absl::ToDoubleMilliseconds(step5 - step4)
-            << ", total cost time " << absl::ToDoubleMilliseconds(step5 - step1);
-  resp->set_content(convo.GetLastResponse());
-  return grpc::Status::OK;
-}
-
-grpc::Status IeltsAI::write_article_by_title(grpc::ServerContext* ctx, const ChatMessage* req,
-                                             grpc::ServerWriter<ChatMessage>* stream) {
-  if (_chat_completion == nullptr) {
-    LOG(WARNING) << "openai chat completion not ready";
-    return grpc::Status(grpc::StatusCode::UNAUTHENTICATED, "openai chat completion nullptr");
-  }
-  absl::Time step1 = absl::Now();
-  liboai::Conversation convo;
-  std::string system_data =
-      "You are now an ielts teacher. "
-      "I give you a title, you generate a writing article. "
-      "This article should have at least 250 words and at most 300 words. "
-      "This article should not talk anything about Chinese politics";
-  if (!convo.SetSystemData(system_data)) {
-    LOG(WARNING) << "set system data failed";
-    return grpc::Status(grpc::StatusCode::FAILED_PRECONDITION, "conversion system data not set");
-  }
-  absl::Time step2 = absl::Now();
-  if (!convo.AddUserData(req->content())) {
-    LOG(WARNING) << "input data empty";
-    return grpc::Status(grpc::StatusCode::INVALID_ARGUMENT, "input empty, check your input");
-  }
-
-  std::regex pattern{"\"content\":\"(.*?)\""};
-  std::smatch matches;
-  auto stream_handler = [&](std::string data, intptr_t ptr) -> bool {
-    auto reg_begin = std::sregex_iterator(data.begin(), data.end(), pattern);
-    if (reg_begin == std::sregex_iterator()) {
-      LOG(WARNING) << "regex match failed, raw: " << data;
-    }
-    for (auto i = reg_begin; i != std::sregex_iterator(); ++i) {
-      ChatMessage resp{};
-      resp.set_content((*i)[1]);
-      stream->Write(std::move(resp));
-    }
-    return true;
-  };
-
-  absl::Time step3 = absl::Now();
-  auto openai_resp =
-      _chat_completion->create_async(_model, convo, std::nullopt, std::nullopt, std::nullopt, stream_handler);
-
-  openai_resp.wait();
-
-  absl::Time step4 = absl::Now();
-  LOG(INFO) << "logid " << req->logid() << " uid " << req->uid() << " content " << req->content() << " SetSystemData "
-            << absl::ToDoubleMilliseconds(step2 - step1) << " AddUserData " << absl::ToDoubleMilliseconds(step3 - step2)
-            << " CreateCompletion " << absl::ToDoubleMilliseconds(step4 - step3) << ", total cost time "
-            << absl::ToDoubleMilliseconds(step4 - step1);
-  return grpc::Status::OK;
 }
 
 grpc::Status IeltsAI::transcribe_judge(grpc::ServerContext* ctx, const ChatMessage* req, ChatMessage* resp) {
@@ -141,27 +43,33 @@ grpc::Status IeltsAI::transcribe_judge(grpc::ServerContext* ctx, const ChatMessa
     LOG(WARNING) << "OssClient get_object failed";
     return grpc::Status(grpc::StatusCode::FAILED_PRECONDITION, "oss error");
   }
+  BOOST_SCOPE_EXIT(&req, &local_filename) {
+    // delete audio file on disk
+    if (unlink(local_filename.c_str()) < 0) {
+      char buf[256];
+      strerror_r(errno, buf, 256);
+      LOG(WARNING) << "logid " << req->logid() << "unlink failed file: " << local_filename << ", errno: " << errno
+                   << ", errmsg: " << buf;
+    }
+  }
+  BOOST_SCOPE_EXIT_END
   absl::Time step2 = absl::Now();
   // 2. call api
   auto res = _audio->transcribe(local_filename, "whisper-1");
   absl::Time step3 = absl::Now();
   // 3. response
+  LOG(INFO) << "logid " << req->logid() << " transcribe input: " << local_filename
+            << " result: " << nlohmann::to_string(res.raw_json);
   auto transcribe_res = res["text"].get<std::string>();
-  LOG(INFO) << "logid " << req->logid() << " uid " << req->uid() << " transcribe_res: " << transcribe_res;
 
   resp->set_content(transcribe_res);
-  // 4. delete audio file on disk
-  if (unlink(local_filename.c_str()) < 0) {
-    char buf[256];
-    strerror_r(errno, buf, 256);
-    LOG(WARNING) << "logid " << req->logid() << "unlink failed file: " << local_filename << ", errno: " << errno << ", errmsg: " << buf;
-  }
-  // 5. TODO: delete aliyun oos
+  // 4. TODO: delete aliyun oos
   absl::Time step4 = absl::Now();
-  LOG(INFO) << "logid " << req->logid() << " uid " << req->uid() << " get from oss cost: "
-            << absl::ToDoubleMilliseconds(step2 - step1) << " transcribe cost: " << absl::ToDoubleMilliseconds(step3 - step2)
-            << " unlink cost: " << absl::ToDoubleMilliseconds(step4 - step3) << ", total cost: "
-            << absl::ToDoubleMilliseconds(step4 - step1);
+  LOG(INFO) << "logid " << req->logid() << " uid " << req->uid()
+            << " get from oss cost: " << absl::ToDoubleMilliseconds(step2 - step1)
+            << " transcribe cost: " << absl::ToDoubleMilliseconds(step3 - step2)
+            << " unlink cost: " << absl::ToDoubleMilliseconds(step4 - step3)
+            << ", total cost: " << absl::ToDoubleMilliseconds(step4 - step1);
   return grpc::Status::OK;
 }
 

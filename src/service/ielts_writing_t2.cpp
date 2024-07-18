@@ -21,7 +21,7 @@ grpc::Status IeltsAI::ielts_writing_t2_generate(grpc::ServerContext* ctx, const 
 
   std::regex pattern{"\"content\":\"(.*?)\""};
   std::smatch matches;
-  auto stream_handler = [&](std::string data, intptr_t ptr) -> bool {
+  auto stream_handler = [&](std::string data, intptr_t ptr, liboai::Conversation&) -> bool {
     auto reg_begin = std::sregex_iterator(data.begin(), data.end(), pattern);
     if (reg_begin == std::sregex_iterator()) {
       LOG(WARNING) << "regex match failed, raw: " << data;
@@ -34,8 +34,8 @@ grpc::Status IeltsAI::ielts_writing_t2_generate(grpc::ServerContext* ctx, const 
     return true;
   };
 
-  auto openai_resp =
-      _chat_completion->create_async(_model, convo, std::nullopt, std::nullopt, std::nullopt, stream_handler);
+  auto openai_resp = _chat_completion->create_async(_model, convo, std::nullopt, std::nullopt, std::nullopt,
+                                                    std::nullopt, stream_handler);
 
   openai_resp.wait();
 
@@ -65,7 +65,7 @@ grpc::Status IeltsAI::ielts_writing_t2_enrich(grpc::ServerContext* ctx, const Ch
 
   std::regex pattern{"\"content\":\"(.*?)\""};
   std::smatch matches;
-  auto stream_handler = [&](std::string data, intptr_t ptr) -> bool {
+  auto stream_handler = [&](std::string data, intptr_t ptr, liboai::Conversation&) -> bool {
     auto reg_begin = std::sregex_iterator(data.begin(), data.end(), pattern);
     if (reg_begin == std::sregex_iterator()) {
       LOG(WARNING) << "regex match failed, raw: " << data;
@@ -78,8 +78,8 @@ grpc::Status IeltsAI::ielts_writing_t2_enrich(grpc::ServerContext* ctx, const Ch
     return true;
   };
 
-  auto openai_resp =
-      _chat_completion->create_async(_model, convo, std::nullopt, std::nullopt, std::nullopt, stream_handler);
+  auto openai_resp = _chat_completion->create_async(_model, convo, std::nullopt, std::nullopt, std::nullopt,
+                                                    std::nullopt, stream_handler);
 
   openai_resp.wait();
 
@@ -108,7 +108,7 @@ grpc::Status IeltsAI::ielts_writing_t2_score(grpc::ServerContext* ctx, const Cha
 
   std::regex pattern{"\"content\":\"(.*?)\""};
   std::smatch matches;
-  auto stream_handler = [&](std::string data, intptr_t ptr) -> bool {
+  auto stream_handler = [&](std::string data, intptr_t ptr, liboai::Conversation&) -> bool {
     auto reg_begin = std::sregex_iterator(data.begin(), data.end(), pattern);
     if (reg_begin == std::sregex_iterator()) {
       LOG(WARNING) << "regex match failed, raw: " << data;
@@ -121,8 +121,8 @@ grpc::Status IeltsAI::ielts_writing_t2_score(grpc::ServerContext* ctx, const Cha
     return true;
   };
 
-  auto openai_resp =
-      _chat_completion->create_async(_model, convo, std::nullopt, std::nullopt, std::nullopt, stream_handler);
+  auto openai_resp = _chat_completion->create_async(_model, convo, std::nullopt, std::nullopt, std::nullopt,
+                                                    std::nullopt, stream_handler);
 
   openai_resp.wait();
 

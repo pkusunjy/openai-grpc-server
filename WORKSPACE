@@ -2,6 +2,7 @@ workspace(name = "openai-grpc-server")
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
+# for liboai
 http_archive(
     name = "com_github_curl_curl",
     urls = [
@@ -16,9 +17,9 @@ http_archive(
 http_archive(
     name = "com_github_d7ead_liboai",
     build_file = "//bazel:liboai.BUILD",
-    sha256 = "8b4797ef5bc5876cba760695563bb7d0341f432abd38488620d642509c698773",
-    strip_prefix = "liboai-1.0.1/liboai",
-    urls = ["https://github.com/pkusunjy/liboai/archive/v1.0.1.tar.gz"],
+    sha256 = "71d1c7fe55fdec465e3f1ec376104c1bac92e014f5984a9024749a73e6a312ff",
+    strip_prefix = "liboai-1.0.7/liboai",
+    urls = ["https://github.com/pkusunjy/liboai/archive/v1.0.7.tar.gz"],
 )
 
 http_archive(

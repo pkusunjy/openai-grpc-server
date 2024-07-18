@@ -1,22 +1,23 @@
 #pragma once
 
-#include <regex>
 #include <grpcpp/ext/proto_server_reflection_plugin.h>
 #include <grpcpp/grpcpp.h>
 #include <grpcpp/health_check_service_interface.h>
 
+#include <queue>
+#include <regex>
+
 #include "absl/log/log.h"
 #include "absl/strings/str_format.h"
-#include "absl/strings/str_split.h"
 #include "absl/strings/str_replace.h"
+#include "absl/strings/str_split.h"
 #include "absl/time/time.h"
+#include "boost/scope_exit.hpp"
 #include "chat_completion/chat_completion.grpc.pb.h"
 #include "components/audio.h"
 #include "components/chat.h"
 #include "src/plugin/oss.h"
 #include "src/plugin/prompt.h"
-
-#include <queue>
 
 namespace chat_completion {
 
@@ -25,9 +26,7 @@ class IeltsAI final : public ChatService::Service {
   IeltsAI() = default;
   virtual ~IeltsAI() = default;
   int32_t initialize();
-  grpc::Status ask(grpc::ServerContext*, const ChatMessage*, ChatMessage*) override;
-  grpc::Status write_article_by_title(grpc::ServerContext*, const ChatMessage*,
-                                      grpc::ServerWriter<ChatMessage>*) override;
+  // 音频转文字
   grpc::Status transcribe_judge(grpc::ServerContext*, const ChatMessage*, ChatMessage*) override;
   // 雅思口语P1
   grpc::Status ielts_speaking_p1_generate(grpc::ServerContext*, const ChatMessage*,
@@ -95,12 +94,17 @@ class IeltsAI final : public ChatService::Service {
   grpc::Status cn_to_en(grpc::ServerContext*, const ChatMessage*, grpc::ServerWriter<ChatMessage>*) override;
   grpc::Status en_to_cn(grpc::ServerContext*, const ChatMessage*, grpc::ServerWriter<ChatMessage>*) override;
 
+  using StreamHandlerFunc = std::function<bool(std::string, intptr_t, liboai::Conversation&)>;
+
  private:
-  std::unique_ptr<liboai::Audio> _audio;
-  std::unique_ptr<liboai::ChatCompletion> _chat_completion;
-  std::string _model;
-  std::unique_ptr<plugin::OssClient> _oss;
-  std::unique_ptr<plugin::Prompt> _prompt_plugin;
+  void stream_handler() {}
+
+ private:
+  std::unique_ptr<liboai::Audio> _audio{nullptr};
+  std::unique_ptr<liboai::ChatCompletion> _chat_completion{nullptr};
+  std::string _model{"qwen-plus"};
+  std::unique_ptr<plugin::OssClient> _oss{nullptr};
+  std::unique_ptr<plugin::Prompt> _prompt_plugin{nullptr};
 };
 
 } // namespace chat_completion
