@@ -17,16 +17,16 @@ http_archive(
 http_archive(
     name = "com_github_d7ead_liboai",
     build_file = "//bazel:liboai.BUILD",
-    sha256 = "71d1c7fe55fdec465e3f1ec376104c1bac92e014f5984a9024749a73e6a312ff",
-    strip_prefix = "liboai-1.0.7/liboai",
-    urls = ["https://github.com/pkusunjy/liboai/archive/v1.0.7.tar.gz"],
+    sha256 = "83108eb34c71b6bf0d18d8b7071a76a6c1609fea60f32afedaf7f69c95f0b827",
+    strip_prefix = "liboai-1.0.11/liboai",
+    urls = ["https://github.com/pkusunjy/liboai/archive/v1.0.11.tar.gz"],
 )
 
 http_archive(
     name = "com_github_pkusunjy_openai_server_proto",
-    sha256 = "5c6cf3341f68cc9ac54534363fe2e0c923bfa22c1583a476934cd98d2e2f2540",
-    strip_prefix = "openai-server-proto-1.1.6",
-    urls = ["https://github.com/pkusunjy/openai-server-proto/archive/v1.1.6.tar.gz"],
+    sha256 = "d4d1e58c1f72e4ac93068e9f4bbc381d9a5ea1ddc37407635d175138b06ee92c",
+    strip_prefix = "openai-server-proto-1.1.13",
+    urls = ["https://github.com/pkusunjy/openai-server-proto/archive/v1.1.13.tar.gz"],
 )
 
 http_archive(

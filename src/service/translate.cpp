@@ -40,8 +40,8 @@ grpc::Status IeltsAI::cn_to_en(grpc::ServerContext* ctx, const ChatMessage* req,
   openai_resp.wait();
 
   absl::Time step2 = absl::Now();
-  LOG(INFO) << "logid " << req->logid() << " uid " << req->uid() << " content " << req->content() << " total cost time "
-            << absl::ToDoubleMilliseconds(step2 - step1);
+  LOG(INFO) << "logid " << req->logid() << " uid " << req->userid() << " content " << req->content()
+            << " total cost time " << absl::ToDoubleMilliseconds(step2 - step1);
   return grpc::Status::OK;
 }
 
@@ -83,8 +83,8 @@ grpc::Status IeltsAI::en_to_cn(grpc::ServerContext* ctx, const ChatMessage* req,
   openai_resp.wait();
 
   absl::Time step2 = absl::Now();
-  LOG(INFO) << "logid " << req->logid() << " uid " << req->uid() << " content " << req->content() << " total cost time "
-            << absl::ToDoubleMilliseconds(step2 - step1);
+  LOG(INFO) << "logid " << req->logid() << " uid " << req->userid() << " content " << req->content()
+            << " total cost time " << absl::ToDoubleMilliseconds(step2 - step1);
   return grpc::Status::OK;
 }
 

@@ -16,8 +16,10 @@
 #include "chat_completion/chat_completion.grpc.pb.h"
 #include "components/audio.h"
 #include "components/chat.h"
+#include "core/authorization.h"
 #include "src/plugin/oss.h"
 #include "src/plugin/prompt.h"
+#include "src/plugin/token.h"
 
 namespace chat_completion {
 
@@ -26,8 +28,9 @@ class IeltsAI final : public ChatService::Service {
   IeltsAI() = default;
   virtual ~IeltsAI() = default;
   int32_t initialize();
-  // 音频转文字
+  // 音频文字互转
   grpc::Status transcribe_judge(grpc::ServerContext*, const ChatMessage*, ChatMessage*) override;
+  grpc::Status text_to_speech(grpc::ServerContext*, const ChatMessage*, ChatMessage*) override;
   // 雅思口语P1
   grpc::Status ielts_speaking_p1_generate(grpc::ServerContext*, const ChatMessage*,
                                           grpc::ServerWriter<ChatMessage>*) override;
@@ -100,6 +103,8 @@ class IeltsAI final : public ChatService::Service {
   void stream_handler() {}
 
  private:
+  liboai::Authorization _audio_auth{};
+  liboai::Authorization _chat_auth{};
   std::unique_ptr<liboai::Audio> _audio{nullptr};
   std::unique_ptr<liboai::ChatCompletion> _chat_completion{nullptr};
   std::string _model{"qwen-plus"};

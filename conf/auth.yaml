@@ -1,4 +1,10 @@
+# ai api keys
 openai_api_key: OPENAI_API_KEY
+qwen_api_key: QWEN_API_KEY
+# ai url roots
+openai_url_root: https://mikiai-tokyo-onctmshaci.ap-northeast-1.fcapp.run/v1
+qwen_url_root: https://dashscope.aliyuncs.com/compatible-mode/v1
+# aliyun object storage service
 oss_endpoint: OSS_ACCESS_ENDPOINT
 oss_access_key_id: OSS_ACCESS_KEY_ID
 oss_access_key_secret: OSS_ACCESS_KEY_SECRET

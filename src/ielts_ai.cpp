@@ -45,14 +45,6 @@ int32_t main(int32_t argc, char* argv[]) {
     return 0;
   }
 
-  std::string openai_api_key = token_instance.get_token_by_name("openai_api_key");
-  LOG(INFO) << "openai_api_key: " << openai_api_key;
-
-  if (!liboai::Authorization::Authorizer().SetKey(openai_api_key)) {
-    LOG(WARNING) << "OPENAI_API_KEY not found, server quit";
-    return 0;
-  }
-
   grpc::EnableDefaultHealthCheckService(true);
   grpc::reflection::InitProtoReflectionServerBuilderPlugin();
 
