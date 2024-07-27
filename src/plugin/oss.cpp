@@ -9,6 +9,7 @@
 ABSL_FLAG(std::string, aliyun_oss_file, "./conf/auth.yaml", "aliyun oss file");
 
 namespace plugin {
+
 OssClient::~OssClient() {
   AlibabaCloud::OSS::ShutdownSdk();
 }
@@ -40,8 +41,7 @@ int32_t OssClient::initialize() {
   return 0;
 }
 
-int32_t OssClient::put_object(const std::string& object_name,
-                              const std::string& local_path) {
+int32_t OssClient::put_object(const std::string& object_name, const std::string& local_path) {
   auto outcome = _client->PutObject(_bucket_name, object_name, local_path);
   if (!outcome.isSuccess()) {
     LOG(WARNING) << "OssClient PutObject fail"
@@ -51,8 +51,8 @@ int32_t OssClient::put_object(const std::string& object_name,
   }
   return 0;
 }
-int32_t OssClient::get_object(const std::string& object_name,
-                              const std::string& local_path) {
+
+int32_t OssClient::get_object(const std::string& object_name, const std::string& local_path) {
   AlibabaCloud::OSS::GetObjectRequest request(_bucket_name, object_name);
   request.setResponseStreamFactory([=]() {
     return std::make_shared<std::fstream>(
@@ -84,6 +84,7 @@ int32_t OssClient::list_objects(std::vector<std::string>& object_names) {
   }
   return 0;
 }
+
 int32_t OssClient::delete_object(const std::string& object_name) {
   AlibabaCloud::OSS::DeleteObjectRequest request(_bucket_name, object_name);
   auto outcome = _client->DeleteObject(request);
@@ -95,4 +96,17 @@ int32_t OssClient::delete_object(const std::string& object_name) {
   }
   return 0;
 }
+
+int32_t OssClient::gen_presigned_url(const std::string& object_name, std::string& url) {
+  auto outcome = _client->GeneratePresignedUrl(_bucket_name, object_name);
+  if (!outcome.isSuccess()) {
+    LOG(WARNING) << "OssClient GeneratePresignedUrl fail"
+                 << ",code:" << outcome.error().Code() << ",message:" << outcome.error().Message()
+                 << ",requestId:" << outcome.error().RequestId() << std::endl;
+    return -1;
+  }
+  url.assign(outcome.result());
+  return 0;
+}
+
 } // namespace plugin

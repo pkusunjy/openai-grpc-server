@@ -14,6 +14,7 @@ class OssClient {
   int32_t get_object(const std::string& object_name, const std::string& local_path);
   int32_t list_objects(std::vector<std::string>& object_names);
   int32_t delete_object(const std::string& object_name);
+  int32_t gen_presigned_url(const std::string& object_name, std::string& url);
 
  private:
   YAML::Node _config;

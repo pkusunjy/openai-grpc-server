@@ -120,8 +120,12 @@ grpc::Status IeltsAI::text_to_speech(grpc::ServerContext* ctx, const ChatMessage
   // 3. response
   absl::Time step3 = absl::Now();
   LOG(INFO) << "logid " << req->logid() << " text_to_speech input: " << input << " result: " << local_filename;
-
-  resp->set_content(local_filename);
+  std::string url;
+  if (_oss->gen_presigned_url(local_filename, url) != 0) {
+    LOG(WARNING) << "OssClient gen_presigned_url failed";
+    return grpc::Status(grpc::StatusCode::FAILED_PRECONDITION, "oss error");
+  }
+  resp->set_content(url);
   // 4. TODO: delete aliyun oos
   absl::Time step4 = absl::Now();
   LOG(INFO) << "logid " << req->logid() << " uid " << req->userid()
