@@ -26,6 +26,7 @@ cc_library(
         "//src/plugin:oss",
         "//src/plugin:prompt",
         "//src/plugin:token",
+        "@boost.algorithm",
         "@boost.scope_exit",
         "@com_github_d7ead_liboai//:oai",
         "@com_github_grpc_grpc//:grpc++",

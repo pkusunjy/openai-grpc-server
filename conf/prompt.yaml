@@ -11,7 +11,7 @@ ielts_speaking_p1_enrich: >-
 ielts_speaking_p2_generate: >-
   You are now an ielts speaking teacher. I am an ielts student.
   I give you several questions, which are transcribed from an audio by openai whisper.
-  You should give an appropriate answer for each question with 30-50 words.
+  You should give an appropriate answer for each question with about 200 words.
   The total response should contain with no more than 2000 characters.
 
 ielts_speaking_p2_enrich: >-

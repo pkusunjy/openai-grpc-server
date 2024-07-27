@@ -135,4 +135,43 @@ grpc::Status IeltsAI::text_to_speech(grpc::ServerContext* ctx, const ChatMessage
   return grpc::Status::OK;
 }
 
+void IeltsAI::do_split_and_trim(const std::string& input, std::vector<std::string>& output) {
+  if (input.empty()) {
+    return;
+  }
+  boost::split(output, input, boost::is_any_of("\n"), boost::token_compress_on);
+  auto predicate = [](char c) {
+    return c != ' ' && c != '\t' && c != '\n';
+  };
+  for (auto& item : output) {
+    if (item.empty()) {
+      continue;
+    }
+    item.erase(item.begin(), std::find_if(item.begin(), item.end(), predicate));
+    item.erase(std::find_if(item.rbegin(), item.rend(), predicate).base(), item.end());
+    // remove "data: " prefix
+    if (item.size() > 6 && item.substr(0, 6) == "data: ") {
+      item.assign(item.substr(6));
+    }
+  }
+}
+
+int32_t IeltsAI::parse_content(const std::string& input, std::string& output) {
+  nlohmann::json j;
+
+  try {
+    j = nlohmann::json::parse(input);
+  } catch (const nlohmann::json::parse_error& e) {
+    LOG(WARNING) << "json parse error:" << e.what();
+    return -1;
+  }
+
+  if (!j.contains("choices") || !j["choices"][0].contains("delta") || !j["choices"][0]["delta"].contains("content")) {
+    return -1;
+  }
+
+  output.assign(j["choices"][0]["delta"]["content"].get<std::string>());
+  return 0;
+}
+
 } // namespace chat_completion

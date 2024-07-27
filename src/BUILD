@@ -15,6 +15,7 @@ cc_binary(
         "@abseil-cpp//absl/log:flags",
         "@abseil-cpp//absl/log:initialize",
         "@abseil-cpp//absl/strings:str_format",
+        "@boost.algorithm",
         "@boost.scope_exit",
         "@com_github_d7ead_liboai//:oai",
     ],

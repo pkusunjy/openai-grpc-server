@@ -106,6 +106,10 @@ int32_t OssClient::gen_presigned_url(const std::string& object_name, std::string
     return -1;
   }
   url.assign(outcome.result());
+  // http -> https
+  if (url.find("http://") == 0) {
+    url.replace(0, 4, "https");
+  }
   return 0;
 }
 

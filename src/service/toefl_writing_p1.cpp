@@ -19,17 +19,26 @@ grpc::Status IeltsAI::toefl_writing_p1_enrich(grpc::ServerContext* ctx, const Ch
     return grpc::Status(grpc::StatusCode::INVALID_ARGUMENT, "input empty, check your input");
   }
 
-  std::regex pattern{"\"content\":\"(.*?)\""};
-  std::smatch matches;
   auto stream_handler = [&](std::string data, intptr_t ptr, liboai::Conversation&) -> bool {
-    auto reg_begin = std::sregex_iterator(data.begin(), data.end(), pattern);
-    if (reg_begin == std::sregex_iterator()) {
-      LOG(WARNING) << "regex match failed, raw: " << data;
-    }
-    for (auto i = reg_begin; i != std::sregex_iterator(); ++i) {
-      ChatMessage resp{};
-      resp.set_content((*i)[1]);
-      stream->Write(std::move(resp));
+    std::vector<std::string> raw_json_strs;
+    do_split_and_trim(data, raw_json_strs);
+
+    ChatMessage resp{};
+    for (const auto& item : raw_json_strs) {
+      if (item.empty()) {
+        continue;
+      }
+      if (item == "[DONE]") {
+        resp.clear_content();
+        stream->WriteLast(resp, grpc::WriteOptions());
+        break;
+      }
+      std::string content;
+      if (parse_content(item, content) != 0) {
+        LOG(WARNING) << "parse content failed input:" << item;
+      }
+      resp.set_content(content);
+      stream->Write(resp);
     }
     return true;
   };
@@ -62,17 +71,26 @@ grpc::Status IeltsAI::toefl_writing_p1_score(grpc::ServerContext* ctx, const Cha
     return grpc::Status(grpc::StatusCode::INVALID_ARGUMENT, "input empty, check your input");
   }
 
-  std::regex pattern{"\"content\":\"(.*?)\""};
-  std::smatch matches;
   auto stream_handler = [&](std::string data, intptr_t ptr, liboai::Conversation&) -> bool {
-    auto reg_begin = std::sregex_iterator(data.begin(), data.end(), pattern);
-    if (reg_begin == std::sregex_iterator()) {
-      LOG(WARNING) << "regex match failed, raw: " << data;
-    }
-    for (auto i = reg_begin; i != std::sregex_iterator(); ++i) {
-      ChatMessage resp{};
-      resp.set_content((*i)[1]);
-      stream->Write(std::move(resp));
+    std::vector<std::string> raw_json_strs;
+    do_split_and_trim(data, raw_json_strs);
+
+    ChatMessage resp{};
+    for (const auto& item : raw_json_strs) {
+      if (item.empty()) {
+        continue;
+      }
+      if (item == "[DONE]") {
+        resp.clear_content();
+        stream->WriteLast(resp, grpc::WriteOptions());
+        break;
+      }
+      std::string content;
+      if (parse_content(item, content) != 0) {
+        LOG(WARNING) << "parse content failed input:" << item;
+      }
+      resp.set_content(content);
+      stream->Write(resp);
     }
     return true;
   };

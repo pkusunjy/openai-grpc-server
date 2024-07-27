@@ -12,6 +12,7 @@
 #include "absl/strings/str_replace.h"
 #include "absl/strings/str_split.h"
 #include "absl/time/time.h"
+#include "boost/algorithm/string.hpp"
 #include "boost/scope_exit.hpp"
 #include "chat_completion/chat_completion.grpc.pb.h"
 #include "components/audio.h"
@@ -100,7 +101,8 @@ class IeltsAI final : public ChatService::Service {
   using StreamHandlerFunc = std::function<bool(std::string, intptr_t, liboai::Conversation&)>;
 
  private:
-  void stream_handler() {}
+  void do_split_and_trim(const std::string& input, std::vector<std::string>& output);
+  int32_t parse_content(const std::string& input, std::string& output);
 
  private:
   liboai::Authorization _audio_auth{};

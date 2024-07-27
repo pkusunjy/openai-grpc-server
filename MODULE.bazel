@@ -3,6 +3,7 @@ module(
 )
 
 bazel_dep(name = "abseil-cpp", version = "20240116.2")
+bazel_dep(name = "boost.algorithm", version = "1.83.0.bzl.1")
 bazel_dep(name = "boost.scope_exit", version = "1.83.0.bzl.1")
 bazel_dep(name = "boringssl", version = "0.0.0-20240530-2db0eb3")
 bazel_dep(name = "c-ares", version = "1.16.1")
