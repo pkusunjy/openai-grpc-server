@@ -166,11 +166,21 @@ int32_t IeltsAI::parse_content(const std::string& input, std::string& output) {
     return -1;
   }
 
-  if (!j.contains("choices") || !j["choices"][0].contains("delta") || !j["choices"][0]["delta"].contains("content")) {
+  if (!j.contains("choices") || !j["choices"].is_array() || j["choices"].empty()) {
     return -1;
   }
 
-  output.assign(j["choices"][0]["delta"]["content"].get<std::string>());
+  const auto& choice = j["choices"][0];
+  if (!choice.contains("delta") || !choice["delta"].is_object()) {
+    return -1;
+  }
+
+  const auto& delta = choice["delta"];
+  if (!delta.contains("content") || !delta["content"].is_string()) {
+    return -1;
+  }
+
+  output.assign(delta["content"].get<std::string>());
   return 0;
 }
 
