@@ -184,4 +184,31 @@ int32_t IeltsAI::parse_content(const std::string& input, std::string& output) {
   return 0;
 }
 
+ChatStreamCallback IeltsAI::stream_handler(grpc::ServerWriter<chat_completion::ChatMessage>* stream) {
+  return [=](std::string data, intptr_t ptr, liboai::Conversation&) -> bool {
+    std::vector<std::string> raw_json_strs;
+    do_split_and_trim(data, raw_json_strs);
+
+    chat_completion::ChatMessage resp{};
+    for (const auto& item : raw_json_strs) {
+      if (item.empty()) {
+        continue;
+      }
+      LOG(INFO) << item;
+      if (item == "[DONE]") {
+        resp.clear_content();
+        stream->WriteLast(resp, grpc::WriteOptions());
+        break;
+      }
+      std::string content;
+      if (parse_content(item, content) != 0) {
+        LOG(WARNING) << "parse content failed input:" << item;
+      }
+      resp.set_content(content);
+      stream->Write(resp);
+    }
+    return true;
+  };
+}
+
 } // namespace chat_completion

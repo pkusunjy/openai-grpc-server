@@ -19,32 +19,8 @@ grpc::Status IeltsAI::cn_to_en(grpc::ServerContext* ctx, const ChatMessage* req,
     return grpc::Status(grpc::StatusCode::INVALID_ARGUMENT, "input empty, check your input");
   }
 
-  auto stream_handler = [&](std::string data, intptr_t ptr, liboai::Conversation&) -> bool {
-    std::vector<std::string> raw_json_strs;
-    do_split_and_trim(data, raw_json_strs);
-
-    ChatMessage resp{};
-    for (const auto& item : raw_json_strs) {
-      if (item.empty()) {
-        continue;
-      }
-      if (item == "[DONE]") {
-        resp.clear_content();
-        stream->WriteLast(resp, grpc::WriteOptions());
-        break;
-      }
-      std::string content;
-      if (parse_content(item, content) != 0) {
-        LOG(WARNING) << "parse content failed input:" << item;
-      }
-      resp.set_content(content);
-      stream->Write(resp);
-    }
-    return true;
-  };
-
   auto openai_resp = _chat_completion->create_async(_model, convo, std::nullopt, std::nullopt, std::nullopt,
-                                                    std::nullopt, stream_handler);
+                                                    std::nullopt, stream_handler(stream));
 
   openai_resp.wait();
 
@@ -71,32 +47,8 @@ grpc::Status IeltsAI::en_to_cn(grpc::ServerContext* ctx, const ChatMessage* req,
     return grpc::Status(grpc::StatusCode::INVALID_ARGUMENT, "input empty, check your input");
   }
 
-  auto stream_handler = [&](std::string data, intptr_t ptr, liboai::Conversation&) -> bool {
-    std::vector<std::string> raw_json_strs;
-    do_split_and_trim(data, raw_json_strs);
-
-    ChatMessage resp{};
-    for (const auto& item : raw_json_strs) {
-      if (item.empty()) {
-        continue;
-      }
-      if (item == "[DONE]") {
-        resp.clear_content();
-        stream->WriteLast(resp, grpc::WriteOptions());
-        break;
-      }
-      std::string content;
-      if (parse_content(item, content) != 0) {
-        LOG(WARNING) << "parse content failed input:" << item;
-      }
-      resp.set_content(content);
-      stream->Write(resp);
-    }
-    return true;
-  };
-
   auto openai_resp = _chat_completion->create_async(_model, convo, std::nullopt, std::nullopt, std::nullopt,
-                                                    std::nullopt, stream_handler);
+                                                    std::nullopt, stream_handler(stream));
 
   openai_resp.wait();
 

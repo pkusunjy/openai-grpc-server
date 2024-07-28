@@ -24,6 +24,8 @@
 
 namespace chat_completion {
 
+using ChatStreamCallback = liboai::ChatCompletion::ChatStreamCallback;
+
 class IeltsAI final : public ChatService::Service {
  public:
   IeltsAI() = default;
@@ -98,11 +100,10 @@ class IeltsAI final : public ChatService::Service {
   grpc::Status cn_to_en(grpc::ServerContext*, const ChatMessage*, grpc::ServerWriter<ChatMessage>*) override;
   grpc::Status en_to_cn(grpc::ServerContext*, const ChatMessage*, grpc::ServerWriter<ChatMessage>*) override;
 
-  using StreamHandlerFunc = std::function<bool(std::string, intptr_t, liboai::Conversation&)>;
-
  private:
   void do_split_and_trim(const std::string& input, std::vector<std::string>& output);
   int32_t parse_content(const std::string& input, std::string& output);
+  ChatStreamCallback stream_handler(grpc::ServerWriter<chat_completion::ChatMessage>*);
 
  private:
   liboai::Authorization _audio_auth{};

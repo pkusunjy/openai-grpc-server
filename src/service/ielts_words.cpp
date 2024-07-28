@@ -19,32 +19,8 @@ grpc::Status IeltsAI::ielts_speaking_words_synonyms(grpc::ServerContext* ctx, co
     return grpc::Status(grpc::StatusCode::INVALID_ARGUMENT, "input empty, check your input");
   }
 
-  auto stream_handler = [&](std::string data, intptr_t ptr, liboai::Conversation&) -> bool {
-    std::vector<std::string> raw_json_strs;
-    do_split_and_trim(data, raw_json_strs);
-
-    ChatMessage resp{};
-    for (const auto& item : raw_json_strs) {
-      if (item.empty()) {
-        continue;
-      }
-      if (item == "[DONE]") {
-        resp.clear_content();
-        stream->WriteLast(resp, grpc::WriteOptions());
-        break;
-      }
-      std::string content;
-      if (parse_content(item, content) != 0) {
-        LOG(WARNING) << "parse content failed input:" << item;
-      }
-      resp.set_content(content);
-      stream->Write(resp);
-    }
-    return true;
-  };
-
   auto openai_resp = _chat_completion->create_async(_model, convo, std::nullopt, std::nullopt, std::nullopt,
-                                                    std::nullopt, stream_handler);
+                                                    std::nullopt, stream_handler(stream));
 
   openai_resp.wait();
 
@@ -71,32 +47,8 @@ grpc::Status IeltsAI::ielts_speaking_words_usage(grpc::ServerContext* ctx, const
     return grpc::Status(grpc::StatusCode::INVALID_ARGUMENT, "input empty, check your input");
   }
 
-  auto stream_handler = [&](std::string data, intptr_t ptr, liboai::Conversation&) -> bool {
-    std::vector<std::string> raw_json_strs;
-    do_split_and_trim(data, raw_json_strs);
-
-    ChatMessage resp{};
-    for (const auto& item : raw_json_strs) {
-      if (item.empty()) {
-        continue;
-      }
-      if (item == "[DONE]") {
-        resp.clear_content();
-        stream->WriteLast(resp, grpc::WriteOptions());
-        break;
-      }
-      std::string content;
-      if (parse_content(item, content) != 0) {
-        LOG(WARNING) << "parse content failed input:" << item;
-      }
-      resp.set_content(content);
-      stream->Write(resp);
-    }
-    return true;
-  };
-
   auto openai_resp = _chat_completion->create_async(_model, convo, std::nullopt, std::nullopt, std::nullopt,
-                                                    std::nullopt, stream_handler);
+                                                    std::nullopt, stream_handler(stream));
 
   openai_resp.wait();
 
@@ -124,32 +76,8 @@ grpc::Status IeltsAI::ielts_writing_words_theme(grpc::ServerContext* ctx, const 
     return grpc::Status(grpc::StatusCode::INVALID_ARGUMENT, "input empty, check your input");
   }
 
-  auto stream_handler = [&](std::string data, intptr_t ptr, liboai::Conversation&) -> bool {
-    std::vector<std::string> raw_json_strs;
-    do_split_and_trim(data, raw_json_strs);
-
-    ChatMessage resp{};
-    for (const auto& item : raw_json_strs) {
-      if (item.empty()) {
-        continue;
-      }
-      if (item == "[DONE]") {
-        resp.clear_content();
-        stream->WriteLast(resp, grpc::WriteOptions());
-        break;
-      }
-      std::string content;
-      if (parse_content(item, content) != 0) {
-        LOG(WARNING) << "parse content failed input:" << item;
-      }
-      resp.set_content(content);
-      stream->Write(resp);
-    }
-    return true;
-  };
-
   auto openai_resp = _chat_completion->create_async(_model, convo, std::nullopt, std::nullopt, std::nullopt,
-                                                    std::nullopt, stream_handler);
+                                                    std::nullopt, stream_handler(stream));
 
   openai_resp.wait();
 
@@ -176,32 +104,8 @@ grpc::Status IeltsAI::ielts_writing_words_synonyms(grpc::ServerContext* ctx, con
     return grpc::Status(grpc::StatusCode::INVALID_ARGUMENT, "input empty, check your input");
   }
 
-  auto stream_handler = [&](std::string data, intptr_t ptr, liboai::Conversation&) -> bool {
-    std::vector<std::string> raw_json_strs;
-    do_split_and_trim(data, raw_json_strs);
-
-    ChatMessage resp{};
-    for (const auto& item : raw_json_strs) {
-      if (item.empty()) {
-        continue;
-      }
-      if (item == "[DONE]") {
-        resp.clear_content();
-        stream->WriteLast(resp, grpc::WriteOptions());
-        break;
-      }
-      std::string content;
-      if (parse_content(item, content) != 0) {
-        LOG(WARNING) << "parse content failed input:" << item;
-      }
-      resp.set_content(content);
-      stream->Write(resp);
-    }
-    return true;
-  };
-
   auto openai_resp = _chat_completion->create_async(_model, convo, std::nullopt, std::nullopt, std::nullopt,
-                                                    std::nullopt, stream_handler);
+                                                    std::nullopt, stream_handler(stream));
 
   openai_resp.wait();
 
@@ -228,32 +132,8 @@ grpc::Status IeltsAI::ielts_writing_words_combination(grpc::ServerContext* ctx, 
     return grpc::Status(grpc::StatusCode::INVALID_ARGUMENT, "input empty, check your input");
   }
 
-  auto stream_handler = [&](std::string data, intptr_t ptr, liboai::Conversation&) -> bool {
-    std::vector<std::string> raw_json_strs;
-    do_split_and_trim(data, raw_json_strs);
-
-    ChatMessage resp{};
-    for (const auto& item : raw_json_strs) {
-      if (item.empty()) {
-        continue;
-      }
-      if (item == "[DONE]") {
-        resp.clear_content();
-        stream->WriteLast(resp, grpc::WriteOptions());
-        break;
-      }
-      std::string content;
-      if (parse_content(item, content) != 0) {
-        LOG(WARNING) << "parse content failed input:" << item;
-      }
-      resp.set_content(content);
-      stream->Write(resp);
-    }
-    return true;
-  };
-
   auto openai_resp = _chat_completion->create_async(_model, convo, std::nullopt, std::nullopt, std::nullopt,
-                                                    std::nullopt, stream_handler);
+                                                    std::nullopt, stream_handler(stream));
 
   openai_resp.wait();
 
