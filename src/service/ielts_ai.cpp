@@ -190,7 +190,6 @@ ChatStreamCallback IeltsAI::stream_handler(grpc::ServerWriter<chat_completion::C
       if (item.empty()) {
         continue;
       }
-      LOG(INFO) << item;
       if (item == "[DONE]") {
         resp.clear_content();
         stream->WriteLast(resp, grpc::WriteOptions());
