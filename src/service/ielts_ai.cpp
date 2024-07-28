@@ -140,15 +140,11 @@ void IeltsAI::do_split_and_trim(const std::string& input, std::vector<std::strin
     return;
   }
   boost::split(output, input, boost::is_any_of("\n"), boost::token_compress_on);
-  auto predicate = [](char c) {
-    return c != ' ' && c != '\t' && c != '\n';
-  };
   for (auto& item : output) {
     if (item.empty()) {
       continue;
     }
-    item.erase(item.begin(), std::find_if(item.begin(), item.end(), predicate));
-    item.erase(std::find_if(item.rbegin(), item.rend(), predicate).base(), item.end());
+    boost::trim_if(item, boost::is_any_of(" \n\t"));
     // remove "data: " prefix
     if (item.size() > 6 && item.substr(0, 6) == "data: ") {
       item.assign(item.substr(6));
