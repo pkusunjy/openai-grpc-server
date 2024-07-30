@@ -1,11 +1,8 @@
 #pragma once
 
-#include <grpcpp/ext/proto_server_reflection_plugin.h>
-#include <grpcpp/grpcpp.h>
-#include <grpcpp/health_check_service_interface.h>
-
 #include <queue>
 #include <regex>
+#include <shared_mutex>
 
 #include "absl/log/log.h"
 #include "absl/strings/str_format.h"
@@ -18,6 +15,9 @@
 #include "components/audio.h"
 #include "components/chat.h"
 #include "core/authorization.h"
+#include "grpcpp/ext/proto_server_reflection_plugin.h"
+#include "grpcpp/grpcpp.h"
+#include "grpcpp/health_check_service_interface.h"
 #include "src/plugin/oss.h"
 #include "src/plugin/prompt.h"
 #include "src/plugin/token.h"

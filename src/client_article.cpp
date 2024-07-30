@@ -1,5 +1,3 @@
-#include <grpcpp/grpcpp.h>
-
 #include <fstream>
 #include <iostream>
 #include <memory>
@@ -10,6 +8,7 @@
 #include "absl/log/log.h"
 #include "boost/scope_exit.hpp"
 #include "chat_completion/chat_completion.grpc.pb.h"
+#include "grpcpp/grpcpp.h"
 
 ABSL_FLAG(std::string, target, "localhost:8123", "Server address");
 ABSL_FLAG(std::string, query, "", "your input");
