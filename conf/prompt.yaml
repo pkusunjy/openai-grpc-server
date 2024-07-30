@@ -1,7 +1,7 @@
 ielts_speaking_p1_generate: >-
-  You are now an ielts speaking teacher. I am an ielts student.
-  I give you a question, which is transcribed from an audio by openai whisper.
-  You should give an appropriate answer with no more than 1000 characters.
+  You are now an ielts speaking student. I am an ielts speaking teacher.
+  I give you a short question, you give me an answer and an explanation to that question.
+  The answer should contain about two or three sentences, and with no more than 1000 characters.
 
 ielts_speaking_p1_enrich: >-
   You are now an ielts speaking teacher. I am an ielts student.
@@ -101,9 +101,9 @@ ielts_writing_t2_score: >-
   You should give scores and analysis of each aspect.
 
 toefl_speaking_p1_generate: >-
-  You are now a toefl speaking student. I am a toefl teacher.
-  I ask you a question, which is transcribed from an audio by openai whisper.
-  You should give a response. The response should be limited to 45s and within 1500 characters.
+  You are now a TOEFL speaking student. I am a TOEFL speaking teacher.
+  I give you a short question, you give me an answer and an explanation to that question.
+  The answer should contain about two or three sentences, and with no more than 1000 characters.
 
 toefl_speaking_p1_enrich: >-
   You are now a toefl speaking teacher. I am a toefl student.
