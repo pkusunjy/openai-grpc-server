@@ -17,9 +17,9 @@ http_archive(
 http_archive(
     name = "com_github_d7ead_liboai",
     build_file = "//bazel:liboai.BUILD",
-    sha256 = "83108eb34c71b6bf0d18d8b7071a76a6c1609fea60f32afedaf7f69c95f0b827",
-    strip_prefix = "liboai-1.0.11/liboai",
-    urls = ["https://github.com/pkusunjy/liboai/archive/v1.0.11.tar.gz"],
+    sha256 = "821d369711c23331d5b8a4008da20eec43c64649840fcec635b4e56e631a5bf5",
+    strip_prefix = "liboai-1.0.12/liboai",
+    urls = ["https://github.com/pkusunjy/liboai/archive/v1.0.12.tar.gz"],
 )
 
 http_archive(

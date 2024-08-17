@@ -14,6 +14,16 @@ package(
 # )
 
 cc_test(
+    name = "test_html_parse",
+    srcs = [
+        "test_html_parse.cpp",
+    ],
+    deps = [
+        "@googletest//:gtest_main",
+    ],
+)
+
+cc_test(
     name = "test_liboai",
     srcs = [
         "test_liboai.cpp",
