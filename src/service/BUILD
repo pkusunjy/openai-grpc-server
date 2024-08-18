@@ -9,6 +9,7 @@ cc_library(
         "ielts_speaking_p1.cpp",
         "ielts_speaking_p2.cpp",
         "ielts_speaking_p3.cpp",
+        "ielts_talk.cpp",
         "ielts_words.cpp",
         "ielts_writing_t1.cpp",
         "ielts_writing_t2.cpp",

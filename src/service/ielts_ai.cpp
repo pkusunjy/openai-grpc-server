@@ -5,15 +5,15 @@ namespace chat_completion {
 int32_t IeltsAI::initialize() {
   auto& token_instance = plugin::TokenFactory::instance();
   // audio auth
-  _audio_auth.SetKey(token_instance.get_token_by_name("openai_api_key"));
-  _chat_auth.SetKey(token_instance.get_token_by_name("qwen_api_key"));
+  _openai_auth.SetKey(token_instance.get_token_by_name("openai_api_key"));
+  _ali_auth.SetKey(token_instance.get_token_by_name("qwen_api_key"));
   // audio
   _audio = std::make_unique<liboai::Audio>();
   if (_audio == nullptr) {
     LOG(WARNING) << "liboai audio ctor failed";
     return -1;
   }
-  _audio->SetAuth(_audio_auth);
+  _audio->SetAuth(_openai_auth);
   _audio->UpdateOpenAIRoot(token_instance.get_token_by_name("openai_url_root"));
   // chat
   _chat_completion = std::make_unique<liboai::ChatCompletion>();
@@ -21,8 +21,16 @@ int32_t IeltsAI::initialize() {
     LOG(WARNING) << "liboai completion ctor failed";
     return -1;
   }
-  _chat_completion->SetAuth(_chat_auth);
+  _chat_completion->SetAuth(_ali_auth);
   _chat_completion->UpdateOpenAIRoot(token_instance.get_token_by_name("qwen_url_root"));
+  // openai chat
+  _openai_chat_completion = std::make_unique<liboai::ChatCompletion>();
+  if (_openai_chat_completion == nullptr) {
+    LOG(WARNING) << "liboai completion ctor failed";
+    return -1;
+  }
+  _openai_chat_completion->SetAuth(_openai_auth);
+  _openai_chat_completion->UpdateOpenAIRoot(token_instance.get_token_by_name("openai_url_root"));
   // aliyun oss
   _oss = std::make_unique<plugin::OssClient>();
   if (_oss == nullptr || _oss->initialize() != 0) {
@@ -35,6 +43,19 @@ int32_t IeltsAI::initialize() {
     LOG(WARNING) << "prompt plugin initialize failed";
     return -1;
   }
+  // response format for ielts talk report
+  std::string ielts_talk_report_filename = "./conf/response_format/ielts_talk_report.json";
+  std::ifstream ielts_talk_report(ielts_talk_report_filename);
+  if (!ielts_talk_report.is_open()) {
+    LOG(WARNING) << "open " << ielts_talk_report_filename << " failed";
+    return -1;
+  }
+  BOOST_SCOPE_EXIT(&ielts_talk_report) {
+    ielts_talk_report.close();
+  }
+  BOOST_SCOPE_EXIT_END
+  ielts_talk_report >> _ielts_talk_report_response_format;
+
   return 0;
 }
 

@@ -1,0 +1,69 @@
+{
+    "type": "json_schema",
+    "json_schema": {
+        "name": "ielts_report_response",
+        "strict": true,
+        "schema": {
+            "type": "object",
+            "properties": {
+                "overall_score": {
+                    "type": "string"
+                },
+                "fluency_coherence": {
+                    "type": "object",
+                    "properties": {
+                        "detailed_score": {
+                            "type": "string"
+                        },
+                        "comment": {
+                            "type": "string"
+                        }
+                    },
+                    "required": ["detailed_score", "comment"],
+                    "additionalProperties": false
+                },
+                "pronunciation": {
+                    "type": "object",
+                    "properties": {
+                        "detailed_score": {
+                            "type": "string"
+                        },
+                        "comment": {
+                            "type": "string"
+                        }
+                    },
+                    "required": ["detailed_score", "comment"],
+                    "additionalProperties": false
+                },
+                "grammer": {
+                    "type": "object",
+                    "properties": {
+                        "detailed_score": {
+                            "type": "string"
+                        },
+                        "comment": {
+                            "type": "string"
+                        }
+                    },
+                    "required": ["detailed_score", "comment"],
+                    "additionalProperties": false
+                },
+                "vocabulary": {
+                    "type": "object",
+                    "properties": {
+                        "detailed_score": {
+                            "type": "string"
+                        },
+                        "comment": {
+                            "type": "string"
+                        }
+                    },
+                    "required": ["detailed_score", "comment"],
+                    "additionalProperties": false
+                }
+            },
+            "required": ["overall_score", "fluency_coherence", "pronunciation", "grammer", "vocabulary"],
+            "additionalProperties": false
+        }
+    }
+}

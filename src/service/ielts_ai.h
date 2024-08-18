@@ -15,6 +15,8 @@
 #include "components/audio.h"
 #include "components/chat.h"
 #include "core/authorization.h"
+#include "google/protobuf/message.h"
+#include "google/protobuf/util/json_util.h"
 #include "grpcpp/ext/proto_server_reflection_plugin.h"
 #include "grpcpp/grpcpp.h"
 #include "grpcpp/health_check_service_interface.h"
@@ -100,19 +102,26 @@ class IeltsAI final : public ChatService::Service {
   grpc::Status cn_to_en(grpc::ServerContext*, const ChatMessage*, grpc::ServerWriter<ChatMessage>*) override;
   grpc::Status en_to_cn(grpc::ServerContext*, const ChatMessage*, grpc::ServerWriter<ChatMessage>*) override;
 
+  // 雅思对话报告
+  grpc::Status ielts_talk_report_impl(grpc::ServerContext*, const ExamAnswerList*, TalkReport*) override;
+
  private:
   void do_split_and_trim(const std::string& input, std::vector<std::string>& output);
   int32_t parse_content(const std::string& input, std::string& output);
   ChatStreamCallback stream_handler(grpc::ServerWriter<chat_completion::ChatMessage>*);
 
  private:
-  liboai::Authorization _audio_auth{};
-  liboai::Authorization _chat_auth{};
+  liboai::Authorization _openai_auth{};
+  liboai::Authorization _ali_auth{};
   std::unique_ptr<liboai::Audio> _audio{nullptr};
   std::unique_ptr<liboai::ChatCompletion> _chat_completion{nullptr};
+  std::unique_ptr<liboai::ChatCompletion> _openai_chat_completion{nullptr};
   std::string _model{"qwen-plus"};
   std::unique_ptr<plugin::OssClient> _oss{nullptr};
   std::unique_ptr<plugin::Prompt> _prompt_plugin{nullptr};
+
+ private:
+  nlohmann::json _ielts_talk_report_response_format;
 };
 
 } // namespace chat_completion
