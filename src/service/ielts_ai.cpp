@@ -84,7 +84,7 @@ grpc::Status IeltsAI::transcribe_judge(grpc::ServerContext* ctx, const ChatMessa
   BOOST_SCOPE_EXIT_END
   absl::Time step2 = absl::Now();
   // 2. call api
-  auto res = _audio->transcribe(local_filename, "whisper-1");
+  auto res = _audio->transcribe(local_filename, "whisper-1", std::nullopt, std::nullopt, std::nullopt, "en");
   absl::Time step3 = absl::Now();
   // 3. response
   LOG(INFO) << "logid " << req->logid() << " transcribe input: " << local_filename
