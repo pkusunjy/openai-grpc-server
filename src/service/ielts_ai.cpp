@@ -217,6 +217,7 @@ ChatStreamCallback IeltsAI::stream_handler(grpc::ServerWriter<chat_completion::C
         break;
       }
       std::string content;
+      LOG(INFO) << "received item:" << item;
       if (parse_content(item, content) != 0) {
         LOG(WARNING) << "parse content failed input:" << item;
       }
