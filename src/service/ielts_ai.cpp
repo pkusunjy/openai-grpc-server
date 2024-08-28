@@ -253,7 +253,11 @@ ChatStreamCallback IeltsAI::stream_handler(grpc::ServerWriter<chat_completion::C
         LOG(WARNING) << "parse content failed input:" << item;
       }
       resp.set_content(content);
-      stream->Write(resp);
+      if (!stream->Write(resp)) {
+        if (debug_log != nullptr && !debug_log->empty()) {
+          LOG(WARNING) << "stream closed, write fail content begins at:" << content << " debug log:" << *debug_log;
+        }
+      }
     }
     return true;
   };
