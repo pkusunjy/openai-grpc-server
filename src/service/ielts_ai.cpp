@@ -201,12 +201,41 @@ int32_t IeltsAI::parse_content(const std::string& input, std::string& output) {
   return 0;
 }
 
+int32_t IeltsAI::parse_debug_info(const std::string& input, std::string& output) {
+  nlohmann::json j;
+
+  try {
+    j = nlohmann::json::parse(input);
+  } catch (const nlohmann::json::parse_error& e) {
+    LOG(WARNING) << "json parse error:" << e.what();
+    return -1;
+  }
+
+  std::stringstream ss;
+  if (j.contains("id") && j["id"].is_string()) {
+    ss << "id:" << j["id"].get<std::string>() << " ";
+  }
+  if (j.contains("model") && j["model"].is_string()) {
+    ss << "model:" << j["model"].get<std::string>() << " ";
+  }
+  if (j.contains("created") && j["created"].is_number()) {
+    ss << "created:" << j["created"].get<uint64_t>() << " ";
+  }
+  if (j.contains("object") && j["object"].is_string()) {
+    ss << "object:" << j["object"].get<std::string>() << " ";
+  }
+
+  output.assign(ss.str());
+  return 0;
+}
+
 ChatStreamCallback IeltsAI::stream_handler(grpc::ServerWriter<chat_completion::ChatMessage>* stream) {
   return [=](std::string data, intptr_t ptr, liboai::Conversation&) -> bool {
     std::vector<std::string> raw_json_strs;
     do_split_and_trim(data, raw_json_strs);
 
     chat_completion::ChatMessage resp{};
+    bool print_debug_info = true;
     for (const auto& item : raw_json_strs) {
       if (item.empty()) {
         continue;
@@ -216,8 +245,14 @@ ChatStreamCallback IeltsAI::stream_handler(grpc::ServerWriter<chat_completion::C
         stream->WriteLast(resp, grpc::WriteOptions());
         break;
       }
+      if (print_debug_info) {
+        std::string debug_info;
+        if (parse_debug_info(item, debug_info) == 0) {
+          LOG(INFO) << debug_info;
+        }
+        print_debug_info = false;
+      }
       std::string content;
-      LOG(INFO) << "received item:" << item;
       if (parse_content(item, content) != 0) {
         LOG(WARNING) << "parse content failed input:" << item;
       }

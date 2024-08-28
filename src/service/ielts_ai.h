@@ -108,6 +108,7 @@ class IeltsAI final : public ChatService::Service {
  private:
   void do_split_and_trim(const std::string& input, std::vector<std::string>& output);
   int32_t parse_content(const std::string& input, std::string& output);
+  int32_t parse_debug_info(const std::string& input, std::string& output);
   ChatStreamCallback stream_handler(grpc::ServerWriter<chat_completion::ChatMessage>*);
 
  private:
