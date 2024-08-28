@@ -19,10 +19,12 @@ grpc::Status IeltsAI::ielts_writing_t1_enrich(grpc::ServerContext* ctx, const Ch
     return grpc::Status(grpc::StatusCode::INVALID_ARGUMENT, "input empty, check your input");
   }
 
+  std::string debug_log;
   auto openai_resp = _chat_completion->create_async(_model, convo, std::nullopt, std::nullopt, std::nullopt,
-                                                    std::nullopt, stream_handler(stream));
+                                                    std::nullopt, stream_handler(stream, &debug_log));
 
   openai_resp.wait();
+  LOG(INFO) << "logid " << req->logid() << " debug_log: " << debug_log;
 
   absl::Time step2 = absl::Now();
   LOG(INFO) << "logid " << req->logid() << " uid " << req->userid() << " content " << req->content()
@@ -47,10 +49,12 @@ grpc::Status IeltsAI::ielts_writing_t1_score(grpc::ServerContext* ctx, const Cha
     return grpc::Status(grpc::StatusCode::INVALID_ARGUMENT, "input empty, check your input");
   }
 
+  std::string debug_log;
   auto openai_resp = _chat_completion->create_async(_model, convo, std::nullopt, std::nullopt, std::nullopt,
-                                                    std::nullopt, stream_handler(stream));
+                                                    std::nullopt, stream_handler(stream, &debug_log));
 
   openai_resp.wait();
+  LOG(INFO) << "logid " << req->logid() << " debug_log: " << debug_log;
 
   absl::Time step2 = absl::Now();
   LOG(INFO) << "logid " << req->logid() << " uid " << req->userid() << " content " << req->content()

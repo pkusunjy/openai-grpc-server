@@ -109,7 +109,7 @@ class IeltsAI final : public ChatService::Service {
   void do_split_and_trim(const std::string& input, std::vector<std::string>& output);
   int32_t parse_content(const std::string& input, std::string& output);
   int32_t parse_debug_info(const std::string& input, std::string& output);
-  ChatStreamCallback stream_handler(grpc::ServerWriter<chat_completion::ChatMessage>*);
+  ChatStreamCallback stream_handler(grpc::ServerWriter<chat_completion::ChatMessage>*, std::string* debug_log);
 
  private:
   liboai::Authorization _openai_auth{};

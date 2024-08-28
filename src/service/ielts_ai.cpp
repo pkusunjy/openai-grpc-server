@@ -229,13 +229,13 @@ int32_t IeltsAI::parse_debug_info(const std::string& input, std::string& output)
   return 0;
 }
 
-ChatStreamCallback IeltsAI::stream_handler(grpc::ServerWriter<chat_completion::ChatMessage>* stream) {
+ChatStreamCallback IeltsAI::stream_handler(grpc::ServerWriter<chat_completion::ChatMessage>* stream,
+                                           std::string* debug_log) {
   return [=](std::string data, intptr_t ptr, liboai::Conversation&) -> bool {
     std::vector<std::string> raw_json_strs;
     do_split_and_trim(data, raw_json_strs);
 
     chat_completion::ChatMessage resp{};
-    bool print_debug_info = true;
     for (const auto& item : raw_json_strs) {
       if (item.empty()) {
         continue;
@@ -245,12 +245,8 @@ ChatStreamCallback IeltsAI::stream_handler(grpc::ServerWriter<chat_completion::C
         stream->WriteLast(resp, grpc::WriteOptions());
         break;
       }
-      if (print_debug_info) {
-        std::string debug_info;
-        if (parse_debug_info(item, debug_info) == 0) {
-          LOG(INFO) << debug_info;
-        }
-        print_debug_info = false;
+      if (debug_log != nullptr && debug_log->empty()) {
+        parse_debug_info(item, *debug_log);
       }
       std::string content;
       if (parse_content(item, content) != 0) {
