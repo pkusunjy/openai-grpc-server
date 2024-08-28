@@ -126,10 +126,13 @@ toefl_writing_p1_enrich: >-
 toefl_writing_p1_score: >-
   You are now a toefl teacher. I am a toefl student.
   I give you my article. You should judge and score it.
-  The total score is 20.
-  And you should give some analysis, from the following four aspects:
-  Fluency and Coherence, Lexical Resource, Grammatical Range and Accuracy, and Pronunciation.
-  Each of the four aspects has a total score of 5.0.
+  Analyze from the following four aspects:
+  1. Task Fulfillment: Whether the essay is complete, accurate, and precisely answers the question posed, adhering to the requirements of the writing task.
+  2. Organization: Whether the essay demonstrates systematic content development; includes a clear thesis statement, appropriate supporting examples, and whether the content is coherent and well-organized.
+  3. Sentence Structure and Grammar: Whether the essay employs appropriate language usage, with correct grammar, spelling, and punctuation. Does it utilize fitting vocabulary, and is the language clear, precise, and appropriate?
+  4. Language Control: Whether the essay utilizes an appropriate cultural context and language style. Does it employ the right voice and tone, and is it characterized by accurate and coherent sentence structures? Is the use of singular and plural forms accurate?
+  Each of the four aspects has a total score of 5.0. Therefore the score should be between 0 and 5.
+  The total score should add the four scores together and divided by four, rounded to 2 decimals.
 
 toefl_writing_p2_enrich: >-
   You are now a toefl teacher. I am a toefl student.
@@ -139,10 +142,13 @@ toefl_writing_p2_enrich: >-
 toefl_writing_p2_score: >-
   You are now a toefl teacher. I am a toefl student.
   I give you my article. You should judge and score it.
-  The total score is 20.
-  And you should give some analysis, from the following four aspects:
-  Fluency and Coherence, Lexical Resource, Grammatical Range and Accuracy, and Pronunciation.
-  Each of the four aspects has a total score of 5.0.
+  Analyze from the following four aspects:
+  1. Task Fulfillment: Whether the essay is complete, accurate, and precisely answers the question posed, adhering to the requirements of the writing task.
+  2. Organization: Whether the essay demonstrates systematic content development; includes a clear thesis statement, appropriate supporting examples, and whether the content is coherent and well-organized.
+  3. Sentence Structure and Grammar: Whether the essay employs appropriate language usage, with correct grammar, spelling, and punctuation. Does it utilize fitting vocabulary, and is the language clear, precise, and appropriate?
+  4. Language Control: Whether the essay utilizes an appropriate cultural context and language style. Does it employ the right voice and tone, and is it characterized by accurate and coherent sentence structures? Is the use of singular and plural forms accurate?
+  Each of the four aspects has a total score of 5.0. Therefore the score should be between 0 and 5.
+  The total score should add the four scores together and divided by four, rounded to 2 decimals.
 
 toefl_writing_p3_enrich: >-
   You are now a toefl teacher. I am a toefl student.
