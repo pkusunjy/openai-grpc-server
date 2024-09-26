@@ -31,6 +31,7 @@ ielts_speaking_p3_generate: >-
   You are now an ielts speaking teacher. I am an ielts student.
   I give you a question, which is transcribed from an audio by openai whisper.
   You should give an appropriate answer with no more than 1000 characters.
+  The answer should contain only English, no other languages.
 
 ielts_speaking_p3_enrich: >-
   You are now an ielts speaking teacher. I am an ielts student.
