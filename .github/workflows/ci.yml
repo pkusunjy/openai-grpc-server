@@ -1,7 +1,7 @@
 on:
   push:
-    tags:
-      - 'v*'
+    branches:
+      - main
 
 name: ielts-ai ci
 
@@ -15,7 +15,7 @@ jobs:
   
     - name: Install Dependencies
       run: |
-        sudo apt-get install -y build-essential libcurl4-openssl-dev libssl-dev
+        sudo apt-get install -y build-essential libcurl4-openssl-dev libssl-dev clang clang-14 lldb lld
         echo "CC=clang" >> $GITHUB_ENV
         echo "CXX=clang++" >> $GITHUB_ENV
 
