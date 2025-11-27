@@ -115,7 +115,10 @@ grpc::Status IeltsAI::text_to_speech(grpc::ServerContext* ctx, const ChatMessage
 
   auto res = _audio->speech("tts-1", voice, input);
 
+  auto cur = absl::ToCivilHour(absl::Now(), _time_zone);
+  std::string pattern = absl::StrFormat("%llu/%d/%d", cur.year(), cur.month(), cur.day());
   std::string local_filename = absl::StrFormat("text_to_speech_%s_%llu.mp3", req->userid(), req->logid());
+  std::string remote_filename = absl::StrFormat("%s/%s", pattern, local_filename);
   {
     std::ofstream ocout(local_filename, std::ios::binary);
     ocout << res.content;
@@ -134,7 +137,7 @@ grpc::Status IeltsAI::text_to_speech(grpc::ServerContext* ctx, const ChatMessage
   BOOST_SCOPE_EXIT_END
   // 2. upload to oss
   absl::Time step2 = absl::Now();
-  if (_oss->put_object(local_filename, local_filename) != 0) {
+  if (_oss->put_object(remote_filename, local_filename) != 0) {
     LOG(WARNING) << "OssClient put_object failed";
     return grpc::Status(grpc::StatusCode::FAILED_PRECONDITION, "oss error");
   }
@@ -142,7 +145,7 @@ grpc::Status IeltsAI::text_to_speech(grpc::ServerContext* ctx, const ChatMessage
   absl::Time step3 = absl::Now();
   LOG(INFO) << "logid " << req->logid() << " text_to_speech input: " << input << " result: " << local_filename;
   std::string url;
-  if (_oss->gen_presigned_url(local_filename, url) != 0) {
+  if (_oss->gen_presigned_url(remote_filename, url) != 0) {
     LOG(WARNING) << "OssClient gen_presigned_url failed";
     return grpc::Status(grpc::StatusCode::FAILED_PRECONDITION, "oss error");
   }

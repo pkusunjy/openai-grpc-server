@@ -123,6 +123,7 @@ class IeltsAI final : public ChatService::Service {
 
  private:
   nlohmann::json _ielts_talk_report_response_format;
+  const absl::TimeZone _time_zone{absl::LocalTimeZone()};
 };
 
 } // namespace chat_completion
