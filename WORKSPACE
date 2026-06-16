@@ -32,7 +32,7 @@ http_archive(
 http_archive(
     name = "com_github_aliyun_oss_sdk",
     build_file = "//bazel:aliyun_oss_sdk.BUILD",
-    sha256 = "86bbbcf15768dcd354bf96bc53ff3a438bca362952b4d4ddadfa70cf4c67bc88",
+    sha256 = "f592db888f5266bb5eeeb43a784f7efc5d3e4c089d811c8c0b81b530f243213d",
     strip_prefix = "aliyun-oss-cpp-sdk-master",
     urls = ["https://github.com/aliyun/aliyun-oss-cpp-sdk/archive/master.zip"],
 )
