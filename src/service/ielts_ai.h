@@ -114,10 +114,13 @@ class IeltsAI final : public ChatService::Service {
  private:
   liboai::Authorization _openai_auth{};
   liboai::Authorization _ali_auth{};
+  liboai::Authorization _doubao_auth{};
   std::unique_ptr<liboai::Audio> _audio{nullptr};
   std::unique_ptr<liboai::ChatCompletion> _chat_completion{nullptr};
   std::unique_ptr<liboai::ChatCompletion> _openai_chat_completion{nullptr};
+  std::unique_ptr<liboai::ChatCompletion> _doubao_chat_completion{nullptr};
   std::string _model{"qwen-plus"};
+  std::string _doubao_model{"doubao-seed-1-8-251228"};
   std::unique_ptr<plugin::OssClient> _oss{nullptr};
   std::unique_ptr<plugin::Prompt> _prompt_plugin{nullptr};
 

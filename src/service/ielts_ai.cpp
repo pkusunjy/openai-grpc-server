@@ -7,6 +7,7 @@ int32_t IeltsAI::initialize() {
   // audio auth
   _openai_auth.SetKey(token_instance.get_token_by_name("openai_api_key"));
   _ali_auth.SetKey(token_instance.get_token_by_name("qwen_api_key"));
+  _doubao_auth.SetKey(token_instance.get_token_by_name("doubao_api_key"));
   // audio
   _audio = std::make_unique<liboai::Audio>();
   if (_audio == nullptr) {
@@ -31,6 +32,13 @@ int32_t IeltsAI::initialize() {
   }
   _openai_chat_completion->SetAuth(_openai_auth);
   _openai_chat_completion->UpdateOpenAIRoot(token_instance.get_token_by_name("openai_url_root"));
+  _doubao_chat_completion = std::make_unique<liboai::ChatCompletion>();
+  if (_doubao_chat_completion == nullptr) {
+    LOG(WARNING) << "liboai completion ctor failed";
+    return -1;
+  }
+  _doubao_chat_completion->SetAuth(_doubao_auth);
+  _doubao_chat_completion->UpdateOpenAIRoot(token_instance.get_token_by_name("doubao_url_root"));
   // aliyun oss
   _oss = std::make_unique<plugin::OssClient>();
   if (_oss == nullptr || _oss->initialize() != 0) {

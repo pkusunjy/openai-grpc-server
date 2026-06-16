@@ -23,6 +23,7 @@ jobs:
       run: |
         sed -i "s/OPENAI_API_KEY/${{ secrets.OPENAI_API_KEY }}/g" ./conf/auth.yaml
         sed -i "s/QWEN_API_KEY/${{ secrets.QWEN_API_KEY }}/g" ./conf/auth.yaml
+        sed -i "s/DOUBAO_API_KEY/${{ secrets.DOUBAO_API_KEY }}/g" ./conf/auth.yaml
         sed -i "s/OSS_ACCESS_ENDPOINT/${{ secrets.OSS_ACCESS_ENDPOINT }}/g" ./conf/auth.yaml
         sed -i "s/OSS_ACCESS_KEY_ID/${{ secrets.OSS_ACCESS_KEY_ID }}/g" ./conf/auth.yaml
         sed -i "s/OSS_ACCESS_KEY_SECRET/${{ secrets.OSS_ACCESS_KEY_SECRET }}/g" ./conf/auth.yaml

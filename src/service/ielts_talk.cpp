@@ -41,7 +41,8 @@ grpc::Status IeltsAI::ielts_talk_report_impl(grpc::ServerContext* ctx, const Exa
     return grpc::Status(grpc::StatusCode::FAILED_PRECONDITION, "set response_format failed");
   }
 
-  auto openai_resp = _openai_chat_completion->create("gpt-4o-2024-08-06", convo);
+  // auto openai_resp = _openai_chat_completion->create("gpt-4o-2024-08-06", convo);
+  auto openai_resp = _doubao_chat_completion->create("doubao-seed-1-8-251228", convo);
   LOG(INFO) << "received response:" << openai_resp;
 
   const auto& raw = openai_resp.raw_json;
